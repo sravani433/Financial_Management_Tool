@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income Declaration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 200px;
+            background: white;
+            border-right: 1px solid #d1d5db;
+            padding: 20px 0;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #6b7280;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .sidebar-item.active {
+            background: #dbeafe;
+            color: #1d4ed8;
+            border-left-color: #1d4ed8;
+            font-weight: 500;
+        }
+
+        .sidebar-item:hover:not(.active) {
+            background: #f9fafb;
+        }
+
+        .sidebar-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .add-income-btn, .bulk-add-btn {
+            background: #1d4ed8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bulk-add-btn {
+            background: #059669;
+        }
+
+        .add-income-btn:hover {
+            background: #1e40af;
+        }
+
+        .bulk-add-btn:hover {
+            background: #047857;
+        }
+
+        /* Person Selector */
+        .person-selector {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .person-selector-label {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #374151;
+        }
+
+        .person-chips {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .person-chip {
+            padding: 8px 16px;
+            border: 2px solid #d1d5db;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .person-chip:hover {
+            border-color: #1d4ed8;
+        }
+
+        .person-chip.selected {
+            background: #1d4ed8;
+            color: white;
+            border-color: #1d4ed8;
+        }
+
+        /* Table */
+        .income-table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .income-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .income-table th {
+            background: #f9fafb;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        .income-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 14px;
+        }
+
+        .income-table tr:hover {
+            background: #f9fafb;
+        }
+
+        .actions-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .actions-btn:hover {
+            background: #f3f4f6;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 8px;
+            width: 600px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            background: #1d4ed8;
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .modal-mode-toggle {
+            display: flex;
+            background: rgba(255,255,255,0.2);
+            border-radius: 6px;
+            padding: 4px;
+        }
+
+        .mode-btn {
+            padding: 6px 12px;
+            border: none;
+            background: transparent;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: white;
+            color: #1d4ed8;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        /* Person Selection in Modal */
+        .person-selection {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .person-selection-label {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #0c4a6e;
+        }
+
+        /* Multi-Income Section */
+        .multi-income-container {
+            display: none;
+        }
+
+        .multi-income-container.active {
+            display: block;
+        }
+
+        .income-entry {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 16px;
+            background: #fafafa;
+            position: relative;
+        }
+
+        .income-entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .income-entry-title {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .remove-income-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #1d4ed8;
+            box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
+        }
+
+        .add-another-btn {
+            background: #059669;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .add-another-btn:hover {
+            background: #047857;
+        }
+
+        .modal-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .income-count {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .footer-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-primary {
+            background: #1d4ed8;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e40af;
+        }
+
+        /* Asset Connection Enhancement */
+        .asset-connection-section {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 16px 0;
+            display: none;
+        }
+
+        .asset-connection-section.show {
+            display: block;
+        }
+
+        .connection-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-weight: 500;
+            color: #0c4a6e;
+        }
+
+        .asset-suggestion {
+            background: #fefce8;
+            border: 1px solid #fde047;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+            font-size: 13px;
+            color: #713f12;
+        }
+
+        .suggestion-icon {
+            margin-right: 6px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Asset indicator in table */
+        .asset-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .asset-badge.true {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .asset-badge.false {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .person-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            background: #ddd6fe;
+            color: #5b21b6;
+        }
+
+        .single-income-container {
+            display: block;
+        }
+
+        .single-income-container.hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-item">
+                <span class="sidebar-icon">📊</span>
+                Categories
+            </div>
+            <div class="sidebar-item active">
+                <span class="sidebar-icon">💰</span>
+                Income Declaration
+            </div>
+            <div class="sidebar-item">
+                <span class="sidebar-icon">🏠</span>
+                Asset Declaration
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1 class="page-title">Income Declaration</h1>
+                <div class="header-actions">
+                    <button class="add-income-btn" onclick="openModal('single')">
+                        ➕ Add Income
+                    </button>
+                    <button class="bulk-add-btn" onclick="openModal('multiple')">
+                        📋 Add Multiple
+                    </button>
+                </div>
+            </div>
+
+            <!-- Person Selector -->
+            <div class="person-selector">
+                <div class="person-selector-label">Select Person/Entity:</div>
+                <div class="person-chips">
+                    <div class="person-chip selected" onclick="selectPerson(this, 'self')">
+                        👤 Self
+                    </div>
+                    <div class="person-chip" onclick="selectPerson(this, 'spouse')">
+                        👥 Spouse
+                    </div>
+                    <div class="person-chip" onclick="selectPerson(this, 'child')">
+                        👥 Child
+                    </div>
+                    <div class="person-chip" onclick="selectPerson(this, 'parent')">
+                        👥 Parent
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="income-table-container">
+                <table class="income-table">
+                    <thead>
+                        <tr>
+                            <th>Person</th>
+                            <th>Source</th>
+                            <th>Income</th>
+                            <th>Category Type</th>
+                            <th>Has Asset</th>
+                            <th>Frequency</th>
+                            <th>Main Classification</th>
+                            <th>Sub Classification</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="person-badge">Self</span></td>
+                            <td>Income 144444444</td>
+                            <td>14</td>
+                            <td>-</td>
+                            <td><span class="asset-badge false">No</span></td>
+                            <td>Monthly</td>
+                            <td>Primary Income</td>
+                            <td>Income 1</td>
+                            <td>
+                                <button class="actions-btn">⋮</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="person-badge">Self</span></td>
+                            <td>Monthly Salary</td>
+                            <td>100000</td>
+                            <td>-</td>
+                            <td><span class="asset-badge false">No</span></td>
+                            <td>Quarterly</td>
+                            <td>Primary Income</td>
+                            <td>Income 2</td>
+                            <td>
+                                <button class="actions-btn">⋮</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Modal with Single/Multiple Mode -->
+    <div id="createIncomeModal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Create Income</h2>
+                <div class="modal-mode-toggle">
+                    <button class="mode-btn active" onclick="switchMode('single')">Single</button>
+                    <button class="mode-btn" onclick="switchMode('multiple')">Multiple</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <!-- Person Selection in Modal -->
+                <div class="person-selection">
+                    <div class="person-selection-label">Assign Income To:</div>
+                    <div class="person-chips">
+                        <div class="person-chip selected" onclick="selectModalPerson(this, 'self')">
+                            👤 Self
+                        </div>
+                        <div class="person-chip" onclick="selectModalPerson(this, 'spouse')">
+                            👥 Spouse
+                        </div>
+                        <div class="person-chip" onclick="selectModalPerson(this, 'child')">
+                            👥 Child
+                        </div>
+                        <div class="person-chip" onclick="selectModalPerson(this, 'business')">
+                            👥 Parent
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Single Income Mode -->
+                <div id="singleIncomeContainer" class="single-income-container">
+                    <div class="form-group">
+                        <label class="form-label">Source</label>
+                        <input type="text" class="form-input" id="sourceInput" placeholder="Enter income source" onchange="suggestAssetConnection()">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Income</label>
+                        <input type="number" class="form-input" placeholder="Enter income amount">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Has Asset</label>
+                        <select class="form-select" id="hasAssetSelect" onchange="toggleAssetSection()">
+                            <option value="">Select...</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+
+                    <!-- Enhanced Asset Connection Section -->
+                    <div id="assetConnectionSection" class="asset-connection-section">
+                        <div class="connection-indicator">
+                            🔗 Asset Connection
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Select Asset</label>
+                            <select class="form-select" id="assetSelect">
+                                <option value="">Choose existing asset...</option>
+                                <option value="property1">🏠 Residential Property - Mumbai</option>
+                                <option value="property2">🏢 Commercial Property - Hyderabad</option>
+                                <option value="stocks">📈 Stock Portfolio</option>
+                                <option value="bonds">📊 Bond Investment</option>
+                                <option value="fd">🏦 Fixed Deposit</option>
+                                <option value="new">➕ Create New Asset</option>
+                            </select>
+                        </div>
+                        <div id="assetSuggestion" class="asset-suggestion hidden">
+                            <span class="suggestion-icon">💡</span>
+                            <span id="suggestionText">Suggestion will appear here</span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Select Category Type</label>
+                            <select class="form-select">
+                                <option value="">Select Category Type...</option>
+                                <option value="employment">Employment Income</option>
+                                <option value="investment">Investment Income</option>
+                                <option value="rental">Rental Income</option>
+                                <option value="business">Business Income</option>
+                                <option value="other">Other Income</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Frequency</label>
+                            <select class="form-select">
+                                <option value="">Select Frequency...</option>
+                                <option value="Daily">Daily</option>
+                                <option value="Weekly">Weekly</option>
+                                <option value="Monthly">Monthly</option>
+                                <option value="Quarterly">Quarterly</option>
+                                <option value="Yearly">Yearly</option>
+                                <option value="One-time">One-time</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Main Classification</label>
+                            <select class="form-select">
+                                <option value="">Select Main Classification...</option>
+                                <option value="Primary Income">Primary Income</option>
+                                <option value="Secondary Income">Secondary Income</option>
+                                <option value="Investment Income">Investment Income</option>
+                                <option value="Passive Income">Passive Income</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Sub Classification</label>
+                            <select class="form-select">
+                                <option value="">Select Sub Classification...</option>
+                                <option value="Income 1">Income 1</option>
+                                <option value="Income 2">Income 2</option>
+                                <option value="Income 3">Income 3</option>
+                                <option value="Income 4">Income 4</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Multiple Income Mode -->
+                <div id="multiIncomeContainer" class="multi-income-container">
+                    <div id="incomeEntriesContainer">
+                        <!-- Income entries will be added here dynamically -->
+                    </div>
+
+                    <button class="add-another-btn" onclick="addIncomeEntry()">
+                        ➕ Add Another Income
+                    </button>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="income-count">
+                    <span id="incomeCountText">1 income entry</span>
+                </div>
+                <div class="footer-actions">
+                    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="saveIncomes()">
+                        <span id="saveButtonText">ADD</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'single';
+        let incomeEntryCount = 0;
+        let selectedPerson = 'self';
+        let selectedModalPerson = 'self';
+
+        function openModal(mode = 'single') {
+            currentMode = mode;
+            document.getElementById('createIncomeModal').classList.remove('hidden');
+            switchMode(mode);
+            if (mode === 'multiple') {
+                document.getElementById('incomeEntriesContainer').innerHTML = '';
+                incomeEntryCount = 0;
+                addIncomeEntry();
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('createIncomeModal').classList.add('hidden');
+            resetForm();
+        }
+
+        function switchMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event?.target.classList.add('active');
+
+            const singleContainer = document.getElementById('singleIncomeContainer');
+            const multiContainer = document.getElementById('multiIncomeContainer');
+
+            if (mode === 'single') {
+                singleContainer.classList.remove('hidden');
+                multiContainer.classList.remove('active');
+                document.getElementById('saveButtonText').textContent = 'ADD';
+                updateIncomeCount(1);
+            } else {
+                singleContainer.classList.add('hidden');
+                multiContainer.classList.add('active');
+                document.getElementById('saveButtonText').textContent = 'ADD ALL';
+                if (incomeEntryCount === 0) addIncomeEntry();
+            }
+        }
+
+        function selectPerson(element, person) {
+            document.querySelectorAll('.person-chip').forEach(chip => chip.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedPerson = person;
+            // Data filtering logic can be added here.
+        }
+
+        function selectModalPerson(element, person) {
+            element.parentElement.querySelectorAll('.person-chip').forEach(chip => chip.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedModalPerson = person;
+        }
+
+        function addIncomeEntry() {
+            incomeEntryCount++;
+            const container = document.getElementById('incomeEntriesContainer');
+            const entryDiv = document.createElement('div');
+            entryDiv.className = 'income-entry';
+            entryDiv.innerHTML = `
+                <div class="income-entry-header">
+                    <div class="income-entry-title">Income Entry #${incomeEntryCount}</div>
+                    <button class="remove-income-btn" onclick="removeIncomeEntry(this)">✕ Remove</button>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Source</label>
+                        <input type="text" class="form-input multi-source" placeholder="Enter income source" onchange="suggestAssetConnectionMulti(this)">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Income</label>
+                        <input type="number" class="form-input" placeholder="Enter amount">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Has Asset</label>
+                        <select class="form-select multi-has-asset" onchange="toggleAssetSectionMulti(this)">
+                            <option value="">Select...</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Frequency</label>
+                        <select class="form-select">
+                            <option value="">Select Frequency...</option>
+                            <option value="Daily">Daily</option>
+                            <option value="Weekly">Weekly</option>
+                            <option value="Monthly">Monthly</option>
+                            <option value="Quarterly">Quarterly</option>
+                            <option value="Yearly">Yearly</option>
+                            <option value="One-time">One-time</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="asset-connection-section multi-asset-section">
+                    <div class="connection-indicator">
+                        🔗 Asset Connection
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Select Asset</label>
+                        <select class="form-select">
+                            <option value="">Choose existing asset...</option>
+                            <option value="property1">🏠 Residential Property - Mumbai</option>
+                            <option value="property2">🏢 Commercial Property - Hyderabad</option>
+                            <option value="stocks">📈 Stock Portfolio</option>
+                            <option value="bonds">📊 Bond Investment</option>
+                            <option value="fd">🏦 Fixed Deposit</option>
+                            <option value="new">➕ Create New Asset</option>
+                        </select>
+                    </div>
+                    <div class="asset-suggestion multi-suggestion hidden">
+                        <span class="suggestion-icon">💡</span>
+                        <span class="suggestion-text">Suggestion will appear here</span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Select Category Type</label>
+                        <select class="form-select">
+                            <option value="">Select Category Type...</option>
+                            <option value="employment">Employment Income</option>
+                            <option value="investment">Investment Income</option>
+                            <option value="rental">Rental Income</option>
+                            <option value="business">Business Income</option>
+                            <option value="other">Other Income</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Main Classification</label>
+                        <select class="form-select">
+                            <option value="">Select Main Classification...</option>
+                            <option value="Primary Income">Primary Income</option>
+                            <option value="Secondary Income">Secondary Income</option>
+                            <option value="Investment Income">Investment Income</option>
+                            <option value="Passive Income">Passive Income</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Sub Classification</label>
+                    <select class="form-select">
+                        <option value="">Select Sub Classification...</option>
+                        <option value="Income 1">Income 1</option>
+                        <option value="Income 2">Income 2</option>
+                        <option value="Income 3">Income 3</option>
+                        <option value="Income 4">Income 4</option>
+                    </select>
+                </div>
+            `;
+            container.appendChild(entryDiv);
+            updateIncomeCount();
+        }
+
+        function removeIncomeEntry(button) {
+            const entry = button.closest('.income-entry');
+            entry.remove();
+            incomeEntryCount--;
+            const entries = document.querySelectorAll('.income-entry');
+            entries.forEach((entry, index) => {
+                entry.querySelector('.income-entry-title').textContent = `Income Entry #${index + 1}`;
+            });
+            updateIncomeCount();
+        }
+
+        function updateIncomeCount(count = null) {
+            if (currentMode === 'single') {
+                document.getElementById('incomeCountText').textContent = '1 income entry';
+            } else {
+                const entries = document.querySelectorAll('.income-entry');
+                document.getElementById('incomeCountText').textContent = entries.length + (entries.length === 1 ? ' income entry' : ' income entries');
+            }
+        }
+
+        function toggleAssetSection() {
+            const assetSection = document.getElementById('assetConnectionSection');
+            const selectVal = document.getElementById('hasAssetSelect').value;
+            if (selectVal === 'Yes') {
+                assetSection.classList.add('show');
+            } else {
+                assetSection.classList.remove('show');
+            }
+        }
+
+        function toggleAssetSectionMulti(selectElement) {
+            const multiAssetSection = selectElement.closest('.income-entry').querySelector('.multi-asset-section');
+            if (selectElement.value === 'Yes') {
+                multiAssetSection.classList.remove('hidden');
+            } else {
+                multiAssetSection.classList.add('hidden');
+            }
+        }
+
+        function suggestAssetConnection() {
+            // Suggestion logic for single income
+        }
+
+        function suggestAssetConnectionMulti(element) {
+            // Suggestion logic for multiple income entries
+        }
+
+        function saveIncomes() {
+            // Saving logic can be implemented here.
+            alert('Income saved!');
+            closeModal();
+        }
+
+        function resetForm() {
+            // Reset single income form
+            document.getElementById('sourceInput').value = "";
+            document.getElementById('hasAssetSelect').value = "";
+            document.getElementById('assetConnectionSection').classList.remove('show');
+            // Reset any additional fields if necessary.
+        }
+    </script>
+</body>
+</html>
