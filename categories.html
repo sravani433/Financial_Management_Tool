@@ -108,28 +108,28 @@
     ];
 
     function renderTable(income = 0) {
-      const tbody = document.getElementById("budgetTableBody");
-      tbody.innerHTML = "";
-      categories.forEach((cat, i) => {
-        const amount = income > 0 ? (income * cat.percent) / 100 : 0;
-        tbody.innerHTML += `
-          <tr class="border-b hover:bg-gray-50">
-            <td class="p-3">${cat.head}</td>
-            <td class="p-3">${cat.main}</td>
-            <td class="p-3">${cat.sub}</td>
-            <td class="p-3">${cat.type}</td>
-            <td class="p-3">${cat.freq}</td>
-            <td class="p-3"><span class="px-2 py-1 bg-gray-200 rounded text-xs">${cat.source}</span></td>
-            <td class="p-3">${cat.percent}%</td>
-            <td class="p-3">₹${amount.toFixed(2)}</td>
-            <td class="p-3">
-              <button class="text-gray-500 hover:text-gray-700">⋮</button>
-            </td>
-          </tr>
-        `;
-      });
-    }
-
+  const tbody = document.getElementById("budgetTableBody");
+  tbody.innerHTML = "";
+  categories.forEach((cat, i) => {
+    const amount = income > 0 ? (income * cat.percent) / 100 : 0;
+    const source = income > 0 ? "Custom" : cat.source;
+    tbody.innerHTML += `
+      <tr class="border-b hover:bg-gray-50">
+        <td class="p-3">${cat.head}</td>
+        <td class="p-3">${cat.main}</td>
+        <td class="p-3">${cat.sub}</td>
+        <td class="p-3">${cat.type}</td>
+        <td class="p-3">${cat.freq}</td>
+        <td class="p-3"><span class="px-2 py-1 bg-gray-200 rounded text-xs">${source}</span></td>
+        <td class="p-3">${cat.percent}%</td>
+        <td class="p-3">₹${amount.toFixed(2)}</td>
+        <td class="p-3">
+          <button class="text-gray-500 hover:text-gray-700">⋮</button>
+        </td>
+      </tr>
+    `;
+  });
+}
     function calculateBudget() {
       const income = parseFloat(document.getElementById("incomeInput").value);
       if (isNaN(income) || income <= 0) {
