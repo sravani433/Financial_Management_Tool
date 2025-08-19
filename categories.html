@@ -3,99 +3,120 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Financial Tool - Budget Allocation</title>
+  <title>Financial Tool</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 font-sans">
-  <!-- Layout -->
   <div class="flex">
     <!-- Sidebar -->
     <aside class="w-60 bg-white shadow-md h-screen">
       <div class="p-4 text-blue-700 font-bold text-lg">📊 Financial Tool</div>
       <nav>
-        <a href="#" class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md my-2">Categories</a>
-        <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md my-2">Income Declaration</a>
-        <a href="#" class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md my-2">Asset Declaration</a>
+        <button onclick="showSystemPage()" class="w-full text-left flex items-center px-4 py-2 bg-blue-600 text-white rounded-md my-2">Categories</button>
+        <button onclick="showCustomPage()" class="w-full text-left flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md my-2">Budget Allocation</button>
       </nav>
     </aside>
 
     <!-- Main Content -->
     <main class="flex-1 p-6">
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-semibold text-gray-700">Budget Allocation</h1>
-        <button onclick="openModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
-          + Add Category
-        </button>
-      </div>
-
-      <!-- Income Input -->
-      <div class="bg-white p-6 rounded-xl shadow-sm mb-6">
-        <label class="block text-gray-600 font-medium mb-2">Enter Monthly Income</label>
-        <input type="number" id="incomeInput" placeholder="e.g. 50000"
-          class="w-full border rounded-lg px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400" />
-        <button onclick="calculateBudget()" class="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700">
-          Calculate Allocation
-        </button>
-      </div>
-
-      <!-- Categories Table -->
-      <div class="bg-white p-6 rounded-xl shadow-sm">
-        <h2 class="text-xl font-semibold text-gray-700 mb-4">Categories</h2>
-        <div class="overflow-x-auto rounded-lg shadow">
-          <table class="w-full border-collapse">
-            <thead>
-              <tr class="bg-gray-100 text-gray-700 text-left">
-                <th class="p-3">Head</th>
-                <th class="p-3">Main Classification</th>
-                <th class="p-3">Sub Classification</th>
-                <th class="p-3">Type</th>
-                <th class="p-3">Frequency</th>
-                <th class="p-3">Source</th>
-                <th class="p-3">Budget Allocation (%)</th>
-                <th class="p-3">Amount</th>
-                <th class="p-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="budgetTableBody" class="text-gray-600">
-              <!-- Dynamic rows -->
-            </tbody>
-          </table>
+      <!-- System Categories Section -->
+      <section id="systemPage">
+        <h1 class="text-2xl font-semibold text-gray-700 mb-4 text-center">System Categories (Master Data)</h1>
+        <!-- Centered search field with search icon -->
+        <div class="flex justify-center mb-4">
+          <div class="relative w-1/2">
+            <input id="searchInput" oninput="filterMasterTable()" type="text" placeholder="Search..."
+                   class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 w-full" />
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">&#128269;</span>
+          </div>
         </div>
-      </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+          <div class="overflow-x-auto rounded-lg shadow">
+            <table class="w-full border-collapse">
+              <thead>
+                <tr class="bg-gray-100 text-gray-700 text-left">
+                  <th class="p-3">Head</th>
+                  <th class="p-3">Main Classification</th>
+                  <th class="p-3">Sub Classification</th>
+                  <th class="p-3">Type</th>
+                  <th class="p-3">Frequency</th>
+                  <th class="p-3">Source</th>
+                  <th class="p-3">Budget Allocation (%)</th>
+                </tr>
+              </thead>
+              <tbody id="masterTableBody" class="text-gray-600">
+                <!-- Dynamic rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Custom Budget Allocation Section -->
+      <section id="customPage" class="hidden">
+        <div class="flex items-center justify-between mb-6">
+          <h1 class="text-2xl font-semibold text-gray-700">Budget Allocation (Custom Categories)</h1>
+          <!-- Add Category Button -->
+          <button onclick="showAddModal()" class="text-blue-600 hover:text-blue-800 text-lg">Add Category</button>
+        </div>
+        <!-- Custom Search Field Centered -->
+        <div class="flex justify-center mb-4">
+          <div class="relative w-1/2">
+            <input id="customSearchInput" oninput="filterCustomTable()" type="text" placeholder="Search Custom Categories..."
+                   class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 w-full" />
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">&#128269;</span>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm mb-6">
+          <label class="block text-gray-600 font-medium mb-2">Enter Monthly Income</label>
+          <input type="number" id="incomeInput" placeholder="e.g. 50000"
+                 class="w-full border rounded-lg px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          <button onclick="calculateBudget()" class="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700">Calculate Allocation</button>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-sm">
+          <div class="overflow-x-auto rounded-lg shadow">
+            <table class="w-full border-collapse">
+              <thead>
+                <tr class="bg-gray-100 text-gray-700 text-left">
+                  <th class="p-3">Head</th>
+                  <th class="p-3">Main Classification</th>
+                  <th class="p-3">Sub Classification</th>
+                  <th class="p-3">Type</th>
+                  <th class="p-3">Frequency</th>
+                  <th class="p-3">Source</th>
+                  <th class="p-3">Budget Allocation (%)</th>
+                  <th class="p-3">Amount</th>
+                </tr>
+              </thead>
+              <tbody id="budgetTableBody" class="text-gray-600">
+                <!-- Dynamic rows -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
     </main>
   </div>
 
-  <!-- Modal -->
-  <div id="categoryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
-    <div class="bg-white p-6 rounded-lg w-96 shadow-lg">
-      <h2 class="text-lg font-semibold mb-4">Add Category</h2>
-      <select id="newHead" class="w-full border rounded-lg px-3 py-2 mb-3">
-        <option value="Expenditure">Expenditure</option>
-        <option value="Income">Income</option>
-      </select>
-      <input type="text" id="newMainClass" placeholder="Main Classification"
-        class="w-full border rounded-lg px-3 py-2 mb-3" />
-      <input type="text" id="newSubClass" placeholder="Sub Classification"
-        class="w-full border rounded-lg px-3 py-2 mb-3" />
-      <select id="newType" class="w-full border rounded-lg px-3 py-2 mb-3">
-        <option value="Mandatory">Mandatory</option>
-        <option value="Optional">Optional</option>
-      </select>
-      <select id="newFreq" class="w-full border rounded-lg px-3 py-2 mb-3">
-        <option value="Not Available">Not Available</option>
-        <option value="Monthly">Monthly</option>
-        <option value="Yearly">Yearly</option>
-      </select>
-      <input type="number" id="newPercent" placeholder="Budget Allocation %"
-        class="w-full border rounded-lg px-3 py-2 mb-3" />
-      <div class="flex justify-end space-x-2">
-        <button onclick="closeModal()" class="px-4 py-2 rounded-lg border">Cancel</button>
-        <button onclick="addCategory()" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Add</button>
+  <!-- Add Category Modal -->
+  <div id="addModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg p-6 w-96">
+      <h2 class="text-xl font-semibold mb-4">Add Category</h2>
+      <div class="space-y-3">
+        <input id="newHead" type="text" placeholder="Head" class="w-full border rounded-lg px-3 py-2" />
+        <input id="newMain" type="text" placeholder="Main Classification" class="w-full border rounded-lg px-3 py-2" />
+        <input id="newSub" type="text" placeholder="Sub Classification" class="w-full border rounded-lg px-3 py-2" />
+        <input id="newType" type="text" placeholder="Type" class="w-full border rounded-lg px-3 py-2" />
+        <input id="newFreq" type="text" placeholder="Frequency" class="w-full border rounded-lg px-3 py-2" />
+        <input id="newPercent" type="number" placeholder="Budget Allocation (%)" class="w-full border rounded-lg px-3 py-2" />
+      </div>
+      <div class="mt-4 flex justify-end space-x-2">
+        <button onclick="hideAddModal()" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-200">Cancel</button>
+        <button onclick="addCategory()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Add</button>
       </div>
     </div>
   </div>
 
-  <!-- JS -->
   <script>
     let categories = [
       { head: "Expenditure", main: "Appliance Maintenance", sub: "Air Conditioners", type: "Mandatory", freq: "Not Available", source: "System", percent: 5 },
@@ -107,68 +128,128 @@
       { head: "Expenditure", main: "Bank Transfer", sub: "Interbank Payment", type: "Optional", freq: "Not Available", source: "System", percent: 2 }
     ];
 
-    function renderTable(income = 0) {
-  const tbody = document.getElementById("budgetTableBody");
-  tbody.innerHTML = "";
-  categories.forEach((cat, i) => {
-    const amount = income > 0 ? (income * cat.percent) / 100 : 0;
-    const source = income > 0 ? "Custom" : cat.source;
-    tbody.innerHTML += `
-      <tr class="border-b hover:bg-gray-50">
-        <td class="p-3">${cat.head}</td>
-        <td class="p-3">${cat.main}</td>
-        <td class="p-3">${cat.sub}</td>
-        <td class="p-3">${cat.type}</td>
-        <td class="p-3">${cat.freq}</td>
-        <td class="p-3"><span class="px-2 py-1 bg-gray-200 rounded text-xs">${source}</span></td>
-        <td class="p-3">${cat.percent}%</td>
-        <td class="p-3">₹${amount.toFixed(2)}</td>
-        <td class="p-3">
-          <button class="text-gray-500 hover:text-gray-700">⋮</button>
-        </td>
-      </tr>
-    `;
-  });
-}
+    function renderMasterTable(filteredData) {
+      const tbody = document.getElementById("masterTableBody");
+      tbody.innerHTML = "";
+      let data = filteredData || categories.filter(cat => cat.source === "System");
+      data.forEach(cat => {
+        tbody.innerHTML += `
+          <tr class="border-b hover:bg-gray-50">
+            <td class="p-3">${cat.head}</td>
+            <td class="p-3">${cat.main}</td>
+            <td class="p-3">${cat.sub}</td>
+            <td class="p-3">${cat.type}</td>
+            <td class="p-3">${cat.freq}</td>
+            <td class="p-3"><span class="px-2 py-1 bg-gray-200 rounded text-xs">${cat.source}</span></td>
+            <td class="p-3">${cat.percent}%</td>
+          </tr>
+        `;
+      });
+    }
+
+    function filterMasterTable() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const filtered = categories.filter(cat =>
+        cat.source === "System" &&
+        (cat.head.toLowerCase().includes(query) ||
+         cat.main.toLowerCase().includes(query) ||
+         cat.sub.toLowerCase().includes(query) ||
+         cat.type.toLowerCase().includes(query) ||
+         cat.freq.toLowerCase().includes(query))
+      );
+      renderMasterTable(filtered);
+    }
+
+    function renderBudgetTable(income, filteredData) {
+      const tbody = document.getElementById("budgetTableBody");
+      tbody.innerHTML = "";
+      let data = filteredData || categories;
+      data.forEach(cat => {
+        const amount = income > 0 ? (income * cat.percent) / 100 : 0;
+        const source = income > 0 ? (cat.source === "Client" ? "Client" : "Custom") : cat.source;
+        tbody.innerHTML += `
+          <tr class="border-b hover:bg-gray-50">
+            <td class="p-3">${cat.head}</td>
+            <td class="p-3">${cat.main}</td>
+            <td class="p-3">${cat.sub}</td>
+            <td class="p-3">${cat.type}</td>
+            <td class="p-3">${cat.freq}</td>
+            <td class="p-3"><span class="px-2 py-1 bg-gray-200 rounded text-xs">${source}</span></td>
+            <td class="p-3">${cat.percent}%</td>
+            <td class="p-3">₹${amount.toFixed(2)}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function filterCustomTable() {
+      const query = document.getElementById("customSearchInput").value.toLowerCase();
+      const income = parseFloat(document.getElementById("incomeInput").value) || 0;
+      const filtered = categories.filter(cat =>
+         (cat.head.toLowerCase().includes(query) ||
+          cat.main.toLowerCase().includes(query) ||
+          cat.sub.toLowerCase().includes(query) ||
+          cat.type.toLowerCase().includes(query) ||
+          cat.freq.toLowerCase().includes(query))
+      );
+      renderBudgetTable(income, filtered);
+    }
+
     function calculateBudget() {
       const income = parseFloat(document.getElementById("incomeInput").value);
       if (isNaN(income) || income <= 0) {
         alert("⚠️ Please enter a valid income.");
         return;
       }
-      renderTable(income);
+      renderBudgetTable(income);
     }
 
-    function openModal() {
-      document.getElementById("categoryModal").classList.remove("hidden");
-      document.getElementById("categoryModal").classList.add("flex");
+    function showSystemPage() {
+      document.getElementById("systemPage").classList.remove("hidden");
+      document.getElementById("customPage").classList.add("hidden");
     }
 
-    function closeModal() {
-      document.getElementById("categoryModal").classList.add("hidden");
-      document.getElementById("categoryModal").classList.remove("flex");
+    function showCustomPage() {
+      document.getElementById("customPage").classList.remove("hidden");
+      document.getElementById("systemPage").classList.add("hidden");
+    }
+
+    function showAddModal() {
+      document.getElementById("addModal").classList.remove("hidden");
+    }
+
+    function hideAddModal() {
+      document.getElementById("addModal").classList.add("hidden");
+      document.getElementById("newHead").value = "";
+      document.getElementById("newMain").value = "";
+      document.getElementById("newSub").value = "";
+      document.getElementById("newType").value = "";
+      document.getElementById("newFreq").value = "";
+      document.getElementById("newPercent").value = "";
     }
 
     function addCategory() {
-      const head = document.getElementById("newHead").value;
-      const main = document.getElementById("newMainClass").value;
-      const sub = document.getElementById("newSubClass").value;
-      const type = document.getElementById("newType").value;
-      const freq = document.getElementById("newFreq").value;
-      const percent = parseFloat(document.getElementById("newPercent").value);
-
-      if (!main || !sub || isNaN(percent) || percent <= 0) {
-        alert("⚠️ Please enter valid category details.");
+      const newCat = {
+        head: document.getElementById("newHead").value,
+        main: document.getElementById("newMain").value,
+        sub: document.getElementById("newSub").value,
+        type: document.getElementById("newType").value,
+        freq: document.getElementById("newFreq").value,
+        source: "Client",
+        percent: parseFloat(document.getElementById("newPercent").value) || 0
+      };
+      if (!newCat.head || !newCat.main || !newCat.sub) {
+        alert("⚠️ Please fill in the required fields.");
         return;
       }
-
-      categories.push({ head, main, sub, type, freq, source: "Client", percent });
-      closeModal();
-      renderTable(parseFloat(document.getElementById("incomeInput").value) || 0);
+      categories.push(newCat);
+      hideAddModal();
+      const income = parseFloat(document.getElementById("incomeInput").value) || 0;
+      renderBudgetTable(income);
     }
 
     // Initial render
-    renderTable();
+    renderMasterTable();
   </script>
 </body>
 </html>
