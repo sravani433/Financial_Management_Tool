@@ -5,23 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Financial Tool - Statement Uploads</title>
     <style>
+        /* (Previous styles remain unchanged) */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #f5f7fa;
             color: #333;
         }
-
         .container {
             display: flex;
             min-height: 100vh;
         }
-
         /* Sidebar */
         .sidebar {
             width: 250px;
@@ -29,7 +27,6 @@
             box-shadow: 2px 0 5px rgba(0,0,0,0.1);
             padding: 20px 0;
         }
-
         .logo {
             padding: 0 20px 20px;
             font-size: 20px;
@@ -38,7 +35,6 @@
             border-bottom: 1px solid #e0e0e0;
             margin-bottom: 20px;
         }
-
         .nav-item {
             display: flex;
             align-items: center;
@@ -47,48 +43,40 @@
             text-decoration: none;
             transition: all 0.3s;
         }
-
         .nav-item:hover {
             background-color: #f5f5f5;
             color: #1976d2;
         }
-
         .nav-item.active {
             background-color: #1976d2;
             color: white;
             border-radius: 0 25px 25px 0;
             margin-right: 10px;
         }
-
         .nav-icon {
             margin-right: 10px;
             font-size: 18px;
         }
-
         /* Main Content */
         .main-content {
             flex: 1;
             padding: 20px 30px;
         }
-
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
         }
-
         .header h1 {
             font-size: 28px;
             color: #333;
         }
-
         .header-actions {
             display: flex;
             gap: 15px;
             align-items: center;
         }
-
         .btn {
             padding: 10px 20px;
             border: none;
@@ -101,16 +89,13 @@
             align-items: center;
             gap: 8px;
         }
-
         .btn-primary {
             background-color: #1976d2;
             color: white;
         }
-
         .btn-primary:hover {
             background-color: #1565c0;
         }
-
         /* Status Cards */
         .status-cards {
             display: grid;
@@ -118,7 +103,6 @@
             gap: 20px;
             margin-bottom: 30px;
         }
-
         .status-card {
             background: white;
             padding: 20px;
@@ -126,24 +110,20 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             border-left: 4px solid;
         }
-
         .status-card.not-started { border-left-color: #9e9e9e; }
         .status-card.in-progress { border-left-color: #2196f3; }
         .status-card.partially-completed { border-left-color: #ff9800; }
         .status-card.completed { border-left-color: #4caf50; }
-
         .status-card h3 {
             font-size: 12px;
             text-transform: uppercase;
             color: #666;
             margin-bottom: 8px;
         }
-
         .status-card .number {
             font-size: 32px;
             font-weight: bold;
         }
-
         /* Upload Tabs */
         .upload-tabs {
             display: flex;
@@ -153,7 +133,6 @@
             padding: 5px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-
         .tab-button {
             flex: 1;
             padding: 15px 20px;
@@ -164,25 +143,20 @@
             font-weight: 500;
             transition: all 0.3s;
         }
-
         .tab-button.active {
             background-color: #1976d2;
             color: white;
         }
-
         .tab-button:not(.active):hover {
             background-color: #f5f5f5;
         }
-
         /* Tab Content */
         .tab-content {
             display: none;
         }
-
         .tab-content.active {
             display: block;
         }
-
         /* Upload Modal */
         .modal {
             display: none;
@@ -194,13 +168,11 @@
             background-color: rgba(0,0,0,0.5);
             z-index: 1000;
         }
-
         .modal.active {
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
         .modal-content {
             background: white;
             padding: 30px;
@@ -208,20 +180,17 @@
             width: 500px;
             max-width: 90vw;
         }
-
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
-
         .modal-title {
             font-size: 20px;
             font-weight: bold;
             color: #333;
         }
-
         .close-btn {
             background: none;
             border: none;
@@ -229,18 +198,15 @@
             cursor: pointer;
             color: #666;
         }
-
         .form-group {
             margin-bottom: 20px;
         }
-
         .form-label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
             color: #333;
         }
-
         .form-control {
             width: 100%;
             padding: 12px 15px;
@@ -248,7 +214,6 @@
             border-radius: 6px;
             font-size: 14px;
         }
-
         .upload-area {
             border: 2px dashed #ddd;
             border-radius: 8px;
@@ -258,34 +223,28 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-
         .upload-area:hover {
             border-color: #1976d2;
             background-color: #f0f7ff;
         }
-
         .upload-icon {
             font-size: 48px;
             color: #1976d2;
             margin-bottom: 15px;
         }
-
         .modal-actions {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
             margin-top: 20px;
         }
-
         .btn-secondary {
             background-color: #f5f5f5;
             color: #666;
         }
-
         .btn-secondary:hover {
             background-color: #e0e0e0;
         }
-
         /* Statement Sections */
         .statement-section {
             background: white;
@@ -293,7 +252,6 @@
             margin-bottom: 20px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-
         .section-header {
             padding: 20px 25px;
             border-bottom: 1px solid #e0e0e0;
@@ -301,13 +259,11 @@
             justify-content: space-between;
             align-items: center;
         }
-
         .section-title {
             font-size: 18px;
             font-weight: 600;
             color: #333;
         }
-
         .section-count {
             background-color: #1976d2;
             color: white;
@@ -316,11 +272,9 @@
             font-size: 12px;
             font-weight: 500;
         }
-
         .statement-list {
             padding: 0;
         }
-
         .statement-item {
             padding: 20px 25px;
             border-bottom: 1px solid #f0f0f0;
@@ -329,16 +283,13 @@
             gap: 20px;
             align-items: center;
         }
-
         .statement-item:last-child {
             border-bottom: none;
         }
-
         .file-name {
             font-weight: 500;
             color: #333;
         }
-
         .account-type {
             padding: 4px 12px;
             border-radius: 15px;
@@ -346,11 +297,10 @@
             font-weight: 500;
             text-transform: uppercase;
         }
-
         .savings { background-color: #e3f2fd; color: #1976d2; }
         .credit { background-color: #fff3e0; color: #f57c00; }
         .loan { background-color: #fce4ec; color: #c2185b; }
-
+        .insurance { background-color: #e8eaf6; color: #3f51b5; }
         .status-badge {
             padding: 4px 12px;
             border-radius: 15px;
@@ -358,39 +308,32 @@
             font-weight: 500;
             text-transform: uppercase;
         }
-
         .completed { background-color: #e8f5e8; color: #2e7d32; }
         .not-started { background-color: #f5f5f5; color: #666; }
-
         .action-buttons {
             display: flex;
             gap: 8px;
         }
-
         .btn-sm {
             padding: 6px 12px;
             font-size: 12px;
             border-radius: 4px;
         }
-
         .btn-view {
             background-color: #e3f2fd;
             color: #1976d2;
             border: 1px solid #1976d2;
         }
-
         .btn-analyze {
             background-color: #fff3e0;
             color: #f57c00;
             border: 1px solid #f57c00;
         }
-
         .btn-view-analysis {
             background-color: #e8f5e8;
             color: #2e7d32;
             border: 1px solid #2e7d32;
         }
-
         .info-note {
             background-color: #e3f2fd;
             color: #1976d2;
@@ -400,33 +343,27 @@
             margin-bottom: 15px;
             border-left: 4px solid #1976d2;
         }
-
         /* Responsive */
         @media (max-width: 1200px) {
             .status-cards {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
-
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
             }
-
             .sidebar {
                 width: 100%;
                 order: 2;
             }
-
             .main-content {
                 order: 1;
                 padding: 15px;
             }
-
             .status-cards {
                 grid-template-columns: 1fr;
             }
-
             .statement-item {
                 grid-template-columns: 1fr;
                 gap: 10px;
@@ -450,7 +387,7 @@
                 </a>
                 <a href="#" class="nav-item">
                     <span class="nav-icon">⚖️</span>
-                    Assets & Liabilities
+                    Assets &amp; Liabilities
                 </a>
                 <a href="#" class="nav-item">
                     <span class="nav-icon">💸</span>
@@ -474,7 +411,6 @@
                 </a>
             </nav>
         </div>
-
         <!-- Main Content -->
         <div class="main-content">
             <div class="header">
@@ -485,7 +421,6 @@
                     </button>
                 </div>
             </div>
-
             <!-- Status Cards -->
             <div class="status-cards">
                 <div class="status-card not-started">
@@ -505,13 +440,12 @@
                     <div class="number" style="color: #4caf50;">4</div>
                 </div>
             </div>
-
             <!-- Upload Tabs -->
             <div class="upload-tabs">
                 <button class="tab-button active" onclick="switchTab('bank')">Bank Statements</button>
                 <button class="tab-button" onclick="switchTab('demat')">Demat Statements</button>
+                <button class="tab-button" onclick="switchTab('insurance')">Insurance Statements</button>
             </div>
-
             <!-- Bank Statements Tab -->
             <div id="bank-tab" class="tab-content active">
                 <!-- Savings Accounts Section -->
@@ -528,7 +462,7 @@
                             <div>SRAVANI PALA</div>
                             <div><span class="status-badge completed">Completed</span></div>
                             <div class="action-buttons">
-                                <button class="btn btn-view btn-sm">👁️ View</button>
+                                <button class="btn btn-view" onclick="simulateView('Account_stmt (1) (1).xlsx')">👁️ View</button>
                                 <button class="btn btn-analyze btn-sm">📊 Analyze</button>
                                 <button class="btn btn-view-analysis btn-sm">📈 View Analysis</button>
                             </div>
@@ -540,7 +474,7 @@
                             <div>pala kumar</div>
                             <div><span class="status-badge completed">Completed</span></div>
                             <div class="action-buttons">
-                                <button class="btn btn-view btn-sm">👁️ View</button>
+                                <button class="btn btn-view" onclick="simulateView('IDFCFIRSTBankstatement.xlsx')">👁️ View</button>
                                 <button class="btn btn-analyze btn-sm">📊 Analyze</button>
                                 <button class="btn btn-view-analysis btn-sm">📈 View Analysis</button>
                             </div>
@@ -552,14 +486,13 @@
                             <div>MANEPALLI PRABHU TEJA</div>
                             <div><span class="status-badge completed">Completed</span></div>
                             <div class="action-buttons">
-                                <button class="btn btn-view btn-sm">👁️ View</button>
+                                <button class="btn btn-view" onclick="simulateView('idfc pdf.pdf')">👁️ View</button>
                                 <button class="btn btn-analyze btn-sm">📊 Analyze</button>
                                 <button class="btn btn-view-analysis btn-sm">📈 View Analysis</button>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <!-- Credit Cards Section -->
                 <div class="statement-section">
                     <div class="section-header">
@@ -574,14 +507,13 @@
                             <div>PALA SRAVANI</div>
                             <div><span class="status-badge not-started">Not Started</span></div>
                             <div class="action-buttons">
-                                <button class="btn btn-view btn-sm">👁️ View</button>
+                                <button class="btn btn-view" onclick="simulateView('AXIS-output.pdf')">👁️ View</button>
                                 <button class="btn btn-analyze btn-sm">📊 Analyze</button>
                                 <button class="btn btn-view-analysis btn-sm">📈 View Analysis</button>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <!-- Loan Accounts Section -->
                 <div class="statement-section">
                     <div class="section-header">
@@ -594,9 +526,9 @@
                             <div><span class="account-type loan">Loan</span></div>
                             <div>AXIS BANK</div>
                             <div>SANTOSH KUMAR TALACHUTLA</div>
-                            <div> </div>
+                            <div></div>
                             <div class="action-buttons">
-                                <button class="btn btn-view btn-sm">👁️ View</button>
+                                <button class="btn btn-view" onclick="simulateView('AXISMB_04-07-2025 131705.pdf')">👁️ View</button>
                             </div>
                         </div>
                         <div class="statement-item">
@@ -604,15 +536,14 @@
                             <div><span class="account-type loan">Loan</span></div>
                             <div>IDFC First Bank</div>
                             <div>BOMMANA VAMSIDHARA REDDY</div>
-                            <div> </div>
+                            <div></div>
                             <div class="action-buttons">
-                                <button class="btn btn-view btn-sm">👁️ View</button>
+                                <button class="btn btn-view" onclick="simulateView('Statement of accounts_171105793 (1).pdf')">👁️ View</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <!-- Demat Statements Tab -->
             <div id="demat-tab" class="tab-content">
                 <!-- Trading Statements Section -->
@@ -629,9 +560,7 @@
                             <div>SRAVANI PALA</div>
                             <div><span class="status-badge completed">Completed</span></div>
                             <div class="action-buttons">
-                                <button class="btn btn-view btn-sm">👁️ View</button>
-                                <button class="btn btn-analyze btn-sm">📊 Analyze</button>
-                                <button class="btn btn-view-analysis btn-sm">📈 View Analysis</button>
+                                <button class="btn btn-view" onclick="simulateView('Zerodha_Trading_Statement_Q1_2024.pdf')">👁️ View</button>
                             </div>
                         </div>
                         <div class="statement-item">
@@ -641,14 +570,11 @@
                             <div>pala kumar</div>
                             <div><span class="status-badge not-started">Not Started</span></div>
                             <div class="action-buttons">
-                                <button class="btn btn-view btn-sm">👁️ View</button>
-                                <button class="btn btn-analyze btn-sm">📊 Analyze</button>
-                                <button class="btn btn-view-analysis btn-sm">📈 View Analysis</button>
+                                <button class="btn btn-view" onclick="simulateView('Angel_Trading_Jul2024.xlsx')">👁️ View</button>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <!-- Holdings Statements Section -->
                 <div class="statement-section">
                     <div class="section-header">
@@ -663,14 +589,11 @@
                             <div>SRAVANI PALA</div>
                             <div><span class="status-badge completed">Completed</span></div>
                             <div class="action-buttons">
-                                <button class="btn btn-view btn-sm">👁️ View</button>
-                                <button class="btn btn-analyze btn-sm">📊 Analyze</button>
-                                <button class="btn btn-view-analysis btn-sm">📈 View Analysis</button>
+                                <button class="btn btn-view" onclick="simulateView('Zerodha_Holdings_Aug2024.pdf')">👁️ View</button>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <!-- Ledger Statements Section -->
                 <div class="statement-section">
                     <div class="section-header">
@@ -685,9 +608,41 @@
                             <div>MANEPALLI PRABHU TEJA</div>
                             <div><span class="status-badge not-started">Not Started</span></div>
                             <div class="action-buttons">
-                                <button class="btn btn-view btn-sm">👁️ View</button>
-                                <button class="btn btn-analyze btn-sm">📊 Analyze</button>
-                                <button class="btn btn-view-analysis btn-sm">📈 View Analysis</button>
+                                <button class="btn btn-view" onclick="simulateView('Zerodha_Ledger_Jul2024.xlsx')">👁️ View</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Insurance Statements Tab -->
+            <div id="insurance-tab" class="tab-content">
+                <!-- Insurance Policies Section -->
+                <div class="statement-section">
+                    <div class="section-header">
+                        <h3 class="section-title">Insurance Policies</h3>
+                        <span class="section-count">2</span>
+                    </div>
+                    <div class="statement-list">
+                        <div class="statement-item">
+                            <div class="file-name">LIC_policy_2024.pdf</div>
+                            <div><span class="account-type insurance">Insurance</span></div>
+                            <div>LIC</div>
+                            <div>SRAVANI PALA</div>
+                            <div><span class="status-badge completed">Completed</span></div>
+                            <div class="action-buttons">
+                                <button class="btn btn-view" onclick="simulateView('LIC_policy_2024.pdf')">👁️ View</button>
+
+                            </div>
+                        </div>
+                        <div class="statement-item">
+                            <div class="file-name">MaxLifecover_Statement.pdf</div>
+                            <div><span class="account-type insurance">Insurance</span></div>
+                            <div>Max Life</div>
+                            <div>pala kumar</div>
+                            <div><span class="status-badge not-started">Not Started</span></div>
+                            <div class="action-buttons">
+                                <button class="btn btn-view" onclick="simulateView('MaxLifecover_Statement.pdf')">👁️ View</button>
+
                             </div>
                         </div>
                     </div>
@@ -695,7 +650,6 @@
             </div>
         </div>
     </div>
-
     <!-- Upload Modal -->
     <div id="uploadModal" class="modal">
         <div class="modal-content">
@@ -703,20 +657,19 @@
                 <h2 class="modal-title">Upload Statement</h2>
                 <button class="close-btn" onclick="closeUploadModal()">×</button>
             </div>
-
             <div class="form-group">
                 <label class="form-label">Statement Type</label>
                 <select class="form-control" id="statementType" onchange="updateFormFields()">
                     <option value="">Select Statement Type</option>
                     <option value="bank">Bank Statement</option>
                     <option value="demat">Demat Statement</option>
+                    <option value="insurance">Insurance Statement</option>
                 </select>
             </div>
-
             <!-- Bank Statement Fields -->
             <div id="bankFields" style="display: none;">
                 <div class="info-note">
-                    📄 Bank statement details (account type, bank name, etc.) will be automatically extracted from the uploaded file.
+                    \📄 Bank statement details (account type, bank name, etc.) will be automatically extracted from the uploaded file.
                 </div>
                 <div class="form-group">
                     <label class="form-label">Select Person</label>
@@ -730,7 +683,6 @@
                     </select>
                 </div>
             </div>
-
             <!-- Demat Statement Fields -->
             <div id="dematFields" style="display: none;">
                 <div class="form-group">
@@ -751,7 +703,23 @@
                     </select>
                 </div>
             </div>
-
+            <!-- Insurance Statement Fields -->
+            <div id="insuranceFields" style="display: none;">
+                <div class="info-note">
+                    \📄 Insurance statement details (policy details, provider, etc.) will be automatically processed.
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Select Person</label>
+                    <select class="form-control" id="insurancePerson">
+                        <option value="">Select Person</option>
+                        <option value="sravani">Sravani Pala</option>
+                        <option value="pala">Pala Kumar</option>
+                        <option value="santosh">Santosh Kumar Talachutla</option>
+                        <option value="manepalli">Manepalli Prabhu Teja</option>
+                        <option value="bommana">Bommana Vamsidhara Reddy</option>
+                    </select>
+                </div>
+            </div>
             <div class="form-group">
                 <label class="form-label">Upload File</label>
                 <div class="upload-area" onclick="document.getElementById('fileInput').click()">
@@ -762,16 +730,29 @@
                 <input type="file" id="fileInput" style="display: none;" accept=".pdf,.xlsx,.xls" onchange="handleFileSelect(this)">
                 <div id="fileName" style="margin-top: 10px; font-size: 14px; color: #666;"></div>
             </div>
-
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="closeUploadModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="uploadFile()">Upload & Process</button>
+                <button class="btn btn-primary" onclick="uploadFile()">Upload &amp; Process</button>
             </div>
         </div>
     </div>
-
+    <!-- Transaction Modal -->
+    <div id="transactionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Transactions for <span id="transactionFileName"></span></h2>
+                <button class="close-btn" onclick="closeTransactionModal()">×</button>
+            </div>
+            <div id="transactionList">
+                <ul>
+                    <li>Transaction 1: Amount $100, Date: 2025-07-01</li>
+                    <li>Transaction 2: Amount $200, Date: 2025-07-02</li>
+                    <li>Transaction 3: Amount $150, Date: 2025-07-03</li>
+                </ul>
+            </div>
+        </div>
+    </div>
     <script>
-        // Demat account providers by person
         const dematAccounts = {
             sravani: [
                 { value: 'zerodha_sravani', text: 'Zerodha' },
@@ -792,11 +773,8 @@
         };
 
         function switchTab(tabName) {
-            // Remove active class from all tabs and buttons
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-
-            // Add active class to selected tab and button
             document.querySelector(`button[onclick="switchTab('${tabName}')"]`).classList.add('active');
             document.getElementById(`${tabName}-tab`).classList.add('active');
         }
@@ -816,33 +794,28 @@
             const statementType = document.getElementById('statementType').value;
             const bankFields = document.getElementById('bankFields');
             const dematFields = document.getElementById('dematFields');
-
+            const insuranceFields = document.getElementById('insuranceFields');
+            bankFields.style.display = 'none';
+            dematFields.style.display = 'none';
+            insuranceFields.style.display = 'none';
             if (statementType === 'bank') {
                 bankFields.style.display = 'block';
-                dematFields.style.display = 'none';
             } else if (statementType === 'demat') {
-                bankFields.style.display = 'none';
                 dematFields.style.display = 'block';
-            } else {
-                bankFields.style.display = 'none';
-                dematFields.style.display = 'none';
+            } else if (statementType === 'insurance') {
+                insuranceFields.style.display = 'block';
             }
         }
 
         function updateDematAccounts() {
             const selectedPerson = document.getElementById('dematPerson').value;
             const providerSelect = document.getElementById('dematProvider');
-
-            // Clear existing options
             providerSelect.innerHTML = '';
-
             if (selectedPerson && dematAccounts[selectedPerson]) {
-                // Add default option
                 const defaultOption = document.createElement('option');
                 defaultOption.value = '';
                 defaultOption.textContent = 'Select Demat Account Provider';
                 providerSelect.appendChild(defaultOption);
-
                 dematAccounts[selectedPerson].forEach(account => {
                     const option = document.createElement('option');
                     option.value = account.value;
@@ -867,49 +840,45 @@
         function uploadFile() {
             const statementType = document.getElementById('statementType').value;
             const fileInput = document.getElementById('fileInput');
-
             if (!statementType) {
                 alert('Please select a statement type');
                 return;
             }
-
             if (!fileInput.files[0]) {
                 alert('Please select a file to upload');
                 return;
             }
-
             if (statementType === 'bank') {
                 const person = document.getElementById('bankPerson').value;
-
                 if (!person) {
                     alert('Please select a person');
                     return;
                 }
-
-                // Simulate file processing for bank statements
                 alert('Bank statement uploaded successfully! The system will automatically extract account details, bank name, and transaction data from the file.');
             } else if (statementType === 'demat') {
                 const dematPerson = document.getElementById('dematPerson').value;
                 const dematProvider = document.getElementById('dematProvider').value;
-
                 if (!dematPerson || !dematProvider) {
                     alert('Please fill in all required fields');
                     return;
                 }
-
-                // Simulate file processing for demat statements
                 alert('Demat statement uploaded successfully! The system will process the trading/investment data.');
+            } else if (statementType === 'insurance') {
+                const insurancePerson = document.getElementById('insurancePerson').value;
+                if (!insurancePerson) {
+                    alert('Please select a person');
+                    return;
+                }
+                alert('Insurance statement uploaded successfully! The system will process the policy details and provider information.');
             }
-
             closeUploadModal();
-
-            // In a real application, you would send the form data to your server here
             console.log('Upload data:', {
                 statementType,
                 file: fileInput.files[0].name,
                 bankPerson: statementType === 'bank' ? document.getElementById('bankPerson').value : null,
                 dematPerson: statementType === 'demat' ? document.getElementById('dematPerson').value : null,
-                dematProvider: statementType === 'demat' ? document.getElementById('dematProvider').value : null
+                dematProvider: statementType === 'demat' ? document.getElementById('dematProvider').value : null,
+                insurancePerson: statementType === 'insurance' ? document.getElementById('insurancePerson').value : null
             });
         }
 
@@ -918,33 +887,25 @@
             document.getElementById('bankPerson').value = '';
             document.getElementById('dematPerson').value = '';
             document.getElementById('dematProvider').innerHTML = '<option value="">First select a person</option>';
+            document.getElementById('insurancePerson').value = '';
             document.getElementById('fileInput').value = '';
             document.getElementById('fileName').textContent = '';
             document.getElementById('bankFields').style.display = 'none';
             document.getElementById('dematFields').style.display = 'none';
+            document.getElementById('insuranceFields').style.display = 'none';
         }
 
-        // Close modal when clicking outside
-        document.getElementById('uploadModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeUploadModal();
-            }
-        });
-
-        // Simulate button clicks for demonstration
         function simulateView(fileName) {
-            alert(`Viewing ${fileName}`);
+            document.getElementById('transactionFileName').textContent = fileName;
+            document.getElementById('transactionModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
-        function simulateAnalyze(fileName) {
-            alert(`Analyzing ${fileName}`);
+        function closeTransactionModal() {
+            document.getElementById('transactionModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
         }
 
-        function simulateViewAnalysis(fileName) {
-            alert(`Viewing analysis for ${fileName}`);
-        }
-
-        // Add click events to action buttons
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.btn-view').forEach(btn => {
                 btn.addEventListener('click', function(e) {
@@ -953,59 +914,31 @@
                     simulateView(fileName);
                 });
             });
-
-            document.querySelectorAll('.btn-analyze').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const fileName = this.closest('.statement-item').querySelector('.file-name').textContent;
-                    simulateAnalyze(fileName);
-                });
-            });
-
-            document.querySelectorAll('.btn-view-analysis').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const fileName = this.closest('.statement-item').querySelector('.file-name').textContent;
-                    simulateViewAnalysis(fileName);
-                });
-            });
-
-            // Add drag and drop functionality
-            const uploadArea = document.querySelector('.upload-area');
-
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, preventDefaults, false);
+                document.querySelector('.upload-area').addEventListener(eventName, preventDefaults, false);
             });
-
             function preventDefaults(e) {
                 e.preventDefault();
                 e.stopPropagation();
             }
-
             ['dragenter', 'dragover'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, highlight, false);
+                document.querySelector('.upload-area').addEventListener(eventName, highlight, false);
             });
-
             ['dragleave', 'drop'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, unhighlight, false);
+                document.querySelector('.upload-area').addEventListener(eventName, unhighlight, false);
             });
-
             function highlight(e) {
-                uploadArea.style.borderColor = '#1976d2';
-                uploadArea.style.backgroundColor = '#f0f7ff';
+                document.querySelector('.upload-area').style.borderColor = '#1976d2';
+                document.querySelector('.upload-area').style.backgroundColor = '#f0f7ff';
             }
-
             function unhighlight(e) {
-                uploadArea.style.borderColor = '#ddd';
-                uploadArea.style.backgroundColor = '#fafafa';
+                document.querySelector('.upload-area').style.borderColor = '#ddd';
+                document.querySelector('.upload-area').style.backgroundColor = '#fafafa';
             }
-
-            uploadArea.addEventListener('drop', handleDrop, false);
-
+            document.querySelector('.upload-area').addEventListener('drop', handleDrop, false);
             function handleDrop(e) {
                 const dt = e.dataTransfer;
                 const files = dt.files;
-
                 if (files.length > 0) {
                     document.getElementById('fileInput').files = files;
                     handleFileSelect({ files: files });
