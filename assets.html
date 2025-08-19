@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Financial Tool - Asset Declaration</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-60 bg-white shadow-md h-screen">
+      <div class="p-4 text-blue-700 font-bold text-lg">📊 Financial Tool</div>
+      <nav>
+        <button class="w-full text-left flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md my-2">Categories</button>
+        <button class="w-full text-left flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md my-2">Income Declaration</button>
+        <button class="w-full text-left flex items-center px-4 py-2 bg-blue-600 text-white rounded-md my-2">Asset Declaration</button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-semibold text-gray-700">Asset Declaration</h1>
+        <button onclick="showAddAssetModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
+          + Add Asset
+        </button>
+      </div>
+
+      <!-- Assets Table -->
+      <div class="bg-white p-6 rounded-xl shadow-sm mb-6">
+        <div class="overflow-x-auto rounded-lg shadow">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-gray-100 text-gray-700 text-left">
+                <th class="p-3">Asset Type</th>
+                <th class="p-3">Category Type</th>
+                <th class="p-3">Purchase Value</th>
+                <th class="p-3">Current Value</th>
+                <th class="p-3">Quantity</th>
+                <th class="p-3">Unit</th>
+                <th class="p-3">Purchase Date</th>
+                <th class="p-3">Expected ROI</th>
+                <th class="p-3">Depreciation Method</th>
+                <th class="p-3">Depreciation Rate</th>
+                <th class="p-3">Outstanding Value</th>
+                <th class="p-3">Last Valuation Date</th>
+                <th class="p-3">Description</th>
+                <th class="p-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="assetTableBody" class="text-gray-600">
+              <!-- Static asset sample -->
+              <tr class="border-b hover:bg-gray-50">
+                <td class="p-3">Gold</td>
+                <td class="p-3">Liquid Gold</td>
+                <td class="p-3">₹200000</td>
+                <td class="p-3">₹210000</td>
+                <td class="p-3">1</td>
+                <td class="p-3">Gram</td>
+                <td class="p-3">2025-08-05</td>
+                <td class="p-3">10%</td>
+                <td class="p-3">Straight Line</td>
+                <td class="p-3">5%</td>
+                <td class="p-3">₹50000</td>
+                <td class="p-3">2025-08-10</td>
+                <td class="p-3">Initial gold purchase</td>
+                <td class="p-3">
+                  <button onclick="showTransactionsModal('Gold')" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">
+                    View Transactions
+                  </button>
+                </td>
+              </tr>
+              <!-- Dynamic asset rows go here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Asset Modal -->
+  <div id="addAssetModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg p-6 w-96 max-h-[90vh] overflow-y-auto">
+      <h2 class="text-xl font-semibold mb-4">Add Asset</h2>
+      <div class="space-y-3">
+        <select id="assetType" class="w-full border rounded-lg px-3 py-2">
+          <option value="">Select Asset Type</option>
+          <option value="Gold">Gold</option>
+          <option value="Real Estate">Real Estate</option>
+          <option value="Furniture">Furniture</option>
+        </select>
+        <select id="categoryType" class="w-full border rounded-lg px-3 py-2">
+          <option value="">Select Category Type</option>
+          <option value="Liquid Gold">Liquid Gold</option>
+          <option value="Residential">Residential</option>
+          <option value="Furniture_Sofa">Furniture Sofa</option>
+        </select>
+        <input id="purchaseValue" type="number" placeholder="Purchase Value" class="w-full border rounded-lg px-3 py-2" />
+        <input id="currentValue" type="number" placeholder="Current Value" class="w-full border rounded-lg px-3 py-2" />
+        <input id="unitType" type="text" placeholder="Unit Type (grams, etc.)" class="w-full border rounded-lg px-3 py-2" />
+        <input id="quantity" type="number" placeholder="Quantity" class="w-full border rounded-lg px-3 py-2" />
+        <input id="purchaseDate" type="date" class="w-full border rounded-lg px-3 py-2" />
+        <input id="expectedROI" type="number" placeholder="Expected ROI (%)" class="w-full border rounded-lg px-3 py-2" />
+        <input id="depreciationMethod" type="text" placeholder="Depreciation Method" class="w-full border rounded-lg px-3 py-2" />
+        <input id="depreciationRate" type="number" placeholder="Depreciation Rate (%)" class="w-full border rounded-lg px-3 py-2" />
+        <input id="outstandingValue" type="number" placeholder="Outstanding Value" class="w-full border rounded-lg px-3 py-2" />
+        <input id="lastValuationDate" type="date" class="w-full border rounded-lg px-3 py-2" />
+        <textarea id="description" placeholder="Description" class="w-full border rounded-lg px-3 py-2"></textarea>
+      </div>
+      <div class="mt-4 flex justify-end space-x-2">
+        <button onclick="hideAddAssetModal()" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-200">Cancel</button>
+        <button onclick="addAsset()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transactions Modal -->
+  <div id="transactionsModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg p-6 w-96 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold">Transactions</h2>
+        <button onclick="hideTransactionsModal()" class="text-gray-600 hover:text-gray-800">&times;</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="bg-gray-100 text-gray-700">
+              <th class="p-3">Date</th>
+              <th class="p-3">Description</th>
+              <th class="p-3">Type</th>
+              <th class="p-3">Amount</th>
+            </tr>
+          </thead>
+          <tbody id="transactionModalBody" class="text-gray-600">
+            <!-- Transactions dynamically populated here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let assets = [];
+    let sampleTransactions = [
+      { asset: "Gold", date: "2025-08-05", description: "Gold purchase Kalyan Jewels", type: "Debit", amount: 200000 },
+      { asset: "Gold", date: "2025-08-10", description: "Gold valuation adjustment", type: "Credit", amount: 50000 },
+      { asset: "Furniture", date: "2025-08-01", description: "Bought Sofa", type: "Debit", amount: 15000 }
+    ];
+
+    function renderAssets() {
+      const tbody = document.getElementById("assetTableBody");
+      // Dynamic asset rows plus keeping the static row intact
+      assets.forEach(asset => {
+        tbody.innerHTML += `
+          <tr class="border-b hover:bg-gray-50">
+            <td class="p-3">${asset.asset_type}</td>
+            <td class="p-3">${asset.category_type}</td>
+            <td class="p-3">₹${asset.purchase_value}</td>
+            <td class="p-3">₹${asset.current_value}</td>
+            <td class="p-3">${asset.quantity}</td>
+            <td class="p-3">${asset.unit_type}</td>
+            <td class="p-3">${asset.purchase_date}</td>
+            <td class="p-3">${asset.expected_roi}%</td>
+            <td class="p-3">${asset.depreciation_method}</td>
+            <td class="p-3">${asset.depreciation_rate}%</td>
+            <td class="p-3">₹${asset.outstanding_value}</td>
+            <td class="p-3">${asset.last_valuation_date}</td>
+            <td class="p-3">${asset.description}</td>
+            <td class="p-3">
+              <button onclick="showTransactionsModal('${asset.asset_type}')" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">
+                View Transactions
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function showTransactionsModal(assetType) {
+      const modal = document.getElementById("transactionsModal");
+      const tbody = document.getElementById("transactionModalBody");
+      tbody.innerHTML = "";
+      const filtered = sampleTransactions.filter(tx => tx.asset === assetType);
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-gray-500">No transactions found.</td></tr>`;
+      } else {
+        filtered.forEach(tx => {
+          tbody.innerHTML += `
+            <tr class="border-b hover:bg-gray-50">
+              <td class="p-3">${tx.date}</td>
+              <td class="p-3">${tx.description}</td>
+              <td class="p-3">${tx.type}</td>
+              <td class="p-3">₹${tx.amount}</td>
+            </tr>
+          `;
+        });
+      }
+      modal.classList.remove("hidden");
+    }
+
+    function hideTransactionsModal() {
+      document.getElementById("transactionsModal").classList.add("hidden");
+    }
+
+    function showAddAssetModal() {
+      document.getElementById("addAssetModal").classList.remove("hidden");
+    }
+
+    function hideAddAssetModal() {
+      document.getElementById("addAssetModal").classList.add("hidden");
+    }
+
+    function addAsset() {
+      const asset = {
+        asset_type: document.getElementById("assetType").value,
+        category_type: document.getElementById("categoryType").value,
+        purchase_value: parseFloat(document.getElementById("purchaseValue").value) || 0,
+        current_value: parseFloat(document.getElementById("currentValue").value) || 0,
+        unit_type: document.getElementById("unitType").value,
+        quantity: parseFloat(document.getElementById("quantity").value) || 0,
+        purchase_date: document.getElementById("purchaseDate").value,
+        expected_roi: parseFloat(document.getElementById("expectedROI").value) || 0,
+        depreciation_method: document.getElementById("depreciationMethod").value,
+        depreciation_rate: parseFloat(document.getElementById("depreciationRate").value) || 0,
+        outstanding_value: parseFloat(document.getElementById("outstandingValue").value) || 0,
+        last_valuation_date: document.getElementById("lastValuationDate").value,
+        description: document.getElementById("description").value
+      };
+      if (!asset.asset_type || !asset.category_type) {
+        alert("⚠️ Please select asset type and category type.");
+        return;
+      }
+      assets.push(asset);
+      hideAddAssetModal();
+      renderAssets();
+    }
+  </script>
+</body>
+</html>
