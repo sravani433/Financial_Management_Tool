@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Financial Tool - Liability Declaration</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-60 bg-white shadow-md h-screen">
+      <div class="p-4 text-blue-700 font-bold text-lg">📊 Financial Tool</div>
+      <nav>
+        <button class="w-full text-left flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md my-2">Categories</button>
+        <button class="w-full text-left flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md my-2">Income Declaration</button>
+        <button class="w-full text-left flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md my-2">Asset Declaration</button>
+        <button class="w-full text-left flex items-center px-4 py-2 bg-blue-600 text-white rounded-md my-2">Liability Declaration</button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-semibold text-gray-700">Liability Declaration</h1>
+        <button onclick="showAddLiabilityModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700">
+          + Add Liability
+        </button>
+      </div>
+
+      <!-- Liabilities Table -->
+      <div class="bg-white p-6 rounded-xl shadow-sm mb-6">
+        <div class="overflow-x-auto rounded-lg shadow">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-gray-100 text-gray-700 text-left">
+                <th class="p-3">Liability Type</th>
+                <th class="p-3">Description</th>
+                <th class="p-3">Principal Amount</th>
+                <th class="p-3">Interest Rate</th>
+                <th class="p-3">Tenure (Months)</th>
+                <th class="p-3">Outstanding Value</th>
+                <th class="p-3">Start Date</th>
+                <th class="p-3">End Date</th>
+                <th class="p-3">Loan Account</th>
+                <th class="p-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="liabilityTableBody" class="text-gray-600">
+              <!-- Static liability sample -->
+              <tr class="border-b hover:bg-gray-50">
+                <td class="p-3">Home Loan</td>
+                <td class="p-3">Property purchase loan</td>
+                <td class="p-3">₹5,000,000</td>
+                <td class="p-3">8.5%</td>
+                <td class="p-3">240</td>
+                <td class="p-3">₹4,200,000</td>
+                <td class="p-3">2023-01-15</td>
+                <td class="p-3">2043-01-15</td>
+                <td class="p-3">SBI Home Loan Account</td>
+                <td class="p-3">
+                  <button onclick="showTransactionsModal('Home Loan')" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 mr-2">
+                    View Transactions
+                  </button>
+                </td>
+              </tr>
+              <!-- Dynamic liability rows go here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Loan Account Transactions Section -->
+      <div id="loanTransactionsSection" class="bg-white p-6 rounded-xl shadow-sm hidden">
+        <h2 class="text-xl font-semibold mb-4 text-gray-700">Loan Account Transactions</h2>
+        <div class="overflow-x-auto rounded-lg shadow">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-gray-100 text-gray-700 text-left">
+                <th class="p-3">Date</th>
+                <th class="p-3">Description</th>
+                <th class="p-3">Transaction Type</th>
+                <th class="p-3">Amount</th>
+                <th class="p-3">Balance</th>
+              </tr>
+            </thead>
+            <tbody id="loanTransactionsBody" class="text-gray-600">
+              <!-- Sample loan transactions -->
+              <tr class="border-b hover:bg-gray-50">
+                <td class="p-3">2025-08-01</td>
+                <td class="p-3">Monthly EMI Payment</td>
+                <td class="p-3">Payment</td>
+                <td class="p-3">₹43,250</td>
+                <td class="p-3">₹4,156,750</td>
+              </tr>
+              <tr class="border-b hover:bg-gray-50">
+                <td class="p-3">2025-07-01</td>
+                <td class="p-3">Monthly EMI Payment</td>
+                <td class="p-3">Payment</td>
+                <td class="p-3">₹43,250</td>
+                <td class="p-3">₹4,200,000</td>
+              </tr>
+              <tr class="border-b hover:bg-gray-50">
+                <td class="p-3">2025-06-01</td>
+                <td class="p-3">Monthly EMI Payment</td>
+                <td class="p-3">Payment</td>
+                <td class="p-3">₹43,250</td>
+                <td class="p-3">₹4,243,250</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Liability Modal -->
+  <div id="addLiabilityModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg p-6 w-96 max-h-[90vh] overflow-y-auto">
+      <h2 class="text-xl font-semibold mb-4">Add Liability</h2>
+      <div class="space-y-3">
+        <select id="liabilityType" onchange="handleLiabilityTypeChange()" class="w-full border rounded-lg px-3 py-2">
+          <option value="">Select Liability Type</option>
+          <option value="Home Loan">Home Loan</option>
+          <option value="Personal Loan">Personal Loan</option>
+          <option value="Car Loan">Car Loan</option>
+          <option value="Credit Card">Credit Card</option>
+          <option value="Business Loan">Business Loan</option>
+        </select>
+
+        <textarea id="description" placeholder="Description" class="w-full border rounded-lg px-3 py-2 h-20"></textarea>
+
+        <!-- Loan Account Selection -->
+        <div class="flex items-center space-x-2 mb-3">
+          <input type="checkbox" id="hasLoanAccount" onchange="toggleLoanAccountFields()" class="rounded">
+          <label for="hasLoanAccount" class="text-sm text-gray-700">If loan account, select the loan account</label>
+        </div>
+
+        <select id="loanAccountsList" class="w-full border rounded-lg px-3 py-2 hidden">
+          <option value="">Select Loan Account</option>
+          <option value="1">SBI Home Loan Account</option>
+          <option value="2">HDFC Personal Loan</option>
+          <option value="3">ICICI Car Loan</option>
+          <option value="4">Axis Bank Business Loan</option>
+        </select>
+
+        <!-- Manual Entry Fields -->
+        <div id="manualFields">
+          <input id="principalAmount" type="number" placeholder="Principal Amount" class="w-full border rounded-lg px-3 py-2 mb-3" />
+          <input id="interestRate" type="number" step="0.01" placeholder="Interest Rate (%)" class="w-full border rounded-lg px-3 py-2 mb-3" />
+          <input id="tenureMonths" type="number" placeholder="Tenure (Months)" class="w-full border rounded-lg px-3 py-2 mb-3" />
+          <input id="outstandingValue" type="number" placeholder="Outstanding Value" class="w-full border rounded-lg px-3 py-2 mb-3" />
+          <input id="startDate" type="date" placeholder="Start Date" class="w-full border rounded-lg px-3 py-2 mb-3" />
+          <input id="endDate" type="date" placeholder="End Date" class="w-full border rounded-lg px-3 py-2 mb-3" />
+        </div>
+      </div>
+
+      <div class="mt-4 flex justify-end space-x-2">
+        <button onclick="hideAddLiabilityModal()" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-200">Cancel</button>
+        <button onclick="addLiability()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transactions Modal -->
+  <div id="transactionsModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg p-6 w-[600px] max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold">Liability Transactions</h2>
+        <button onclick="hideTransactionsModal()" class="text-gray-600 hover:text-gray-800 text-2xl">&times;</button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="bg-gray-100 text-gray-700">
+              <th class="p-3 text-left">Date</th>
+              <th class="p-3 text-left">Description</th>
+              <th class="p-3 text-left">Type</th>
+              <th class="p-3 text-left">Amount</th>
+              <th class="p-3 text-left">Balance</th>
+            </tr>
+          </thead>
+          <tbody id="transactionModalBody" class="text-gray-600">
+            <!-- Transactions dynamically populated here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let liabilities = [];
+    let sampleTransactions = [
+      { liability: "Home Loan", date: "2025-08-01", description: "Monthly EMI Payment", type: "Payment", amount: 43250, balance: 4156750 },
+      { liability: "Home Loan", date: "2025-07-01", description: "Monthly EMI Payment", type: "Payment", amount: 43250, balance: 4200000 },
+      { liability: "Home Loan", date: "2025-06-01", description: "Monthly EMI Payment", type: "Payment", amount: 43250, balance: 4243250 },
+      { liability: "Personal Loan", date: "2025-08-05", description: "Loan disbursement", type: "Disbursement", amount: 200000, balance: 200000 },
+      { liability: "Personal Loan", date: "2025-08-10", description: "EMI Payment", type: "Payment", amount: 8500, balance: 191500 }
+    ];
+
+    function renderLiabilities() {
+      const tbody = document.getElementById("liabilityTableBody");
+      // Keep the static row and add dynamic ones
+      const staticRow = tbody.querySelector('tr');
+      tbody.innerHTML = '';
+      if (staticRow) {
+        tbody.appendChild(staticRow);
+      }
+
+      liabilities.forEach(liability => {
+        const row = document.createElement('tr');
+        row.className = 'border-b hover:bg-gray-50';
+        row.innerHTML = `
+          <td class="p-3">${liability.liability_type}</td>
+          <td class="p-3">${liability.description}</td>
+          <td class="p-3">${liability.principal_amount ? '₹' + liability.principal_amount.toLocaleString() : 'N/A'}</td>
+          <td class="p-3">${liability.interest_rate ? liability.interest_rate + '%' : 'N/A'}</td>
+          <td class="p-3">${liability.tenure_months || 'N/A'}</td>
+          <td class="p-3">${liability.outstanding_value ? '₹' + liability.outstanding_value.toLocaleString() : 'N/A'}</td>
+          <td class="p-3">${liability.start_date || 'N/A'}</td>
+          <td class="p-3">${liability.end_date || 'N/A'}</td>
+          <td class="p-3">${liability.loan_account || 'Manual Entry'}</td>
+          <td class="p-3">
+            <button onclick="showTransactionsModal('${liability.liability_type}')" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 mr-2">
+              View Transactions
+            </button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function showTransactionsModal(liabilityType) {
+      const modal = document.getElementById("transactionsModal");
+      const tbody = document.getElementById("transactionModalBody");
+      tbody.innerHTML = "";
+
+      const filtered = sampleTransactions.filter(tx => tx.liability === liabilityType);
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-3 text-center text-gray-500">No transactions found.</td></tr>`;
+      } else {
+        filtered.forEach(tx => {
+          tbody.innerHTML += `
+            <tr class="border-b hover:bg-gray-50">
+              <td class="p-3">${tx.date}</td>
+              <td class="p-3">${tx.description}</td>
+              <td class="p-3">${tx.type}</td>
+              <td class="p-3">₹${tx.amount.toLocaleString()}</td>
+              <td class="p-3">₹${tx.balance.toLocaleString()}</td>
+            </tr>
+          `;
+        });
+      }
+      modal.classList.remove("hidden");
+    }
+
+    function hideTransactionsModal() {
+      document.getElementById("transactionsModal").classList.add("hidden");
+    }
+
+    function showAddLiabilityModal() {
+      document.getElementById("addLiabilityModal").classList.remove("hidden");
+      resetForm();
+    }
+
+    function hideAddLiabilityModal() {
+      document.getElementById("addLiabilityModal").classList.add("hidden");
+    }
+
+    function toggleLoanAccountFields() {
+      const checkbox = document.getElementById("hasLoanAccount");
+      const loanAccountsList = document.getElementById("loanAccountsList");
+      const manualFields = document.getElementById("manualFields");
+
+      if (checkbox.checked) {
+        loanAccountsList.classList.remove("hidden");
+        manualFields.style.display = "none";
+      } else {
+        loanAccountsList.classList.add("hidden");
+        manualFields.style.display = "block";
+      }
+    }
+
+    function handleLiabilityTypeChange() {
+      // This would typically fetch sub-classifications from the API
+      // POST /api/categories/sub-classifications with "Financial Obligations" as main_classification
+      console.log("Liability type changed - would fetch sub-classifications here");
+    }
+
+    function resetForm() {
+      document.getElementById("liabilityType").value = "";
+      document.getElementById("description").value = "";
+      document.getElementById("hasLoanAccount").checked = false;
+      document.getElementById("loanAccountsList").classList.add("hidden");
+      document.getElementById("manualFields").style.display = "block";
+      document.getElementById("principalAmount").value = "";
+      document.getElementById("interestRate").value = "";
+      document.getElementById("tenureMonths").value = "";
+      document.getElementById("outstandingValue").value = "";
+      document.getElementById("startDate").value = "";
+      document.getElementById("endDate").value = "";
+    }
+
+    function addLiability() {
+      const hasLoanAccount = document.getElementById("hasLoanAccount").checked;
+      const selectedAccount = document.getElementById("loanAccountsList").value;
+
+      const liability = {
+        liability_type: document.getElementById("liabilityType").value,
+        category_id: null, // Would be set from API response
+        description: document.getElementById("description").value,
+        loan_account: hasLoanAccount ? document.getElementById("loanAccountsList").options[document.getElementById("loanAccountsList").selectedIndex].text : null,
+        account_id: hasLoanAccount ? selectedAccount : null
+      };
+
+      // Only add manual fields if no loan account is selected
+      if (!hasLoanAccount) {
+        liability.principal_amount = parseFloat(document.getElementById("principalAmount").value) || 0;
+        liability.interest_rate = parseFloat(document.getElementById("interestRate").value) || 0;
+        liability.tenure_months = parseInt(document.getElementById("tenureMonths").value) || 0;
+        liability.outstanding_value = parseFloat(document.getElementById("outstandingValue").value) || 0;
+        liability.start_date = document.getElementById("startDate").value;
+        liability.end_date = document.getElementById("endDate").value;
+      }
+
+      if (!liability.liability_type || !liability.description) {
+        alert("⚠️ Please fill in required fields: Liability Type and Description.");
+        return;
+      }
+
+      if (!hasLoanAccount && (!liability.principal_amount || !liability.interest_rate)) {
+        alert("⚠️ Please fill in principal amount and interest rate for manual entry.");
+        return;
+      }
+
+      liabilities.push(liability);
+      hideAddLiabilityModal();
+      renderLiabilities();
+
+      // Show loan transactions section if this is a loan account liability
+      if (hasLoanAccount) {
+        document.getElementById("loanTransactionsSection").classList.remove("hidden");
+      }
+    }
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      renderLiabilities();
+    });
+  </script>
+</body>
+</html>
