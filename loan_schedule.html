@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Loan & Spending Insights Dashboard (Prototype)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* tiny heatmap cell styling */
+    .heat-cell { width: 28px; height: 28px; border-radius: 4px; display:inline-block; margin:2px; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+  <div class="max-w-7xl mx-auto p-6">
+    <!-- Header -->
+    <header class="mb-6">
+      <h1 class="text-2xl font-semibold">Loan & Spending Insights — Prototype</h1>
+      <p class="text-sm text-gray-500">Interactive mock: repayment vs schedule, spending breakdown, cashflow timeline.</p>
+    </header>
+
+    <!-- KPI Row -->
+    <section class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div class="bg-white p-4 rounded-2xl shadow-sm">
+        <div class="text-sm text-gray-500">Loan Progress</div>
+        <div class="mt-2 text-xl font-semibold">₹7,20,000 / ₹10,00,000</div>
+        <div class="mt-2 text-xs text-red-500">3 EMIs Overdue</div>
+        <div class="mt-3 h-3 bg-gray-100 rounded-full overflow-hidden">
+          <div class="h-3 rounded-full bg-green-500" style="width:72%"></div>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl shadow-sm">
+        <div class="text-sm text-gray-500">Spend-to-Income Ratio</div>
+        <div class="mt-2 text-xl font-semibold">68%</div>
+        <div class="mt-2 text-xs text-yellow-600">Warning Zone</div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl shadow-sm">
+        <div class="text-sm text-gray-500">EMI as % of Income</div>
+        <div class="mt-2 text-xl font-semibold">35%</div>
+        <div class="mt-2 text-xs text-gray-400">Stable</div>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl shadow-sm">
+        <div class="text-sm text-gray-500">Cashflow Health Score</div>
+        <div class="mt-2 text-xl font-semibold">7.2 / 10</div>
+        <div class="mt-2 text-xs text-green-600">Monitor</div>
+      </div>
+    </section>
+
+    <!-- Main Grid -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Left: Repayment -->
+      <div class="lg:col-span-1 bg-white p-5 rounded-2xl shadow-sm">
+        <h2 class="font-semibold mb-3">Repayment Overview</h2>
+
+        <!-- Progress -->
+        <div class="mb-4">
+          <div class="text-sm text-gray-500">Overall Progress</div>
+          <div class="mt-2 text-lg font-medium">72% Repaid</div>
+          <div class="mt-3 h-4 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-4 rounded-full bg-indigo-500" style="width:72%"></div>
+          </div>
+        </div>
+
+        <!-- Heatmap -->
+        <div class="mb-4">
+          <div class="flex items-center justify-between">
+            <div class="text-sm text-gray-500">Repayment Heatmap (Last 12 months)</div>
+            <div class="text-xs text-gray-400">🟢 Paid • 🟡 Late • 🔴 Missed</div>
+          </div>
+          <div class="mt-3">
+            <div id="heatmap" class="flex flex-wrap"></div>
+          </div>
+        </div>
+
+        <!-- Trend Chart -->
+        <canvas id="repaymentTrend" height="180"></canvas>
+      </div>
+
+      <!-- Middle: Spending Charts -->
+      <div class="lg:col-span-1 bg-white p-5 rounded-2xl shadow-sm">
+        <h2 class="font-semibold mb-3">Spending Insights</h2>
+        <div class="grid grid-cols-1 gap-4">
+          <div>
+            <div class="text-sm text-gray-500">Category Distribution</div>
+            <canvas id="categoryDonut" height="200"></canvas>
+          </div>
+
+          <div>
+            <div class="text-sm text-gray-500">Monthly Spend vs EMI</div>
+            <canvas id="spendBar" height="160"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Combined & Recommendations -->
+      <div class="lg:col-span-1 bg-white p-5 rounded-2xl shadow-sm">
+        <h2 class="font-semibold mb-3">Cashflow Timeline & Recommendations</h2>
+
+        <div class="mb-4">
+          <div class="text-sm text-gray-500">Timeline (Salary / Spend Spikes / EMI)</div>
+          <canvas id="timeline" height="140"></canvas>
+        </div>
+
+        <div class="mb-2">
+          <h3 class="font-medium">Risk Flags</h3>
+          <ul class="list-disc pl-5 text-sm text-gray-600 mt-2">
+            <li>3 consecutive months of late payments (end-month discretionary spend correlated)</li>
+            <li>EMI takes 35% of income — consider reschedule to align with salary</li>
+          </ul>
+        </div>
+
+        <div class="mt-4">
+          <h3 class="font-medium">Recommendations</h3>
+          <ol class="list-decimal pl-5 text-sm text-gray-600 mt-2">
+            <li>Enable auto-debit for primary loan account.</li>
+            <li>Move EMI due date to 5th (post salary) or split EMI into smaller instalments.</li>
+            <li>Introduce a short-term buffer goal: save 10% of income into emergency buffer.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer / Notes -->
+    <footer class="mt-6 text-xs text-gray-400">Prototype: sample data only. Integrate your live API to replace sample datasets.</footer>
+  </div>
+
+  <script>
+    // --- sample datasets ---
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    // Repayment status sample: 0=paid,1=late,2=missed
+    const heatmapSample = [0,0,1,0,0,0,1,0,2,0,0,1];
+
+    // create heatmap DOM
+    const heatmapEl = document.getElementById('heatmap');
+    heatmapSample.forEach((s,i)=>{
+      const cell = document.createElement('div');
+      cell.className = 'heat-cell';
+      cell.title = months[i] + ' - ' + (s===0? 'Paid' : s===1? 'Late' : 'Missed');
+      if(s===0) cell.style.backgroundColor = '#10B981';
+      if(s===1) cell.style.backgroundColor = '#F59E0B';
+      if(s===2) cell.style.backgroundColor = '#EF4444';
+      heatmapEl.appendChild(cell);
+    });
+
+    // Repayment trend chart
+    const repCtx = document.getElementById('repaymentTrend').getContext('2d');
+    new Chart(repCtx, {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [
+          { label: 'Scheduled EMI', data: [20000,20000,20000,20000,20000,20000,20000,20000,20000,20000,20000,20000], tension:0.3, borderWidth:2, fill:false },
+          { label: 'Actual Paid', data: [20000,18000,15000,20000,20000,20000,16000,20000,0,20000,20000,17000], tension:0.3, borderWidth:2, fill:true }
+        ]
+      },
+      options: { responsive:true, plugins:{legend:{position:'top'}} }
+    });
+
+    // Category donut
+    const catCtx = document.getElementById('categoryDonut').getContext('2d');
+    new Chart(catCtx, {
+      type:'doughnut',
+      data:{ labels:['Necessities','Discretionary','Obligations','Investments'], datasets:[{ data:[40,30,20,10], hoverOffset:8 }]},
+      options:{ responsive:true, plugins:{legend:{position:'bottom'}} }
+    });
+
+    // Spend vs EMI bar
+    const spendCtx = document.getElementById('spendBar').getContext('2d');
+    new Chart(spendCtx, {
+      type:'bar',
+      data:{ labels:months, datasets:[{ label:'Income', data:[60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,60000], stack:'a' }, { label:'Spending', data:[38000,40000,42000,35000,37000,36000,40000,38000,45000,37000,36000,39000], stack:'a' }, { label:'EMI', data:[20000,20000,20000,20000,20000,20000,20000,20000,20000,20000,20000,20000], stack:'b' } ] },
+      options:{ responsive:true, plugins:{legend:{position:'bottom'}}, scales:{ y:{ beginAtZero:true } } }
+    });
+
+    // Timeline chart sample (stacked area-ish representation using line)
+    const timeCtx = document.getElementById('timeline').getContext('2d');
+    new Chart(timeCtx, {
+      type:'line',
+      data: { labels: months, datasets: [ { label:'Salary Credit', data:[60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,60000,60000], borderDash:[5,5], tension:0.2, fill:false }, { label:'Spend Spike Index', data:[0,1,2,0,1,0,2,1,3,1,0,2], tension:0.2, fill:true } ] },
+      options:{ responsive:true, plugins:{legend:{position:'bottom'}} }
+    });
+  </script>
+</body>
+</html>
