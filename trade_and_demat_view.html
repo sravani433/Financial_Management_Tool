@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statement Uploads - Demat Holdings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 240px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover {
+            background: #f3f4f6;
+        }
+
+        .nav-item.active {
+            background: #3b82f6;
+            color: white;
+            border-right: 4px solid #2563eb;
+        }
+
+        .main-content {
+            margin-left: 240px;
+            padding: 20px 30px;
+        }
+
+        .status-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .status-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .status-card.not-started { border-left-color: #9ca3af; }
+        .status-card.in-progress { border-left-color: #3b82f6; }
+        .status-card.partially { border-left-color: #f59e0b; }
+        .status-card.completed { border-left-color: #10b981; }
+
+        .status-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .status-count {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .tabs-container {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            background: #f9fafb;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            background: #f3f4f6;
+        }
+
+        .tab.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .statements-section {
+            background: white;
+            border-radius: 8px;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .count-badge {
+            background: #3b82f6;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .statement-item {
+            padding: 20px 25px;
+            border-bottom: 1px solid #e5e7eb;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+
+        .statement-item:hover {
+            background: #f9fafb;
+        }
+
+        .statement-item:last-child {
+            border-bottom: none;
+        }
+
+        .filename {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge.trading {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge.holdings {
+            background: #fed7aa;
+            color: #92400e;
+        }
+
+        .badge.completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge.not-started {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background: #f9fafb;
+            border-color: #3b82f6;
+        }
+
+        .btn.analyze {
+            background: #fef3c7;
+            border-color: #fbbf24;
+            color: #92400e;
+        }
+
+        .btn.analyze:hover {
+            background: #fde68a;
+        }
+
+        .btn.view-analysis {
+            background: #d1fae5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+
+        .btn.view-analysis:hover {
+            background: #a7f3d0;
+        }
+
+        .symbols-view {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .symbols-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            padding: 8px 16px;
+            background: #f3f4f6;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .back-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .symbols-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .symbol-card {
+            padding: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .symbol-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+
+        .symbol-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .symbol-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .symbol-company {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .symbol-quantity {
+            background: #eff6ff;
+            color: #1e40af;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .symbol-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-mini {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .stat-mini-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-top: 2px;
+        }
+
+        .symbol-details {
+            background: white;
+            border-radius: 8px;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .detail-tabs {
+            display: flex;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .detail-tab {
+            padding: 18px 30px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .detail-tab:hover {
+            color: #3b82f6;
+        }
+
+        .detail-tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        .detail-content {
+            padding: 25px;
+        }
+
+        .overall-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f6f8fb 0%, #ffffff 100%);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .stat-value.positive {
+            color: #10b981;
+        }
+
+        .stat-value.negative {
+            color: #ef4444;
+        }
+
+        .transactions-table {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: #f9fafb;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e5e7eb;
+            color: #4b5563;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .buy {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .sell {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="nav-item">
+            <span>🏠</span> Dashboard
+        </div>
+        <div class="nav-item">
+            <span>💰</span> NetWorth
+        </div>
+        <div class="nav-item">
+            <span>📊</span> Assets & Liabilities
+        </div>
+        <div class="nav-item">
+            <span>💸</span> Cashflows
+        </div>
+        <div class="nav-item active">
+            <span>📄</span> Statement Uploads
+        </div>
+        <div class="nav-item">
+            <span>👥</span> Family Members
+        </div>
+        <div class="nav-item">
+            <span>🏦</span> Accounts
+        </div>
+        <div class="nav-item">
+            <span>📦</span> Packages
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div id="mainView">
+            <div class="status-cards">
+                <div class="status-card not-started">
+                    <div class="status-label">Not Started</div>
+                    <div class="status-count" style="color: #9ca3af;">3</div>
+                </div>
+                <div class="status-card in-progress">
+                    <div class="status-label">In Progress</div>
+                    <div class="status-count" style="color: #3b82f6;">0</div>
+                </div>
+                <div class="status-card partially">
+                    <div class="status-label">Partially Completed</div>
+                    <div class="status-count" style="color: #f59e0b;">0</div>
+                </div>
+                <div class="status-card completed">
+                    <div class="status-label">Completed</div>
+                    <div class="status-count" style="color: #10b981;">4</div>
+                </div>
+            </div>
+
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab">Bank Statements</button>
+                    <button class="tab active">Demat Statements</button>
+                    <button class="tab">Insurance Statements</button>
+                </div>
+            </div>
+
+            <div class="statements-section">
+                <div class="section-header">
+                    <div class="section-title">Trading Statements</div>
+                    <div class="count-badge">2</div>
+                </div>
+                <div class="statement-item">
+                    <div class="filename">Zerodha_Trading_Statement_Q1_2024.pdf</div>
+                    <div><span class="badge trading">Trading</span></div>
+                    <div style="color: #666;">Zerodha</div>
+                    <div class="action-btns">
+                        <button class="btn view-analysis" onclick="showSymbols('Zerodha', 'trading')">🔍 View Analysis</button>
+                    </div>
+                </div>
+                <div class="statement-item">
+                    <div class="filename">Angel_Trading_Jul2024.xlsx</div>
+                    <div><span class="badge trading">Trading</span></div>
+                    <div style="color: #666;">Angel One</div>
+                    <div class="action-btns">
+                        <button class="btn view-analysis" onclick="showSymbols('Angel One', 'trading')">🔍 View Analysis</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="statements-section">
+                <div class="section-header">
+                    <div class="section-title">Holdings Statements</div>
+                    <div class="count-badge">1</div>
+                </div>
+                <div class="statement-item">
+                    <div class="filename">Zerodha_Holdings_Aug2024.pdf</div>
+                    <div><span class="badge holdings">Holdings</span></div>
+                    <div style="color: #666;">Zerodha</div>
+                    <div class="action-btns">
+                        <button class="btn view-analysis" onclick="showSymbols('Zerodha', 'holdings')">🔍 View Analysis</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="symbolsView" class="hidden">
+            <div class="symbols-view">
+                <div class="symbols-header">
+                    <h2 style="color: #333; font-size: 24px;" id="symbolsTitle">Stock Symbols - Zerodha</h2>
+                    <button class="back-btn" onclick="backToMain()">
+                        ← Back to Statements
+                    </button>
+                </div>
+
+                <div class="symbols-grid">
+                    <div class="symbol-card" onclick="showDetails('RELIANCE')">
+                        <div class="symbol-header">
+                            <div>
+                                <div class="symbol-name">RELIANCE</div>
+                                <div class="symbol-company">Reliance Industries</div>
+                            </div>
+                            <div class="symbol-quantity">100 Qty</div>
+                        </div>
+                        <div class="symbol-stats">
+                            <div>
+                                <div class="stat-mini">Avg Price</div>
+                                <div class="stat-mini-value">₹2,456.80</div>
+                            </div>
+                            <div>
+                                <div class="stat-mini">Current Price</div>
+                                <div class="stat-mini-value">₹2,678.50</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="symbol-card" onclick="showDetails('TCS')">
+                        <div class="symbol-header">
+                            <div>
+                                <div class="symbol-name">TCS</div>
+                                <div class="symbol-company">Tata Consultancy Services</div>
+                            </div>
+                            <div class="symbol-quantity">50 Qty</div>
+                        </div>
+                        <div class="symbol-stats">
+                            <div>
+                                <div class="stat-mini">Avg Price</div>
+                                <div class="stat-mini-value">₹3,245.60</div>
+                            </div>
+                            <div>
+                                <div class="stat-mini">Current Price</div>
+                                <div class="stat-mini-value">₹3,512.30</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="symbol-card" onclick="showDetails('INFY')">
+                        <div class="symbol-header">
+                            <div>
+                                <div class="symbol-name">INFY</div>
+                                <div class="symbol-company">Infosys Limited</div>
+                            </div>
+                            <div class="symbol-quantity">75 Qty</div>
+                        </div>
+                        <div class="symbol-stats">
+                            <div>
+                                <div class="stat-mini">Avg Price</div>
+                                <div class="stat-mini-value">₹1,456.20</div>
+                            </div>
+                            <div>
+                                <div class="stat-mini">Current Price</div>
+                                <div class="stat-mini-value">₹1,523.80</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="symbol-card" onclick="showDetails('HDFC')">
+                        <div class="symbol-header">
+                            <div>
+                                <div class="symbol-name">HDFC</div>
+                                <div class="symbol-company">HDFC Bank</div>
+                            </div>
+                            <div class="symbol-quantity">120 Qty</div>
+                        </div>
+                        <div class="symbol-stats">
+                            <div>
+                                <div class="stat-mini">Avg Price</div>
+                                <div class="stat-mini-value">₹1,678.90</div>
+                            </div>
+                            <div>
+                                <div class="stat-mini">Current Price</div>
+                                <div class="stat-mini-value">₹1,745.60</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="symbol-details" id="detailsSection" style="display: none;">
+                <div class="detail-content" style="padding-top: 0;">
+                    <div>
+                        <h3 style="color: #333; margin-bottom: 20px; font-size: 20px; padding: 25px 25px 0;">RELIANCE - Complete Overview</h3>
+
+                        <div style="padding: 0 25px;">
+                            <h4 style="color: #333; margin-bottom: 15px; font-size: 16px; font-weight: 600;">Holdings Summary</h4>
+                            <div class="overall-stats">
+                                <div class="stat-card">
+                                    <div class="stat-label">Average Price</div>
+                                    <div class="stat-value">₹2,456.80</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-label">Last Trading Price</div>
+                                    <div class="stat-value">₹2,678.50</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-label">Market Value</div>
+                                    <div class="stat-value">₹2,67,850</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-label">Total Gain/Loss</div>
+                                    <div class="stat-value positive">+₹22,170</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="padding: 0 25px; margin-top: 30px;">
+                            <h4 style="color: #333; margin-bottom: 15px; font-size: 16px; font-weight: 600;">Trade Summary</h4>
+                            <div class="overall-stats">
+                                <div class="stat-card">
+                                    <div class="stat-label">Total Buy Quantity</div>
+                                    <div class="stat-value">150</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-label">Total Sell Quantity</div>
+                                    <div class="stat-value">50</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-label">Total Buy Price</div>
+                                    <div class="stat-value">₹3,68,500</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-label">Total Sell Price</div>
+                                    <div class="stat-value">₹1,26,000</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-label">Avg Weighted Price</div>
+                                    <div class="stat-value">₹2,456.67</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-label">Net Quantity</div>
+                                    <div class="stat-value">100</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="padding: 25px;">
+                            <h4 style="color: #333; margin-bottom: 15px; font-size: 16px; font-weight: 600;">All Transactions</h4>
+                            <div class="transactions-table">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Trade Date</th>
+                                            <th>Type</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                            <th>Amount</th>
+                                            <th>Charges</th>
+                                            <th>Net Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>15 Jan 2025</td>
+                                            <td><span class="buy">BUY</span></td>
+                                            <td>50</td>
+                                            <td>₹2,400.00</td>
+                                            <td>₹1,20,000</td>
+                                            <td>₹450</td>
+                                            <td>₹1,20,450</td>
+                                        </tr>
+                                        <tr>
+                                            <td>20 Feb 2024</td>
+                                            <td><span class="buy">BUY</span></td>
+                                            <td>30</td>
+                                            <td>₹2,350.00</td>
+                                            <td>₹70,500</td>
+                                            <td>₹280</td>
+                                            <td>₹70,780</td>
+                                        </tr>
+                                        <tr>
+                                            <td>05 Mar 2024</td>
+                                            <td><span class="buy">BUY</span></td>
+                                            <td>20</td>
+                                            <td>₹2,580.00</td>
+                                            <td>₹51,600</td>
+                                            <td>₹210</td>
+                                            <td>₹51,810</td>
+                                        </tr>
+                                        <tr>
+                                            <td>15 Apr 2024</td>
+                                            <td><span class="buy">BUY</span></td>
+                                            <td>50</td>
+                                            <td>₹2,528.00</td>
+                                            <td>₹1,26,400</td>
+                                            <td>₹480</td>
+                                            <td>₹1,26,880</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10 May 2024</td>
+                                            <td><span class="sell">SELL</span></td>
+                                            <td>50</td>
+                                            <td>₹2,520.00</td>
+                                            <td>₹1,26,000</td>
+                                            <td>₹450</td>
+                                            <td>₹1,25,550</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSymbols(broker, type) {
+            document.getElementById('mainView').classList.add('hidden');
+            document.getElementById('symbolsView').classList.remove('hidden');
+            document.getElementById('symbolsTitle').textContent = `Stock Symbols - ${broker} (${type.charAt(0).toUpperCase() + type.slice(1)})`;
+            window.scrollTo(0, 0);
+        }
+
+        function backToMain() {
+            document.getElementById('mainView').classList.remove('hidden');
+            document.getElementById('symbolsView').classList.add('hidden');
+            document.getElementById('detailsSection').style.display = 'none';
+        }
+
+        function showDetails(symbol) {
+            document.getElementById('detailsSection').style.display = 'block';
+            document.getElementById('detailsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

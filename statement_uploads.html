@@ -697,6 +697,15 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label class="form-label">Select DematAccount Type</label>
+                    <select class="form-control" id="dematType" onchange="updateDematAccounts()">
+                        <option value="">Select DematAccount Type</option>
+                        <option value="sravani">Trading</option>
+                        <option value="pala">Savings</option>
+                        <option value="santosh">Ledger</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label class="form-label">Select Demat Account Provider</label>
                     <select class="form-control" id="dematProvider">
                         <option value="">First select a person</option>
@@ -720,6 +729,7 @@
                     </select>
                 </div>
             </div>
+
             <div class="form-group">
                 <label class="form-label">Upload File</label>
                 <div class="upload-area" onclick="document.getElementById('fileInput').click()">
@@ -810,6 +820,7 @@
         function updateDematAccounts() {
             const selectedPerson = document.getElementById('dematPerson').value;
             const providerSelect = document.getElementById('dematProvider');
+            const dematType = document.getElementById('dematType').value;
             providerSelect.innerHTML = '';
             if (selectedPerson && dematAccounts[selectedPerson]) {
                 const defaultOption = document.createElement('option');

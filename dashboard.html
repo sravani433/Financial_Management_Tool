@@ -1382,12 +1382,12 @@
       forms.forEach(form => {
         form.addEventListener('submit', function(e) {
           e.preventDefault();
-          // In a real application, submit data to server
+          // In a real application, submit data to a server
           // For demo, just close the modal
           modals.forEach(modal => {
             modal.style.display = 'none';
           });
-          // Could also show success message
+          // Could also show a success message
           alert('Data saved successfully!');
         });
       });
