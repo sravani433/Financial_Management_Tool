@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Tool - Expenditure View</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .header {
+            background-color: #fff;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e1e8ed;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #0066cc;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            width: 200px;
+            height: calc(100vh - 60px);
+            background-color: #fff;
+            border-right: 1px solid #e1e8ed;
+            padding: 16px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #666;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .nav-item.active {
+            background-color: #e6f0ff;
+            color: #0066cc;
+            border-left-color: #0066cc;
+            font-weight: 600;
+        }
+
+        .main-content {
+            margin-left: 200px;
+            margin-top: 60px;
+            padding: 24px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .view-container {
+            display: grid;
+            gap: 24px;
+        }
+
+        .main-classifications {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .classification-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #e1e8ed;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .classification-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: #0066cc;
+            transform: translateY(-2px);
+        }
+
+        .classification-card.selected {
+            background-color: #e6f0ff;
+            border-color: #0066cc;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .classification-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .percentage-badge {
+            background-color: #f0f4f8;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #0066cc;
+        }
+
+        .card-stats {
+            display: grid;
+            gap: 12px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f4f8;
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            color: #1a202c;
+            font-weight: 600;
+        }
+
+        .stat-value.projection {
+            color: #0066cc;
+        }
+
+        .detail-view {
+            display: none;
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            border: 1px solid #e1e8ed;
+        }
+
+        .detail-view.active {
+            display: block;
+        }
+
+        .detail-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: #0066cc;
+            padding: 0;
+        }
+
+        .detail-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .subclassifications {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .subclass-item {
+            background: #f9fafb;
+            padding: 16px;
+            border-radius: 6px;
+            border: 1px solid #e1e8ed;
+            transition: all 0.2s ease;
+        }
+
+        .subclass-item:hover {
+            background: #f0f4f8;
+            border-color: #0066cc;
+        }
+
+        .subclass-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .subclass-name {
+            font-weight: 600;
+            color: #1a202c;
+            flex: 1;
+        }
+
+        .subclass-amounts {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .amount-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+            font-size: 12px;
+        }
+
+        .amount-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .amount-value {
+            color: #1a202c;
+            font-weight: 600;
+        }
+
+        .view-btn {
+            padding: 6px 14px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .view-btn:hover {
+            background-color: #0052a3;
+        }
+
+        .transactions-section {
+            margin-top: 24px;
+            display: none;
+        }
+
+        .transactions-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 16px;
+        }
+
+        .transactions-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #e1e8ed;
+        }
+
+        .transactions-table thead {
+            background-color: #f9fafb;
+        }
+
+        .transactions-table th {
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .transactions-table td {
+            padding: 12px;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f4f8;
+        }
+
+        .transactions-table tbody tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .transaction-amount {
+            color: #1a202c;
+            font-weight: 600;
+        }
+
+        .transaction-date {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: #f0f4f8;
+            color: #0066cc;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 150px;
+            }
+
+            .main-content {
+                margin-left: 150px;
+                padding: 16px;
+            }
+
+            .main-classifications {
+                grid-template-columns: 1fr;
+            }
+
+            .subclass-amounts {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-title">Financial Tool</div>
+        <div class="user-profile">
+            <div class="user-avatar">S</div>
+            <span>Sravani</span>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="nav-item active">
+            <span>📊</span>
+            <span>Expenditure</span>
+        </div>
+        <div class="nav-item">
+            <span>💰</span>
+            <span>Categories</span>
+        </div>
+        <div class="nav-item">
+            <span>📋</span>
+            <span>Income Declaration</span>
+        </div>
+        <div class="nav-item">
+            <span>💵</span>
+            <span>Budget Allocation</span>
+        </div>
+        <div class="nav-item">
+            <span>📈</span>
+            <span>Income Projections</span>
+        </div>
+        <div class="nav-item">
+            <span>🏦</span>
+            <span>Demat Accounts</span>
+        </div>
+        <div class="nav-item">
+            <span>📦</span>
+            <span>Asset Declaration</span>
+        </div>
+        <div class="nav-item">
+            <span>📜</span>
+            <span>Liabilities Declaration</span>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="page-header">
+            <div class="page-title">Expenditure View</div>
+        </div>
+
+        <div class="view-container">
+            <div id="mainView" class="main-view">
+                <div class="main-classifications" id="classificationsGrid"></div>
+            </div>
+
+            <div id="detailView" class="detail-view">
+                <div class="detail-header">
+                    <button class="back-btn" onclick="goBack()">←</button>
+                    <div class="detail-title" id="detailTitle"></div>
+                </div>
+
+                <div class="subclassifications" id="subclassificationsContainer"></div>
+
+                <div class="transactions-section" id="transactionsSection">
+                    <div class="section-title">Related Transactions</div>
+                    <table class="transactions-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Amount (Rs.)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const data = {
+            classifications: [
+                {
+                    id: 'housing',
+                    name: 'Housing',
+                    percentage: 30,
+                    actual: 1241036,
+                    projection: 196497,
+                    budget: 1044539,
+                    subclassifications: [
+                        { name: 'Cleaning', actual: 45000, projection: 5000, budget: 40000 },
+                        { name: 'Kitchen Utils', actual: 52000, projection: 6000, budget: 46000 },
+                        { name: 'News Paper', actual: 8000, projection: 1000, budget: 7000 },
+                        { name: 'Waste removal', actual: 18000, projection: 2000, budget: 16000 },
+                        { name: 'Electricity', actual: 285000, projection: 35000, budget: 250000 },
+                        { name: 'Milk', actual: 95000, projection: 12000, budget: 83000 },
+                        { name: 'Groceries', actual: 380000, projection: 50000, budget: 330000 },
+                        { name: 'Home Telephone', actual: 25000, projection: 3000, budget: 22000 },
+                        { name: 'Home repairs', actual: 120000, projection: 15000, budget: 105000 },
+                        { name: 'Water and sewer', actual: 65000, projection: 8000, budget: 57000 },
+                        { name: 'House Maintainace', actual: 72000, projection: 9000, budget: 63000 },
+                        { name: 'Mobile Bills', actual: 42000, projection: 5000, budget: 37000 },
+                        { name: 'Rental', actual: 35000, projection: 4000, budget: 31000 },
+                        { name: 'Maid', actual: 48000, projection: 6000, budget: 42000 },
+                        { name: 'Garden Maintainace', actual: 30000, projection: 4000, budget: 26000 }
+                    ]
+                },
+                {
+                    id: 'family',
+                    name: 'Family Care',
+                    percentage: 25,
+                    actual: 1034197,
+                    projection: 129274,
+                    budget: 904923,
+                    subclassifications: [
+                        { name: 'Medicine', actual: 185000, projection: 25000, budget: 160000 },
+                        { name: 'Regular Medical Tests', actual: 120000, projection: 15000, budget: 105000 },
+                        { name: 'Grooming', actual: 75000, projection: 10000, budget: 65000 },
+                        { name: 'Medical Checkups', actual: 95000, projection: 12000, budget: 83000 },
+                        { name: 'Vaccinations', actual: 85000, projection: 11000, budget: 74000 },
+                        { name: 'Education', actual: 145000, projection: 18000, budget: 127000 },
+                        { name: 'Clothing', actual: 108000, projection: 14000, budget: 94000 },
+                        { name: 'Sports & Activities', actual: 82000, projection: 10000, budget: 72000 },
+                        { name: 'Birthday & Celebrations', actual: 95000, projection: 12000, budget: 83000 }
+                    ]
+                },
+                {
+                    id: 'entertainment',
+                    name: 'Entertainment',
+                    percentage: 15,
+                    actual: 620518,
+                    projection: 77564,
+                    budget: 542954,
+                    subclassifications: [
+                        { name: 'Games & Fun', actual: 95000, projection: 12000, budget: 83000 },
+                        { name: 'Concerts', actual: 120000, projection: 15000, budget: 105000 },
+                        { name: 'Sports Events', actual: 180000, projection: 22000, budget: 158000 },
+                        { name: 'Misleanor', actual: 60000, projection: 8000, budget: 52000 },
+                        { name: 'Movies', actual: 85000, projection: 10000, budget: 75000 },
+                        { name: 'Dining Out', actual: 100000, projection: 13000, budget: 87000 }
+                    ]
+                },
+                {
+                    id: 'vehicles',
+                    name: 'Vehicles Maintenance',
+                    percentage: 12,
+                    actual: 496414,
+                    projection: 62051,
+                    budget: 434363,
+                    subclassifications: [
+                        { name: 'Fuel', actual: 180000, projection: 22000, budget: 158000 },
+                        { name: 'Service & Repair', actual: 120000, projection: 15000, budget: 105000 },
+                        { name: 'Insurance', actual: 95000, projection: 12000, budget: 83000 },
+                        { name: 'Parking', actual: 42000, projection: 5000, budget: 37000 },
+                        { name: 'Toll & Registration', actual: 35000, projection: 4000, budget: 31000 },
+                        { name: 'Maintenance Parts', actual: 24000, projection: 3000, budget: 21000 }
+                    ]
+                },
+                {
+                    id: 'insurance',
+                    name: 'Insurance',
+                    percentage: 10,
+                    actual: 413012,
+                    projection: 51626,
+                    budget: 361386,
+                    subclassifications: [
+                        { name: 'Health Insurance', actual: 180000, projection: 22000, budget: 158000 },
+                        { name: 'Life Insurance', actual: 150000, projection: 18000, budget: 132000 },
+                        { name: 'Vehicle Insurance', actual: 83012, projection: 11000, budget: 72000 }
+                    ]
+                },
+                {
+                    id: 'travel',
+                    name: 'Travel',
+                    percentage: 8,
+                    actual: 330410,
+                    projection: 41301,
+                    budget: 289109,
+                    subclassifications: [
+                        { name: 'Flight Tickets', actual: 120000, projection: 15000, budget: 105000 },
+                        { name: 'Hotels', actual: 95000, projection: 12000, budget: 83000 },
+                        { name: 'Local Transport', actual: 60000, projection: 8000, budget: 52000 },
+                        { name: 'Travel Insurance', actual: 25000, projection: 3000, budget: 22000 },
+                        { name: 'Tours & Activities', actual: 30410, projection: 4000, budget: 26410 }
+                    ]
+                }
+            ],
+            transactions: {
+                housing: [
+                    { date: '2025-10-08', desc: 'Electricity Bill', amount: 3500 },
+                    { date: '2025-10-07', desc: 'Grocery Shopping', amount: 2150 },
+                    { date: '2025-10-06', desc: 'Milk Delivery', amount: 350 },
+                    { date: '2025-10-05', desc: 'Home Repair - Plumbing', amount: 5000 },
+                    { date: '2025-10-04', desc: 'Water Bill', amount: 850 },
+                    { date: '2025-10-03', desc: 'Maid Salary', amount: 3000 }
+                ],
+                family: [
+                    { date: '2025-10-08', desc: 'Medical Checkup', amount: 1500 },
+                    { date: '2025-10-07', desc: 'Medicine Purchase', amount: 850 },
+                    { date: '2025-10-05', desc: 'School Fees', amount: 15000 },
+                    { date: '2025-10-04', desc: 'Clothing Purchase', amount: 2500 },
+                    { date: '2025-10-02', desc: 'Sports Activity', amount: 1200 }
+                ],
+                entertainment: [
+                    { date: '2025-10-08', desc: 'Movie Tickets', amount: 600 },
+                    { date: '2025-10-07', desc: 'Concert Ticket', amount: 3000 },
+                    { date: '2025-10-06', desc: 'Dining - Restaurant', amount: 1800 },
+                    { date: '2025-10-04', desc: 'Gaming Purchase', amount: 2500 },
+                    { date: '2025-10-01', desc: 'Sports Event Ticket', amount: 2000 }
+                ],
+                vehicles: [
+                    { date: '2025-10-08', desc: 'Fuel', amount: 1500 },
+                    { date: '2025-10-07', desc: 'Vehicle Service', amount: 4500 },
+                    { date: '2025-10-05', desc: 'Parking Fee', amount: 150 },
+                    { date: '2025-10-03', desc: 'Fuel', amount: 1500 },
+                    { date: '2025-10-01', desc: 'Maintenance Part', amount: 2000 }
+                ],
+                insurance: [
+                    { date: '2025-10-08', desc: 'Health Insurance Premium', amount: 5000 },
+                    { date: '2025-10-07', desc: 'Life Insurance Premium', amount: 4200 },
+                    { date: '2025-10-05', desc: 'Vehicle Insurance Renewal', amount: 2800 }
+                ],
+                travel: [
+                    { date: '2025-10-08', desc: 'Flight Booking', amount: 8500 },
+                    { date: '2025-10-07', desc: 'Hotel Reservation', amount: 12000 },
+                    { date: '2025-10-05', desc: 'Travel Insurance', amount: 1500 },
+                    { date: '2025-10-03', desc: 'Local Transport', amount: 450 }
+                ]
+            }
+        };
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function renderClassifications() {
+            const grid = document.getElementById('classificationsGrid');
+            grid.innerHTML = data.classifications.map(cls => `
+                <div class="classification-card" onclick="showDetail('${cls.id}')">
+                    <div class="card-header">
+                        <div class="classification-name">${cls.name}</div>
+                        <div class="percentage-badge">${cls.percentage}%</div>
+                    </div>
+                    <div class="card-stats">
+                        <div class="stat-row">
+                            <span class="stat-label">Actual Amount</span>
+                            <span class="stat-value">${formatCurrency(cls.actual)}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Projection</span>
+                            <span class="stat-value projection">${formatCurrency(cls.projection)}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Budget Allocated</span>
+                            <span class="stat-value">${formatCurrency(cls.budget)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showDetail(classificationId) {
+            const cls = data.classifications.find(c => c.id === classificationId);
+            if (!cls) return;
+
+            document.getElementById('mainView').style.display = 'none';
+            document.getElementById('detailView').classList.add('active');
+            document.getElementById('detailTitle').textContent = cls.name;
+
+            const subclassContainer = document.getElementById('subclassificationsContainer');
+            subclassContainer.innerHTML = cls.subclassifications.map((sub, idx) => `
+                <div class="subclass-item">
+                    <div class="subclass-header">
+                        <div class="subclass-name">${sub.name}</div>
+                        <div class="subclass-amounts">
+                            <div class="amount-block">
+                                <span class="amount-label">Actual</span>
+                                <span class="amount-value">${formatCurrency(sub.actual)}</span>
+                            </div>
+                            <div class="amount-block">
+                                <span class="amount-label">Projected</span>
+                                <span class="amount-value">${formatCurrency(sub.projection)}</span>
+                            </div>
+                            <button class="view-btn" onclick="showSubclassTransactions('${classificationId}', ${idx}, '${sub.name}', '${cls.name}')">View</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('transactionsSection').classList.remove('active');
+        }
+
+        function showSubclassTransactions(classificationId, subIdx, subName, mainName) {
+            const cls = data.classifications.find(c => c.id === classificationId);
+            const section = document.getElementById('transactionsSection');
+
+            const transactions = data.transactions[classificationId] || [];
+
+            const tbody = document.getElementById('transactionsBody');
+            tbody.innerHTML = transactions.map(trans => `
+                <tr>
+                    <td class="transaction-date">${trans.date}</td>
+                    <td>${trans.desc}</td>
+                    <td><span class="tag">${subName}</span></td>
+                    <td class="transaction-amount">${formatCurrency(trans.amount)}</td>
+                </tr>
+            `).join('');
+
+            section.classList.add('active');
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function goBack() {
+            document.getElementById('mainView').style.display = 'block';
+            document.getElementById('detailView').classList.remove('active');
+        }
+
+        renderClassifications();
+    </script>
+</body>
+</html>
