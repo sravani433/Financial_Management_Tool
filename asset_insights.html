@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asset Insights</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #1976d2;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .metric-card.dominant {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .metric-card.growth {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .metric-label {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .metric-detail {
+            font-size: 12px;
+            opacity: 0.85;
+        }
+
+        .charts-section {
+            margin-bottom: 25px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            height: 320px;
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        canvas {
+            max-height: 250px !important;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .asset-breakdown {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .asset-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 4px solid #1976d2;
+        }
+
+        .asset-item.real-estate {
+            border-left-color: #f5576c;
+        }
+
+        .asset-item.gold {
+            border-left-color: #ffd700;
+        }
+
+        .asset-item.equity {
+            border-left-color: #4facfe;
+        }
+
+        .asset-item.vehicle {
+            border-left-color: #9e9e9e;
+        }
+
+        .asset-info {
+            flex: 1;
+        }
+
+        .asset-category {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+            font-size: 14px;
+        }
+
+        .asset-growth {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .growth-positive {
+            color: #43a047;
+            font-weight: 600;
+        }
+
+        .growth-negative {
+            color: #e53935;
+            font-weight: 600;
+        }
+
+        .asset-amount {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1976d2;
+            margin-right: 10px;
+        }
+
+        .asset-percentage {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .insights-section {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 0;
+        }
+
+        .insights-title {
+            color: #856404;
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .insight-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0e5c5;
+            color: #856404;
+            line-height: 1.5;
+            font-size: 13px;
+        }
+
+        .insight-item:last-child {
+            border-bottom: none;
+        }
+
+        .insight-bullet {
+            color: #ffc107;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .warning-badge {
+            display: inline-block;
+            background: #ffebee;
+            color: #c62828;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        @media (max-width: 968px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Asset Insights</h1>
+        <p class="subtitle">Comprehensive analysis of your asset portfolio and growth patterns</p>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Total Net Worth</div>
+                <div class="metric-value">₹1.32 Cr</div>
+                <div class="metric-detail">Overall Portfolio Value</div>
+            </div>
+            <div class="metric-card dominant">
+                <div class="metric-label">Dominant Asset</div>
+                <div class="metric-value">Real Estate</div>
+                <div class="metric-detail">87.1% concentration</div>
+            </div>
+            <div class="metric-card growth">
+                <div class="metric-label">Best Performer</div>
+                <div class="metric-value">Vizag Property</div>
+                <div class="metric-detail">12.5% - 20% growth</div>
+            </div>
+        </div>
+
+        <div class="charts-section">
+            <h2 class="section-title">Visual Analysis</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-title">Asset Allocation</div>
+                    <canvas id="pieChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Asset Growth Performance (%)</div>
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="asset-breakdown">
+                <h2 class="section-title">Asset Portfolio Breakdown</h2>
+
+                <div class="asset-item real-estate">
+                    <div class="asset-info">
+                        <div class="asset-category">Real Estate (Vizag)</div>
+                        <div class="asset-growth">Growth: <span class="growth-positive">12.5% - 20%</span></div>
+                    </div>
+                    <div class="asset-amount">₹1.05 Cr</div>
+                    <div class="asset-percentage">87.1%</div>
+                </div>
+
+                <div class="asset-item gold">
+                    <div class="asset-info">
+                        <div class="asset-category">Gold</div>
+                        <div class="asset-growth">Growth: <span class="growth-positive">5.6%</span> (₹50,000 gain)</div>
+                    </div>
+                    <div class="asset-amount">₹9.5 L</div>
+                    <div class="asset-percentage">7.2%</div>
+                </div>
+
+                <div class="asset-item equity">
+                    <div class="asset-info">
+                        <div class="asset-category">Equity (BOI, IOB)</div>
+                        <div class="asset-growth">Growth: <span class="growth-positive">5.0%</span> (₹30,000 gain)</div>
+                    </div>
+                    <div class="asset-amount">₹6.3 L</div>
+                    <div class="asset-percentage">4.8%</div>
+                </div>
+
+                <div class="asset-item vehicle">
+                    <div class="asset-info">
+                        <div class="asset-category">Two Wheeler</div>
+                        <div class="asset-growth">Depreciation: <span class="growth-negative">-20%</span> (₹30,000 loss)</div>
+                    </div>
+                    <div class="asset-amount">₹1.2 L</div>
+                    <div class="asset-percentage">0.9%</div>
+                </div>
+            </div>
+
+            <div class="insights-section">
+                <div class="insights-title">Key Insights & Risk Analysis</div>
+
+                <div class="insight-item">
+                    <span class="insight-bullet">●</span>
+                    Real estate dominates your portfolio (over 87%). <span class="warning-badge">HIGH RISK</span> Such concentration increases vulnerability to local economic fluctuations, policy changes, and liquidity risks.
+                </div>
+
+                <div class="insight-item">
+                    <span class="insight-bullet">●</span>
+                    Vizag real estate has shown strong appreciation (12.5-20%), especially near the airport, but local market risks remain due to policy shifts, infrastructure delays, or IT/industrial demand changes.
+                </div>
+
+                <div class="insight-item">
+                    <span class="insight-bullet">●</span>
+                    Gold provides modest appreciation (₹50,000 gain) and stability, but offers lower liquidity compared to financial assets.
+                </div>
+
+                <div class="insight-item">
+                    <span class="insight-bullet">●</span>
+                    Equities (BOI, IOB) show reasonable growth (₹30,000 gain), but these are public sector banks with moderate volatility and growth prospects.
+                </div>
+
+                <div class="insight-item">
+                    <span class="insight-bullet">●</span>
+                    Two-wheelers are depreciating assets (₹30,000 loss). They provide utility but not investment returns. Consider this as an expense rather than an investment.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Asset data
+        const assetData = {
+            labels: ['Real Estate', 'Gold', 'Equity', 'Two Wheeler'],
+            amounts: [10500000, 950000, 630000, 120000],
+            percentages: [87.1, 7.2, 4.8, 0.9],
+            growth: [16.25, 5.6, 5.0, -20.0], // Using average for real estate (12.5+20)/2
+            colors: [
+                '#f5576c',  // Real Estate - Red/Pink
+                '#ffd700',  // Gold - Gold
+                '#4facfe',  // Equity - Blue
+                '#9e9e9e'   // Two Wheeler - Grey
+            ]
+        };
+
+        // Pie Chart - Asset Allocation
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: assetData.labels,
+                datasets: [{
+                    data: assetData.amounts,
+                    backgroundColor: assetData.colors,
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const percentage = assetData.percentages[context.dataIndex];
+                                const formatted = value >= 10000000 ?
+                                    '₹' + (value/10000000).toFixed(2) + ' Cr' :
+                                    '₹' + (value/100000).toFixed(1) + ' L';
+                                return `${label}: ${formatted} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Bar Chart - Growth Performance
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: assetData.labels,
+                datasets: [{
+                    label: 'Growth Rate (%)',
+                    data: assetData.growth,
+                    backgroundColor: assetData.growth.map(g => g >= 0 ? '#43a047' : '#e53935'),
+                    borderWidth: 0,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.parsed.y;
+                                return value >= 0 ? `+${value}%` : `${value}%`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
