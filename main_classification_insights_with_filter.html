@@ -1,0 +1,1651 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Insights Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Sophisticated color palette */
+            --primary-50: #f8fafc;
+            --primary-100: #f1f5f9;
+            --primary-200: #e2e8f0;
+            --primary-300: #cbd5e1;
+            --primary-400: #94a3b8;
+            --primary-500: #64748b;
+            --primary-600: #475569;
+            --primary-700: #334155;
+            --primary-800: #1e293b;
+            --primary-900: #0f172a;
+
+            --accent-blue: #3b82f6;
+            --accent-blue-light: #60a5fa;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-purple: #8b5cf6;
+
+            --surface-0: #ffffff;
+            --surface-1: #f8fafc;
+            --surface-2: #f1f5f9;
+            --surface-3: #e2e8f0;
+
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #64748b;
+
+            --border-light: #e2e8f0;
+            --border-medium: #cbd5e1;
+            --border-strong: #94a3b8;
+
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+            --gradient-subtle: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            --gradient-muted: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--surface-1);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Modern header design */
+        .header {
+            background: var(--surface-0);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-subtle);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            letter-spacing: -0.025em;
+        }
+
+        .header-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 24px;
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-item {
+            background: var(--surface-2);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        /* Refined controls section */
+        .controls-section {
+            background: var(--surface-0);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--accent-blue);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-medium);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface-0);
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-blue-light);
+            border-color: var(--accent-blue-light);
+        }
+
+        .btn-success {
+            background: var(--accent-green);
+            color: white;
+            border-color: var(--accent-green);
+        }
+
+        .btn-warning {
+            background: var(--accent-amber);
+            color: white;
+            border-color: var(--accent-amber);
+        }
+
+        /* Elegant category cards */
+        .category-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .category-card {
+            background: var(--surface-0);
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .category-card.selected {
+            border-color: var(--accent-blue);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05));
+        }
+
+        .category-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .category-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .category-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .category-count {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        .category-check {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--border-medium);
+            background: var(--surface-0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .category-card.selected .category-check {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+        }
+
+        .category-check i {
+            color: white;
+            font-size: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .category-card.selected .category-check i {
+            opacity: 1;
+        }
+
+        /* Refined classification selector */
+        .main-classification-selector {
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .main-classification-selector.active {
+            display: block;
+        }
+
+        .classification-group {
+            background: var(--surface-1);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .classification-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .classification-label i {
+            color: var(--accent-blue);
+        }
+
+        .classification-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .classification-chip {
+            padding: 8px 16px;
+            border: 1px solid var(--border-medium);
+            border-radius: 20px;
+            background: var(--surface-0);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .classification-chip:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .classification-chip.selected {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        /* Professional insight cards */
+        .insights-container {
+            display: grid;
+            gap: 24px;
+        }
+
+        .insight-card {
+            background: var(--surface-0);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .insight-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .insight-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-light);
+            gap: 20px;
+        }
+
+        .insight-title-section {
+            flex: 1;
+        }
+
+        .insight-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.025em;
+        }
+
+        .insight-meta {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .insight-meta i {
+            color: var(--accent-blue);
+        }
+
+        .insight-scores {
+            display: flex;
+            gap: 16px;
+        }
+
+        .score-item {
+            text-align: center;
+            background: var(--surface-1);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            min-width: 100px;
+        }
+
+        .score-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .score-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .score-value.confidence { color: var(--accent-blue); }
+        .score-value.impact { color: var(--accent-purple); }
+
+        .insight-section {
+            margin-bottom: 24px;
+        }
+
+        .insight-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .insight-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .insight-section-title i {
+            color: var(--accent-blue);
+        }
+
+        .insight-list {
+            list-style: none;
+        }
+
+        .insight-list li {
+            padding: 12px 0 12px 24px;
+            position: relative;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .insight-list li:hover {
+            color: var(--text-primary);
+            padding-left: 28px;
+        }
+
+        .insight-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 20px;
+            width: 6px;
+            height: 6px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+        }
+
+        .recommendation-list li::before {
+            background: var(--accent-green);
+        }
+
+        /* Enhanced no selection state */
+        .no-selection {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--surface-0);
+            border: 2px dashed var(--border-medium);
+            border-radius: 16px;
+        }
+
+        .no-selection-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.6;
+        }
+
+        .no-selection h3 {
+            font-size: 20px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .no-selection p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        /* Filter info bar */
+        .filter-info {
+            background: var(--gradient-muted);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .filter-info i {
+            color: var(--accent-blue);
+        }
+
+        /* Dark mode toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--surface-0);
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-toggle i {
+            color: var(--accent-blue);
+            font-size: 18px;
+        }
+
+        /* Search and filter bar */
+        .search-filter-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 12px 16px;
+            border: 1px solid var(--border-medium);
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--surface-0);
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .filter-dropdown {
+            padding: 12px 16px;
+            border: 1px solid var(--border-medium);
+            border-radius: 8px;
+            background: var(--surface-0);
+            color: var(--text-primary);
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        /* Comparison view */
+        .comparison-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .comparison-card {
+            background: var(--surface-0);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Chart placeholder */
+        .chart-container {
+            height: 300px;
+            background: var(--surface-1);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 24px 0;
+            color: var(--text-tertiary);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+
+            .header { padding: 24px 20px; }
+            .header h1 { font-size: 24px; }
+            .stats-bar { grid-template-columns: 1fr 1fr; }
+
+            .controls-section { padding: 24px 20px; }
+            .section-header { flex-direction: column; gap: 16px; align-items: stretch; }
+            .action-buttons { justify-content: stretch; }
+            .btn { justify-content: center; }
+
+            .category-selector { grid-template-columns: 1fr; }
+            .insight-header { flex-direction: column; }
+            .insight-scores { width: 100%; justify-content: space-around; }
+
+            .search-filter-bar { flex-direction: column; }
+            .search-input { min-width: unset; }
+
+            .theme-toggle {
+                position: relative;
+                top: unset;
+                right: unset;
+                margin-left: auto;
+            }
+        }
+
+        /* Loading states */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid var(--border-light);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Dark mode styles */
+        [data-theme="dark"] {
+            --surface-0: #0f172a;
+            --surface-1: #1e293b;
+            --surface-2: #334155;
+            --surface-3: #475569;
+
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+
+            --border-light: #334155;
+            --border-medium: #475569;
+            --border-strong: #64748b;
+        }
+
+        [data-theme="dark"] body {
+            background: var(--surface-1);
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </div>
+
+    <div class="dashboard">
+        <div class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-chart-line"></i> Financial Insights Dashboard</h1>
+                <p class="header-subtitle">Comprehensive analysis across income, investments, assets, and liabilities with advanced filtering and comparison tools</p>
+
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <div class="stat-label"><i class="fas fa-layer-group"></i> Total Categories</div>
+                        <div class="stat-value" id="totalCategories">4</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label"><i class="fas fa-check-circle"></i> Selected</div>
+                        <div class="stat-value" id="selectedCount">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label"><i class="fas fa-lightbulb"></i> Active Insights</div>
+                        <div class="stat-value" id="activeInsights">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label"><i class="fas fa-clock"></i> Last Updated</div>
+                        <div class="stat-value" id="lastUpdated" style="font-size: 14px;">Just now</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-sliders-h"></i>
+                    Category Selection & Filters
+                </div>
+                <div class="action-buttons">
+                    <button class="btn" onclick="clearAll()">
+                        <i class="fas fa-times"></i> Clear All
+                    </button>
+                    <button class="btn" onclick="toggleComparisonMode()">
+                        <i class="fas fa-exchange-alt"></i> Compare
+                    </button>
+                    <button class="btn btn-warning" onclick="refreshInsights()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <button class="btn btn-success" onclick="exportData()">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                    <button class="btn btn-primary" onclick="generateReport()">
+                        <i class="fas fa-file-pdf"></i> Report
+                    </button>
+                </div>
+            </div>
+
+            <div class="search-filter-bar">
+                <input type="text" class="search-input" placeholder="Search insights, categories, or recommendations..." id="searchInput" oninput="filterInsights()">
+                <select class="filter-dropdown" id="sortBy" onchange="sortInsights()">
+                    <option value="relevance">Sort by Relevance</option>
+                    <option value="confidence">Sort by Confidence</option>
+                    <option value="impact">Sort by Impact</option>
+                    <option value="date">Sort by Date</option>
+                </select>
+                <select class="filter-dropdown" id="filterBy" onchange="filterInsights()">
+                    <option value="all">All Insights</option>
+                    <option value="high-confidence">High Confidence</option>
+                    <option value="high-impact">High Impact</option>
+                    <option value="recommendations">With Recommendations</option>
+                </select>
+            </div>
+
+            <div class="category-selector" id="categorySelector">
+                <div class="category-card" data-category="Income">
+                    <div class="category-content">
+                        <div class="category-icon">💰</div>
+                        <div class="category-name">Income Sources</div>
+                        <div class="category-count">2 classifications • Primary & Secondary</div>
+                    </div>
+                    <div class="category-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="category-card" data-category="Investment">
+                    <div class="category-content">
+                        <div class="category-icon">📈</div>
+                        <div class="category-name">Investments</div>
+                        <div class="category-count">3 classifications • Equity, Debt & Mutual Funds</div>
+                    </div>
+                    <div class="category-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="category-card" data-category="Assets">
+                    <div class="category-content">
+                        <div class="category-icon">🏦</div>
+                        <div class="category-name">Assets</div>
+                        <div class="category-count">3 classifications • Liquid, Fixed & Real Estate</div>
+                    </div>
+                    <div class="category-check"><i class="fas fa-check"></i></div>
+                </div>
+                <div class="category-card" data-category="Liabilities">
+                    <div class="category-content">
+                        <div class="category-icon">💳</div>
+                        <div class="category-name">Liabilities</div>
+                        <div class="category-count">3 classifications • Short, Long & Contingent</div>
+                    </div>
+                    <div class="category-check"><i class="fas fa-check"></i></div>
+                </div>
+            </div>
+
+            <div class="main-classification-selector" id="mainClassificationSelector"></div>
+        </div>
+
+        <div class="insights-container" id="insightsContainer">
+            <div class="no-selection">
+                <div class="no-selection-icon">📊</div>
+                <h3>Welcome to Financial Insights</h3>
+                <p>Select categories and classifications above to discover personalized insights and actionable recommendations for your financial portfolio</p>
+            </div>
+        </div>
+
+        <div class="comparison-view" id="comparisonView" style="display: none;">
+            <div class="comparison-card">
+                <h3>Performance Comparison</h3>
+                <div class="chart-container">
+                    <i class="fas fa-chart-bar fa-3x"></i>
+                    <p>Chart visualization will appear here</p>
+                </div>
+            </div>
+            <div class="comparison-card">
+                <h3>Risk Analysis</h3>
+                <div class="chart-container">
+                    <i class="fas fa-chart-pie fa-3x"></i>
+                    <p>Risk breakdown visualization</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced data with more sophisticated sample insights
+        const categoryData = {
+            "Income": {
+                id: "6acd243e-a4bf-44bc-9b16-96a61680459d",
+                mainClassifications: [
+                    { id: "3dbaf4e9-86a9-4a27-8c35-dbfb854dc582", name: "Primary Income" },
+                    { id: "ad52a676-3d4b-4269-a1aa-bf07b95e2111", name: "Secondary Income" }
+                ]
+            },
+            "Investment": {
+                id: "investment-head-id",
+                mainClassifications: [
+                    { id: "inv-equity-id", name: "Equity Investments" },
+                    { id: "inv-debt-id", name: "Debt Investments" },
+                    { id: "inv-mutual-id", name: "Mutual Funds" }
+                ]
+            },
+            "Assets": {
+                id: "assets-head-id",
+                mainClassifications: [
+                    { id: "asset-liquid-id", name: "Liquid Assets" },
+                    { id: "asset-fixed-id", name: "Fixed Assets" },
+                    { id: "asset-property-id", name: "Real Estate" }
+                ]
+            },
+            "Liabilities": {
+                id: "liabilities-head-id",
+                mainClassifications: [
+                    { id: "liab-short-id", name: "Short-term Liabilities" },
+                    { id: "liab-long-id", name: "Long-term Liabilities" },
+                    { id: "liab-contingent-id", name: "Contingent Liabilities" }
+                ]
+            }
+        };
+
+        const insightsData = [
+            {
+                id: "f9443816-6b35-4ae2-9e3e-fe1739411862",
+                userId: "d5b9b5ae-874e-4c90-a5e3-ed7880c83110",
+                name: "Primary Income Stability Analysis",
+                categoryId: "3dbaf4e9-86a9-4a27-8c35-dbfb854dc582",
+                configuredWeightage: 10.00,
+                systemWeightage: 8.10,
+                insights: [
+                    "Your primary income streams show strong consistency with minimal month-to-month volatility, indicating excellent financial stability.",
+                    "Income diversification within primary sources has improved by 23% over the past quarter, reducing single-source dependency risk.",
+                    "Current earning capacity exceeds industry benchmarks by 15%, positioning you favorably for future growth opportunities."
+                ],
+                recommendations: [
+                    "Consider establishing an emergency fund equivalent to 6-8 months of primary income to further strengthen financial security.",
+                    "Explore income diversification through skill monetization or passive income streams to reduce career dependency.",
+                    "Review and optimize tax strategies to maximize take-home income from primary sources."
+                ]
+            },
+            {
+                id: "17eeef3a-e122-496c-a443-ad720a23693d",
+                userId: "d5b9b5ae-874e-4c90-a5e3-ed7880c83110",
+                name: "Secondary Income Growth Potential",
+                categoryId: "ad52a676-3d4b-4269-a1aa-bf07b95e2111",
+                configuredWeightage: 5.00,
+                systemWeightage: 7.15,
+                insights: [
+                    "Secondary income sources have grown 34% year-over-year, now contributing 18% of total income streams.",
+                    "Investment dividends and interest payments show consistent growth trajectory with compounding benefits becoming evident.",
+                    "Side income activities demonstrate scalability potential with current utilization at only 60% capacity."
+                ],
+                recommendations: [
+                    "Increase allocation to dividend-yielding investments to boost passive secondary income streams.",
+                    "Scale up proven side income activities that show strong ROI and time efficiency.",
+                    "Consider automating secondary income processes to maximize earnings with minimal time investment."
+                ]
+            },
+            {
+                id: "sample-portfolio-analysis",
+                userId: "d5b9b5ae-874e-4c90-a5e3-ed7880c83110",
+                name: "Portfolio Risk-Return Optimization",
+                categoryId: "inv-equity-id|inv-debt-id",
+                configuredWeightage: 15.50,
+                systemWeightage: 9.20,
+                insights: [
+                    "Current equity-debt allocation of 70:30 aligns well with your risk profile and investment timeline.",
+                    "Recent market volatility has created strategic rebalancing opportunities in undervalued sectors.",
+                    "Your portfolio's Sharpe ratio of 1.8 indicates strong risk-adjusted returns above market average."
+                ],
+                recommendations: [
+                    "Consider increasing exposure to emerging market equities for enhanced diversification.",
+                    "Implement systematic rebalancing to maintain optimal asset allocation during market fluctuations.",
+                    "Explore ESG investment options which show strong long-term performance potential."
+                ]
+            },
+            {
+                id: "asset-liability-balance",
+                userId: "d5b9b5ae-874e-4c90-a5e3-ed7880c83110",
+                name: "Net Worth Optimization Strategy",
+                categoryId: "asset-fixed-id|liab-long-id",
+                configuredWeightage: 18.00,
+                systemWeightage: 8.95,
+                insights: [
+                    "Your debt-to-asset ratio of 0.28 is excellent, well below the recommended 0.40 threshold.",
+                    "Real estate assets have appreciated 12% annually, significantly outpacing inflation and mortgage costs.",
+                    "Current leverage strategy is conservative with potential for strategic debt utilization for wealth building."
+                ],
+                recommendations: [
+                    "Consider strategic mortgage refinancing to take advantage of current favorable rates.",
+                    "Explore leveraging real estate equity for additional investment opportunities.",
+                    "Maintain current debt service levels while redirecting surplus towards high-yield investments."
+                ]
+            }
+        ];
+
+        let selectedCategories = [];
+        let selectedClassifications = {};
+        let filteredInsights = [...insightsData];
+        let currentTheme = 'light';
+        let comparisonMode = false;
+
+        // Theme management
+        function toggleTheme() {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', currentTheme);
+            const icon = document.getElementById('theme-icon');
+            icon.className = currentTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            currentTheme = savedTheme;
+            document.body.setAttribute('data-theme', currentTheme);
+            const icon = document.getElementById('theme-icon');
+            icon.className = currentTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+
+        // Enhanced search and filter functionality
+        function filterInsights() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filterBy = document.getElementById('filterBy').value;
+
+            filteredInsights = insightsData.filter(insight => {
+                const matchesSearch = !searchTerm ||
+                    insight.name.toLowerCase().includes(searchTerm) ||
+                    insight.insights.some(i => i.toLowerCase().includes(searchTerm)) ||
+                    insight.recommendations.some(r => r.toLowerCase().includes(searchTerm));
+
+                const matchesFilter = filterBy === 'all' ||
+                    (filterBy === 'high-confidence' && insight.systemWeightage >= 8) ||
+                    (filterBy === 'high-impact' && insight.configuredWeightage >= 12) ||
+                    (filterBy === 'recommendations' && insight.recommendations.length > 0);
+
+                return matchesSearch && matchesFilter;
+            });
+
+            updateInsights();
+        }
+
+        function sortInsights() {
+            const sortBy = document.getElementById('sortBy').value;
+
+            filteredInsights.sort((a, b) => {
+                switch (sortBy) {
+                    case 'confidence':
+                        return b.systemWeightage - a.systemWeightage;
+                    case 'impact':
+                        return b.configuredWeightage - a.configuredWeightage;
+                    case 'date':
+                        return new Date(b.id) - new Date(a.id); // Simulated date sorting
+                    default: // relevance
+                        const aRelevance = getRelevanceScore(a);
+                        const bRelevance = getRelevanceScore(b);
+                        return bRelevance - aRelevance;
+                }
+            });
+
+            updateInsights();
+        }
+
+        function getRelevanceScore(insight) {
+            const selectedCombinations = getSelectedCombinations();
+            if (selectedCombinations.length === 0) return 0;
+
+            return selectedCombinations.some(combo => {
+                const categoryIds = insight.categoryId.split('|');
+                return categoryIds.every(id => combo.includes(id));
+            }) ? insight.systemWeightage + insight.configuredWeightage : 0;
+        }
+
+        // Comparison mode
+        function toggleComparisonMode() {
+            comparisonMode = !comparisonMode;
+            const comparisonView = document.getElementById('comparisonView');
+            const btn = event.target.closest('.btn');
+
+            if (comparisonMode) {
+                comparisonView.style.display = 'grid';
+                btn.classList.add('btn-primary');
+                btn.innerHTML = '<i class="fas fa-list"></i> List View';
+            } else {
+                comparisonView.style.display = 'none';
+                btn.classList.remove('btn-primary');
+                btn.innerHTML = '<i class="fas fa-exchange-alt"></i> Compare';
+            }
+        }
+
+        // Report generation
+        function generateReport() {
+            if (getActiveInsightsCount() === 0) {
+                showNotification('Please select categories to generate a report', 'warning');
+                return;
+            }
+
+            showNotification('Generating comprehensive financial report...', 'info');
+            setLoading(true);
+
+            // Simulate report generation
+            setTimeout(() => {
+                setLoading(false);
+                showNotification('Report generated successfully! Check your downloads.', 'success');
+
+                // In a real implementation, this would generate and download a PDF
+                const reportData = {
+                    title: 'Financial Insights Report',
+                    generatedAt: new Date().toISOString(),
+                    summary: {
+                        totalInsights: getActiveInsightsCount(),
+                        categories: selectedCategories,
+                        classifications: selectedClassifications
+                    },
+                    insights: getRelevantInsights()
+                };
+
+                downloadReport(reportData);
+            }, 2000);
+        }
+
+        function downloadReport(data) {
+            // Create a simple HTML report
+            const html = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${data.title}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 40px; }
+                        .header { border-bottom: 2px solid #3b82f6; padding-bottom: 20px; margin-bottom: 30px; }
+                        .insight { margin-bottom: 30px; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px; }
+                        .insight-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; color: #1e293b; }
+                        ul { padding-left: 20px; }
+                        li { margin-bottom: 8px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>${data.title}</h1>
+                        <p>Generated on ${new Date(data.generatedAt).toLocaleDateString()}</p>
+                        <p>Total Insights: ${data.summary.totalInsights}</p>
+                    </div>
+                    ${data.insights.map(insight => `
+                        <div class="insight">
+                            <div class="insight-title">${insight.name}</div>
+                            <h3>Key Insights:</h3>
+                            <ul>
+                                ${insight.insights.map(i => `<li>${i}</li>`).join('')}
+                            </ul>
+                            <h3>Recommendations:</h3>
+                            <ul>
+                                ${insight.recommendations.map(r => `<li>${r}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `).join('')}
+                </body>
+                </html>
+            `;
+
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `financial-report-${new Date().toISOString().split('T')[0]}.html`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize page
+        function initializePage() {
+            loadTheme();
+            const categoryCards = document.querySelectorAll('.category-card');
+            categoryCards.forEach(card => {
+                card.addEventListener('click', () => toggleCategory(card.dataset.category));
+            });
+            updateStats();
+            updateLastUpdated();
+        }
+
+        function updateLastUpdated() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('lastUpdated').textContent = timeString;
+        }
+
+        function toggleCategory(category) {
+            const index = selectedCategories.indexOf(category);
+            if (index > -1) {
+                selectedCategories.splice(index, 1);
+                delete selectedClassifications[category];
+            } else {
+                selectedCategories.push(category);
+            }
+            updateUI();
+        }
+
+        function updateUI() {
+            updateCategoryCards();
+            updateMainClassificationSelector();
+            updateInsights();
+            updateStats();
+        }
+
+        function updateCategoryCards() {
+            const cards = document.querySelectorAll('.category-card');
+            cards.forEach(card => {
+                if (selectedCategories.includes(card.dataset.category)) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+        }
+
+        function updateMainClassificationSelector() {
+            const selector = document.getElementById('mainClassificationSelector');
+
+            if (selectedCategories.length === 0) {
+                selector.classList.remove('active');
+                return;
+            }
+
+            selector.classList.add('active');
+            selector.innerHTML = '';
+
+            selectedCategories.forEach(category => {
+                const categoryInfo = categoryData[category];
+                if (categoryInfo && categoryInfo.mainClassifications.length > 0) {
+                    const groupDiv = document.createElement('div');
+                    groupDiv.className = 'classification-group';
+
+                    const label = document.createElement('label');
+                    label.className = 'classification-label';
+                    label.innerHTML = `<i class="fas fa-arrow-right"></i> ${category} Classifications`;
+                    groupDiv.appendChild(label);
+
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.className = 'classification-options';
+
+                    categoryInfo.mainClassifications.forEach(mc => {
+                        const chip = document.createElement('div');
+                        chip.className = 'classification-chip';
+                        chip.textContent = mc.name;
+                        chip.dataset.category = category;
+                        chip.dataset.classificationId = mc.id;
+
+                        if (selectedClassifications[category] &&
+                            selectedClassifications[category].includes(mc.id)) {
+                            chip.classList.add('selected');
+                        }
+
+                        chip.addEventListener('click', () => {
+                            toggleClassification(category, mc.id, mc.name);
+                        });
+
+                        optionsDiv.appendChild(chip);
+                    });
+
+                    groupDiv.appendChild(optionsDiv);
+                    selector.appendChild(groupDiv);
+                }
+            });
+        }
+
+        function toggleClassification(category, classificationId, classificationName) {
+            if (!selectedClassifications[category]) {
+                selectedClassifications[category] = [];
+            }
+
+            const index = selectedClassifications[category].indexOf(classificationId);
+            if (index > -1) {
+                selectedClassifications[category].splice(index, 1);
+                if (selectedClassifications[category].length === 0) {
+                    delete selectedClassifications[category];
+                }
+            } else {
+                selectedClassifications[category].push(classificationId);
+            }
+
+            updateUI();
+        }
+
+        function updateInsights() {
+            const container = document.getElementById('insightsContainer');
+            const selectedCombinations = getSelectedCombinations();
+
+            if (selectedCombinations.length === 0 && !document.getElementById('searchInput').value) {
+                container.innerHTML = `
+                    <div class="no-selection">
+                        <div class="no-selection-icon">📊</div>
+                        <h3>Welcome to Financial Insights</h3>
+                        <p>Select categories and classifications above to discover personalized insights and actionable recommendations for your financial portfolio</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Get relevant insights from filtered results
+            let relevantInsights = filteredInsights;
+
+            if (selectedCombinations.length > 0) {
+                relevantInsights = filteredInsights.filter(insight => {
+                    return selectedCombinations.some(combo => {
+                        const categoryIds = insight.categoryId.split('|');
+                        return categoryIds.every(id => combo.includes(id));
+                    });
+                });
+            }
+
+            if (relevantInsights.length === 0) {
+                container.innerHTML = `
+                    <div class="no-selection">
+                        <div class="no-selection-icon">🔍</div>
+                        <h3>No Insights Found</h3>
+                        <p>Try adjusting your search criteria or selecting different categories</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Display filter info if applicable
+            let filterHtml = '';
+            if (selectedCombinations.length > 0) {
+                filterHtml = `
+                    <div class="filter-info">
+                        <i class="fas fa-filter"></i>
+                        <div>
+                            Showing insights for: <strong>${getFilterDescription()}</strong>
+                            <span style="margin-left: 12px; color: var(--text-tertiary);">
+                                (${relevantInsights.length} ${relevantInsights.length === 1 ? 'insight' : 'insights'} found)
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Generate insight cards
+            relevantInsights.forEach(insight => {
+                filterHtml += generateInsightCard(insight);
+            });
+
+            container.innerHTML = filterHtml;
+        }
+
+        function getSelectedCombinations() {
+            const combinations = [];
+
+            const categories = Object.keys(selectedClassifications);
+            if (categories.length === 0) return [];
+
+            function generateCombinations(categoryIndex, currentCombination) {
+                if (categoryIndex >= categories.length) {
+                    if (currentCombination.length > 0) {
+                        combinations.push([...currentCombination]);
+                    }
+                    return;
+                }
+
+                const category = categories[categoryIndex];
+                const classifications = selectedClassifications[category];
+
+                generateCombinations(categoryIndex + 1, currentCombination);
+
+                classifications.forEach(classificationId => {
+                    currentCombination.push(classificationId);
+                    generateCombinations(categoryIndex + 1, currentCombination);
+                    currentCombination.pop();
+                });
+            }
+
+            generateCombinations(0, []);
+            return combinations;
+        }
+
+        function getFilterDescription() {
+            const descriptions = [];
+
+            Object.keys(selectedClassifications).forEach(category => {
+                const categoryInfo = categoryData[category];
+                if (categoryInfo) {
+                    const selectedNames = selectedClassifications[category].map(id => {
+                        const mc = categoryInfo.mainClassifications.find(m => m.id === id);
+                        return mc ? mc.name : 'Unknown';
+                    });
+                    descriptions.push(`${category} (${selectedNames.join(', ')})`);
+                }
+            });
+
+            return descriptions.join(' + ');
+        }
+
+        function generateInsightCard(insight) {
+            const confidenceScore = insight.systemWeightage.toFixed(1);
+            const impactScore = insight.configuredWeightage.toFixed(1);
+
+            return `
+                <div class="insight-card" data-insight-id="${insight.id}">
+                    <div class="insight-header">
+                        <div class="insight-title-section">
+                            <div class="insight-title">${insight.name}</div>
+                            <div class="insight-meta">
+                                <span><i class="fas fa-calendar"></i> ${new Date().toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric'
+                                })}</span>
+                                <span><i class="fas fa-user"></i> Personal Analysis</span>
+                                <span><i class="fas fa-chart-line"></i> AI Generated</span>
+                            </div>
+                        </div>
+                        <div class="insight-scores">
+                            <div class="score-item">
+                                <div class="score-label">Confidence</div>
+                                <div class="score-value confidence">${confidenceScore}</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="score-label">Impact</div>
+                                <div class="score-value impact">${impactScore}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="insight-section">
+                        <div class="insight-section-title">
+                            <i class="fas fa-lightbulb"></i> Key Insights
+                        </div>
+                        <ul class="insight-list">
+                            ${insight.insights.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="insight-section">
+                        <div class="insight-section-title">
+                            <i class="fas fa-bullseye"></i> Recommendations
+                        </div>
+                        <ul class="insight-list recommendation-list">
+                            ${insight.recommendations.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getRelevantInsights() {
+            const selectedCombinations = getSelectedCombinations();
+            if (selectedCombinations.length === 0) return filteredInsights;
+
+            return filteredInsights.filter(insight => {
+                return selectedCombinations.some(combo => {
+                    const categoryIds = insight.categoryId.split('|');
+                    return categoryIds.every(id => combo.includes(id));
+                });
+            });
+        }
+
+        function updateStats() {
+            const totalSelected = selectedCategories.length;
+            const totalClassifications = Object.values(selectedClassifications).reduce((sum, arr) => sum + arr.length, 0);
+            const activeInsights = getActiveInsightsCount();
+
+            document.getElementById('selectedCount').textContent = totalSelected;
+            document.getElementById('activeInsights').textContent = activeInsights;
+
+            if (totalClassifications > 0) {
+                document.getElementById('selectedCount').textContent = `${totalSelected} (${totalClassifications})`;
+            }
+        }
+
+        function getActiveInsightsCount() {
+            return getRelevantInsights().length;
+        }
+
+        function clearAll() {
+            selectedCategories = [];
+            selectedClassifications = {};
+            document.getElementById('searchInput').value = '';
+            document.getElementById('sortBy').value = 'relevance';
+            document.getElementById('filterBy').value = 'all';
+            filteredInsights = [...insightsData];
+            updateUI();
+            showNotification('All selections cleared', 'info');
+        }
+
+        function refreshInsights() {
+            setLoading(true);
+            const container = document.getElementById('insightsContainer');
+
+            setTimeout(() => {
+                setLoading(false);
+                updateInsights();
+                updateLastUpdated();
+                showNotification('Insights refreshed successfully!', 'success');
+            }, 1500);
+        }
+
+        function exportData() {
+            const relevantInsights = getRelevantInsights();
+            if (relevantInsights.length === 0) {
+                showNotification('No data to export. Please select categories first.', 'warning');
+                return;
+            }
+
+            const exportData = {
+                metadata: {
+                    exportedAt: new Date().toISOString(),
+                    version: '2.0',
+                    totalInsights: relevantInsights.length
+                },
+                filters: {
+                    categories: selectedCategories,
+                    classifications: selectedClassifications,
+                    searchTerm: document.getElementById('searchInput').value,
+                    sortBy: document.getElementById('sortBy').value,
+                    filterBy: document.getElementById('filterBy').value
+                },
+                insights: relevantInsights,
+                summary: {
+                    averageConfidence: (relevantInsights.reduce((sum, i) => sum + i.systemWeightage, 0) / relevantInsights.length).toFixed(2),
+                    averageImpact: (relevantInsights.reduce((sum, i) => sum + i.configuredWeightage, 0) / relevantInsights.length).toFixed(2)
+                }
+            };
+
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `financial-insights-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            showNotification('Data exported successfully!', 'success');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 80px;
+                padding: 16px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                box-shadow: var(--shadow-xl);
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+                max-width: 350px;
+                border-left: 4px solid currentColor;
+            `;
+
+            const colors = {
+                success: '#10b981',
+                warning: '#f59e0b',
+                error: '#ef4444',
+                info: '#3b82f6'
+            };
+
+            notification.style.background = colors[type] || colors.info;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 100);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 4000);
+        }
+
+        function setLoading(isLoading) {
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(btn => {
+                btn.disabled = isLoading;
+                if (isLoading) {
+                    btn.classList.add('loading');
+                } else {
+                    btn.classList.remove('loading');
+                }
+            });
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 'a':
+                        e.preventDefault();
+                        Object.keys(categoryData).forEach(category => {
+                            if (!selectedCategories.includes(category)) {
+                                selectedCategories.push(category);
+                            }
+                        });
+                        updateUI();
+                        showNotification('All categories selected', 'info');
+                        break;
+                    case 'r':
+                        e.preventDefault();
+                        refreshInsights();
+                        break;
+                    case 'e':
+                        e.preventDefault();
+                        exportData();
+                        break;
+                    case 'Escape':
+                        e.preventDefault();
+                        clearAll();
+                        break;
+                    case 'f':
+                        e.preventDefault();
+                        document.getElementById('searchInput').focus();
+                        break;
+                }
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializePage();
+
+            // Demo selection after load
+            setTimeout(() => {
+                toggleCategory('Income');
+                setTimeout(() => {
+                    toggleClassification('Income', '3dbaf4e9-86a9-4a27-8c35-dbfb854dc582', 'Primary Income');
+                    showNotification('Demo: Primary Income selected for preview', 'info');
+                }, 500);
+            }, 1500);
+        });
+
+        // Responsive handling
+        function handleResize() {
+            const isMobile = window.innerWidth <= 768;
+            // Add any responsive adjustments here
+        }
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+    </script>
+</body>
+</html>
