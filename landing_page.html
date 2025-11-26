@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinSpinia - AI-Driven Financial Analysis Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1abc9c;
+            --secondary-color: #2c3e50;
+            --accent-color: #3498db;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --bg-light: #ecf0f1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color) !important;
+        }
+
+        .navbar-brand i {
+            margin-right: 8px;
+        }
+
+        .nav-link {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .btn-primary-custom {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary-custom:hover {
+            background: #16a085;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 188, 156, 0.3);
+        }
+
+        .btn-outline-custom {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            background: transparent;
+            padding: 10px 25px;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-outline-custom:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 100px 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-50px, -50px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-section .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .trust-badge img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .dashboard-preview {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-top: 30px;
+        }
+
+        .dashboard-preview img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Services Section */
+        .services-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+        }
+
+        .section-title .highlight {
+            color: var(--primary-color);
+            font-style: italic;
+        }
+
+        .section-subtitle {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .service-card {
+            text-align: center;
+            padding: 30px;
+            border-radius: 10px;
+            transition: all 0.3s;
+            height: 100%;
+            background: white;
+            border: 1px solid #e0e0e0;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
+
+        .service-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+        }
+
+        .service-card h4 {
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .service-card p {
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .know-more {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .know-more:hover {
+            color: #16a085;
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .feature-block {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .feature-image {
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .feature-stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .pricing-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s;
+            height: 100%;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary-color);
+            position: relative;
+        }
+
+        .pricing-card.featured::before {
+            content: 'Best Value';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .pricing-title {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .pricing-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin: 20px 0;
+        }
+
+        .price-note {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .features-list li {
+            padding: 10px 0;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .features-list li i {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+
+        .features-list li.disabled {
+            color: var(--text-light);
+        }
+
+        .features-list li.disabled i {
+            color: var(--text-light);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .contact-info {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: #e8f8f5;
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 1.3rem;
+        }
+
+        .contact-details h5 {
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .contact-details p {
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .contact-form {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .form-control {
+            border: 2px solid #e0e0e0;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: none;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--secondary-color);
+            color: white;
+            padding: 50px 0 20px;
+        }
+
+        .footer h5 {
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .footer ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 40px;
+            padding-top: 20px;
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 80px 0;
+            color: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            .price {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#home">
+                <i class="fas fa-chart-line"></i> FINSPINIA
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#services">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#pricing">Plans</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="btn btn-outline-custom ms-3">
+                            <i class="fas fa-sign-in-alt"></i> SIGN IN
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="btn btn-primary-custom ms-2">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-content">
+                    <div class="trust-badge mb-3">
+                        <span>🎉 Trusted by 50k+ happy customers</span>
+                    </div>
+                    <h1>The #1 <span style="color: #1abc9c;">Financial Analysis</span> Platform - <em style="opacity: 0.9;">Trusted by Thousands</em></h1>
+                    <p class="subtitle">AI-powered financial statement analysis with automatic categorization, budget tracking, and real-time insights. Designed for businesses, accountants, and financial professionals.</p>
+                    <div class="d-flex gap-3">
+                        <button class="btn btn-primary-custom btn-lg">
+                            <i class="fas fa-shopping-cart"></i> Get Started
+                        </button>
+                        <button class="btn btn-outline-custom btn-lg" style="border-color: white; color: white;">
+                            <i class="fas fa-users"></i> Contact Us
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="dashboard-preview">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop" alt="Dashboard Preview">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+        <div class="container">
+            <div class="section-title">
+                <p class="section-subtitle">🚀 Empowering your financial journey</p>
+                <h2>Discover Our <span class="highlight">Core Services</span> and Capabilities</h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-file-upload"></i>
+                        </div>
+                        <h4>Automated Statement Processing</h4>
+                        <p>Upload financial statements and let AI automatically categorize transactions into predefined investment, expenditure, obligations, and income categories.</p>
+                        <a href="#" class="know-more">Know more →</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <h4>Budget vs Actual Analysis</h4>
+                        <p>Track projected versus actual figures with admin-defined budgets. Get instant insights into spending patterns and budget adherence.</p>
+                        <a href="#" class="know-more">Know more →</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <h4>Category Management</h4>
+                        <p>Admins can create and manage main categories and subcategories tailored to your business needs for precise financial tracking.</p>
+                        <a href="#" class="know-more">Know more →</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <h4>Asset & Liability Tracking</h4>
+                        <p>Comprehensive tracking of client assets, income sources, and liabilities with automatic extraction from uploaded financial statements.</p>
+                        <a href="#" class="know-more">Know more →</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <h4>CA Validation Process</h4>
+                        <p>Built-in chartered accountant onboarding for professional validation checks, ensuring accuracy and compliance with financial standards.</p>
+                        <a href="#" class="know-more">Know more →</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Real-time Insights</h4>
+                        <p>Get instant financial insights and analytics with secure data processing and comprehensive reporting features for informed decision-making.</p>
+                        <a href="#" class="know-more">Know more →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="feature-block">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h2>Smart Financial Statement Analysis</h2>
+                        <p>Our AI-powered platform empowers teams and businesses to efficiently analyze financial data. Upload statements and receive automatic categorization with built-in validation from chartered accountants, no matter the complexity.</p>
+                        <button class="btn btn-primary-custom mt-3">
+                            <i class="fas fa-upload"></i> Upload Statement
+                        </button>
+                        <div class="feature-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">99.5%</div>
+                                <div class="stat-label">Accuracy rate</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">5.2x</div>
+                                <div class="stat-label">Faster processing</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">2,000+</div>
+                                <div class="stat-label">Statements daily</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&h=400&fit=crop" alt="Financial Analysis" class="img-fluid feature-image">
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-block">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 order-lg-2">
+                        <h2>Comprehensive Budget Management</h2>
+                        <p>A powerful, secure, and intuitive budget manager built to simplify how you track projected versus actual spending. Store, share, and organize financial data in real-time with peace of mind through encrypted storage.</p>
+                        <button class="btn btn-primary-custom mt-3">
+                            <i class="fas fa-folder"></i> Explore Budget Tools
+                        </button>
+                        <div class="feature-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">99.9%</div>
+                                <div class="stat-label">Budget accuracy</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">3.5x</div>
+                                <div class="stat-label">Faster reporting</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">1,800+</div>
+                                <div class="stat-label">Budgets tracked</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 order-lg-1">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop" alt="Budget Management" class="img-fluid feature-image">
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-block">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h2>Professional CA Validation Network</h2>
+                        <p>Connect with chartered accountants through our platform for validation checks and financial guidance. Our smart contacts system keeps all your professional relationships organized and accessible in one secure location.</p>
+                        <button class="btn btn-primary-custom mt-3">
+                            <i class="fas fa-address-book"></i> Check CA Network
+                        </button>
+                        <div class="feature-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">98.2%</div>
+                                <div class="stat-label">Validation accuracy</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">4.5x</div>
+                                <div class="stat-label">Faster validation</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">350+</div>
+                                <div class="stat-label">CAs onboarded</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop" alt="CA Network" class="img-fluid feature-image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section">
+        <div class="container">
+            <div class="section-title">
+                <p class="section-subtitle">💎 Transparent and flexible pricing</p>
+                <h2>Choose the <span class="highlight">License</span> That Fits Your Needs</h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="pricing-card">
+                        <h3 class="pricing-title">Basic Package</h3>
+                        <p class="pricing-description">Perfect for individual users</p>
+                        <div class="price">$49</div>
+                        <p class="price-note">One-time payment<br>Lifetime access</p>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check-circle"></i> Valid for 365 days</li>
+                            <li><i class="fas fa-check-circle"></i> 5 users</li>
+                            <li><i class="fas fa-check-circle"></i> Basic Financial Analysis</li>
+                            <li><i class="fas fa-check-circle"></i> Transaction Categorization</li>
+                            <li class="disabled"><i class="fas fa-times-circle"></i> No multi-client use</li>
+                        </ul>
+                        <button class="btn btn-outline-custom w-100">Buy Single License</button>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="pricing-card featured">
+                        <h3 class="pricing-title">Family Package</h3>
+                        <p class="pricing-description">Ideal for family financial planning</p>
+                        <div class="price">$249</div>
+                        <p class="price-note">One-time payment</p>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check-circle"></i> Valid for 365 days</li>
+                            <li><i class="fas fa-check-circle"></i> 10 users</li>
+                            <li><i class="fas fa-check-circle"></i> Advanced financial analysis</li>
+                            <li><i class="fas fa-check-circle"></i> Asset Tracking</li>
+                            <li><i class="fas fa-check-circle"></i> Networth Trends</li>
+
+                        </ul>
+                        <button class="btn btn-primary-custom w-100">Buy Multiple License</button>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="pricing-card">
+                        <h3 class="pricing-title">Premium Package</h3>
+                        <p class="pricing-description">Complete financial solution</p>
+                        <div class="price">$999</div>
+                        <p class="price-note">One-time payment<br>Commercial redistribution rights</p>
+                        <ul class="features-list">
+                            <li><i class="fas fa-check-circle"></i> Valid for 365 days</li>
+                            <li><i class="fas fa-check-circle"></i> 15 users</li>
+                            <li><i class="fas fa-check-circle"></i> Comprehensive financial analysis</li>
+                            <li><i class="fas fa-check-circle"></i> Family asset tracking</li>
+                            <li><i class="fas fa-check-circle"></i> Investment recommendations</li>
+                        </ul>
+                        <button class="btn btn-outline-custom w-100">Buy Extended License</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Build Faster with Our Premium Financial Analysis Platform</h2>
+            <p>Kickstart your project with a modern, responsive, and AI-powered financial dashboard.<br>Try it free for 14 days — no credit card needed.</p>
+            <button class="btn btn-primary-custom btn-lg" style="background: white; color: var(--primary-color);">
+                <i class="fas fa-rocket"></i> Start Free Trial
+            </button>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="section-title">
+                <p class="section-subtitle">📞 We're Here to Help</p>
+                <h2>Get in Touch with <span class="highlight">Our Team</span></h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-5">
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h5>Contact Numbers</h5>
+                                <p>+43324324</p>
+                                <p>+434432432</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h5>Email</h5>
+                                <p>support@finspinia.com</p>
+                                <p>info@finspinia.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h5>Address</h5>
+                                <p>P8VJ+MXG, MVP Sector 3, Sector 4, Sector 3, MVP Colony</p>
+                                <p>Visakhapatnam, Andhra Pradesh 530017</p>
+                                <p>India</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="contact-form">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" placeholder="Enter your full name" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="email" class="form-control" placeholder="Enter your email" required>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control" placeholder="What's the reason for contact?">
+                            <textarea class="form-control" rows="5" placeholder="Write your message here..."></textarea>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-paperclip"></i> Attach files
+                                    </small>
+                                </div>
+                                <button type="submit" class="btn btn-primary-custom">
+                                    <i class="fas fa-paper-plane"></i> Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h3 style="color: var(--primary-color); margin-bottom: 20px;">
+                        <i class="fas fa-chart-line"></i> FINSPINIA
+                    </h3>
+                    <p>FINSPINIA is the ultimate AI-driven financial analysis platform. Known for its sleek design, flexibility, and powerful features. Build modern financial applications with ease using the best in class.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Company</h5>
+                    <ul>
+                        <li><a href="#">Our Story</a></li>
+                        <li><a href="#">Leadership Team</a></li>
+                        <li><a href="#">Careers <span class="badge bg-success">We're hiring</span></a></li>
+                        <li><a href="#">Press & Media</a></li>
+                        <li><a href="#">Investor Relations</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Community</h5>
+                    <ul>
+                        <li><a href="#">Community Forum</a></li>
+                        <li><a href="#">Events & Meetups</a></li>
+                        <li><a href="#">Ambassadors</a></li>
+                        <li><a href="#">Customer Stories</a></li>
+                        <li><a href="#">Code of Conduct</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Admin</h5>
+                    <ul>
+                        <li><a href="#">Dashboard</a></li>
+                        <li><a href="#">User Management</a></li>
+                        <li><a href="#">Roles & Permissions</a></li>
+                        <li><a href="#">System Logs</a></li>
+                        <li><a href="#">Settings</a></li>
+                        <li><a href="#">API Access</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Resources</h5>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Video Tutorials</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Support Center</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2014 - 2025 FinSpinia by <a href="#" style="color: var(--primary-color);">WebAppLayers</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    const navCollapse = document.querySelector('.navbar-collapse');
+                    if (navCollapse.classList.contains('show')) {
+                        navCollapse.classList.remove('show');
+                    }
+                }
+            });
+        });
+
+        // Add active class to navigation on scroll
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('section[id]');
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
