@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Financial Profile Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 5 CSS -->
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+        rel="stylesheet"
+    />
+
+    <style>
+        body {
+            background-color: #f5f6fa;
+        }
+
+        .app-navbar {
+            background: #0f172a;
+        }
+
+        .app-navbar .navbar-brand {
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+
+        .card {
+            border-radius: 14px;
+            border: none;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+        }
+
+        .card-header {
+            border-bottom: none;
+            background: transparent;
+            padding-bottom: 0;
+        }
+
+        .progress {
+            height: 10px;
+            border-radius: 999px;
+        }
+
+        .badge-soft {
+            background: rgba(25, 135, 84, 0.08);
+            color: #198754;
+        }
+
+        .badge-soft-warning {
+            background: rgba(255, 193, 7, 0.12);
+            color: #b58102;
+        }
+
+        .badge-soft-danger {
+            background: rgba(220, 53, 69, 0.12);
+            color: #b02a37;
+        }
+
+        .step-label {
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        .locked-overlay {
+            opacity: 0.6;
+        }
+
+        .locked-badge {
+            font-size: 0.75rem;
+        }
+
+        .checklist-item small {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        .status-chip {
+            padding: 0.2rem 0.65rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-draft {
+            background: #fff7ed;
+            color: #9a3412;
+        }
+
+        .status-submitted {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .status-verified {
+            background: #ecfdf3;
+            color: #15803d;
+        }
+
+        .status-rejected {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .pointer {
+            cursor: pointer;
+        }
+
+        .next-action-pill {
+            border-radius: 999px;
+            font-size: 0.82rem;
+            padding: 0.4rem 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Top Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark app-navbar">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand" href="#">
+            FinSight Console
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-light small">Welcome, John Doe</span>
+            <img src="https://via.placeholder.com/32" class="rounded-circle" alt="avatar">
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container-fluid px-4 py-4">
+    <!-- Row 1: Profile Completion + Alerts -->
+    <div class="row g-4">
+        <!-- Profile Completion & Actions -->
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1">Profile & Declarations Setup</h5>
+                        <p class="text-muted mb-0 small">
+                            Complete the steps below to unlock full financial insights and compliance reports.
+                        </p>
+                    </div>
+                    <span class="badge rounded-pill badge-soft">
+                        72% complete
+                    </span>
+                </div>
+                <div class="card-body">
+                    <!-- Progress -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <small class="text-muted">Overall completion</small>
+                            <small class="text-muted">72%</small>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 72%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Next Best Action Pills -->
+                    <div class="mb-3 d-flex flex-wrap gap-2">
+                        <span class="bg-light border next-action-pill pointer">
+                            🔔 Next: Submit Income Declaration
+                        </span>
+                        <span class="bg-light border next-action-pill pointer">
+                            🧾 Add missing Asset details
+                        </span>
+                        <span class="bg-light border next-action-pill pointer">
+                            👨‍👩‍👧 Add nominee information
+                        </span>
+                    </div>
+
+                    <!-- 3-column steps summary -->
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="p-3 border rounded-3 h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="fw-semibold">Profile</span>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                        100%
+                                    </span>
+                                </div>
+                                <div class="step-label mb-2">Personal & contact details</div>
+                                <button class="btn btn-sm btn-outline-secondary w-100">
+                                    View details
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 border rounded-3 h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="fw-semibold">KYC & Banking</span>
+                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle">
+                                        In Progress
+                                    </span>
+                                </div>
+                                <div class="step-label mb-2">PAN, KYC & linked accounts</div>
+                                <button class="btn btn-sm btn-outline-primary w-100">
+                                    Continue KYC
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 border rounded-3 h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="fw-semibold">Declarations</span>
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle">
+                                        Pending
+                                    </span>
+                                </div>
+                                <div class="step-label mb-2">Income, assets & liabilities</div>
+                                <button class="btn btn-sm btn-primary w-100">
+                                    Complete declarations
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Smart Nudges / Alerts -->
+        <div class="col-lg-4">
+            <div class="card mb-3">
+                <div class="card-header pb-1">
+                    <h6 class="mb-1">Action Required</h6>
+                    <p class="text-muted small mb-0">Resolve these items to stay compliant.</p>
+                </div>
+                <div class="card-body pt-2">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-semibold">Income Declaration</span>
+                            <span class="badge-soft-warning badge rounded-pill">Due in 2 days</span>
+                        </div>
+                        <p class="small text-muted mb-2">
+                            Last year’s income details are missing. Required for tax projections.
+                        </p>
+                        <button class="btn btn-sm btn-outline-primary">
+                            Complete now
+                        </button>
+                    </div>
+
+                    <hr>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-semibold">Asset Declaration</span>
+                            <span class="badge-soft-danger badge rounded-pill">Overdue</span>
+                        </div>
+                        <p class="small text-muted mb-2">
+                            Property and investment details not updated in the last 12 months.
+                        </p>
+                        <button class="btn btn-sm btn-outline-danger">
+                            Update assets
+                        </button>
+                    </div>
+
+                    <hr>
+
+                    <div>
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-semibold">Nominee Details</span>
+                            <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">
+                                Optional
+                            </span>
+                        </div>
+                        <p class="small text-muted mb-2">
+                            Add nominee information to protect your family in case of contingencies.
+                        </p>
+                        <button class="btn btn-sm btn-outline-secondary">
+                            Add nominee
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature locking card -->
+            <div class="card locked-overlay">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <h6 class="mb-0">Net Worth & Tax Insights</h6>
+                        <span class="badge bg-dark-subtle text-dark locked-badge">
+                            🔒 Locked
+                        </span>
+                    </div>
+                    <p class="small text-muted mb-3">
+                        Finish declarations to unlock consolidated net worth, tax projections and advisory insights.
+                    </p>
+                    <button class="btn btn-sm btn-outline-dark" disabled>
+                        Unlock by completing declarations
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 2: Checklist + Declaration Status -->
+    <div class="row g-4 mt-1">
+        <!-- Checklist -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Profile Setup Checklist</h6>
+                    <small class="text-muted">5 of 7 items completed</small>
+                </div>
+                <div class="card-body pt-2">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-start checklist-item">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked>
+                                <label class="form-check-label">
+                                    Personal details
+                                    <br>
+                                    <small>Full name, date of birth, contact number</small>
+                                </label>
+                            </div>
+                            <span class="badge bg-success-subtle text-success">Done</span>
+                        </li>
+
+                        <li class="list-group-item d-flex justify-content-between align-items-start checklist-item">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked>
+                                <label class="form-check-label">
+                                    Communication address
+                                    <br>
+                                    <small>Residential and correspondence address</small>
+                                </label>
+                            </div>
+                            <span class="badge bg-success-subtle text-success">Done</span>
+                        </li>
+
+                        <li class="list-group-item d-flex justify-content-between align-items-start checklist-item">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked>
+                                <label class="form-check-label">
+                                    PAN & ID proof
+                                    <br>
+                                    <small>PAN, Aadhaar and identity verification</small>
+                                </label>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                View
+                            </button>
+                        </li>
+
+                        <li class="list-group-item d-flex justify-content-between align-items-start checklist-item">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox">
+                                <label class="form-check-label">
+                                    Bank accounts linked
+                                    <br>
+                                    <small>Salary, savings and credit card accounts</small>
+                                </label>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary">
+                                Link account
+                            </button>
+                        </li>
+
+                        <li class="list-group-item d-flex justify-content-between align-items-start checklist-item">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox">
+                                <label class="form-check-label">
+                                    Nominee details
+                                    <br>
+                                    <small>Primary nominee for financial accounts</small>
+                                </label>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary">
+                                Add
+                            </button>
+                        </li>
+
+                        <li class="list-group-item d-flex justify-content-between align-items-start checklist-item">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox">
+                                <label class="form-check-label">
+                                    Risk profile
+                                    <br>
+                                    <small>Investment horizon and risk tolerance</small>
+                                </label>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary">
+                                Complete
+                            </button>
+                        </li>
+
+                        <li class="list-group-item d-flex justify-content-between align-items-start checklist-item">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox">
+                                <label class="form-check-label">
+                                    Communication preferences
+                                    <br>
+                                    <small>Email, WhatsApp and notification settings</small>
+                                </label>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                Configure
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Declaration Status Table -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Declaration Status</h6>
+                    <small class="text-muted">Last updated: 08 Dec 2025</small>
+                </div>
+                <div class="card-body pt-2">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Declaration</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="fw-semibold">Income Declaration</div>
+                                        <small class="text-muted">FY 2024–25</small>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="status-chip status-draft">Draft</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            Resume
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="fw-semibold">Asset Declaration</div>
+                                        <small class="text-muted">Properties, deposits, investments</small>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="status-chip status-submitted">Submitted</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-outline-secondary">
+                                            View
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="fw-semibold">Liability Declaration</div>
+                                        <small class="text-muted">Loans, credit cards, guarantees</small>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="status-chip status-verified">Verified</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-outline-secondary">
+                                            View
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="fw-semibold">Tax Residency & Compliance</div>
+                                        <small class="text-muted">FATCA / CRS</small>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="status-chip status-rejected">Rejected</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            Fix & resubmit
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="fw-semibold">PEP / High-Risk Declaration</div>
+                                        <small class="text-muted">Optional, based on profile</small>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="status-chip status-draft">Not started</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            Start
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p class="small text-muted mt-3 mb-0">
+                        All declarations are digitally stored and time-stamped for audit and compliance purposes.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS (optional, for components) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

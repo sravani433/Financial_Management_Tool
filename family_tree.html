@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collapsible Family Tree</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tree-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 1400px;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            min-width: 800px;
+        }
+
+        .node {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .node.client {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .node.category {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .node.admin {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 8px;
+            font-weight: bold;
+        }
+
+        .expand-icon {
+            display: inline-block;
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+            font-size: 14px;
+        }
+
+        .expand-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        /* Branching connector */
+        .branch-container {
+            position: relative;
+            width: 100%;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .vertical-line {
+            width: 3px;
+            height: 30px;
+            background: #999;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .horizontal-line {
+            height: 3px;
+            background: #999;
+            position: absolute;
+            top: 30px;
+            left: 25%;
+            right: 25%;
+        }
+
+        .branch-line-left,
+        .branch-line-right {
+            width: 3px;
+            height: 30px;
+            background: #999;
+            position: absolute;
+            top: 30px;
+        }
+
+        .branch-line-left {
+            left: 25%;
+        }
+
+        .branch-line-right {
+            right: 25%;
+        }
+
+        /* Level 2 - Two cards side by side */
+        .level-2 {
+            display: flex;
+            gap: 100px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .connector {
+            width: 3px;
+            height: 30px;
+            background: #999;
+            display: none;
+        }
+
+        .connector.show {
+            display: block;
+        }
+
+        .children {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .children.show {
+            max-height: 2000px;
+            opacity: 1;
+        }
+
+        .subcategory {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .subcategory:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .member {
+            background: white;
+            color: #333;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            min-width: 120px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+        }
+
+        .member:hover {
+            border-color: #667eea;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .scroll-hint {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="tree-container">
+        <h1>Family Tree Structure</h1>
+
+        <div class="tree">
+            <!-- Level 1: Client Node -->
+            <div class="node client">
+                Client: John Doe
+            </div>
+
+            <!-- Branching Connector -->
+            <div class="branch-container">
+                <div class="vertical-line"></div>
+                <div class="horizontal-line"></div>
+                <div class="branch-line-left"></div>
+                <div class="branch-line-right"></div>
+            </div>
+
+            <!-- Level 2: Family Members & Administrators (Side by Side) -->
+            <div class="level-2">
+                <!-- Family Members Branch -->
+                <div class="branch">
+                    <div class="node category" onclick="toggleChildren('family')">
+                        Family Members <span class="badge">12</span>
+                        <span class="expand-icon" id="family-icon">▼</span>
+                    </div>
+                    <div class="connector" id="family-connector"></div>
+
+                    <!-- Level 3: Relationship Types -->
+                    <div class="children" id="family-children">
+                        <!-- Spouse -->
+                        <div class="branch">
+                            <div class="subcategory" onclick="toggleChildren('spouse')">
+                                Spouse <span class="badge">1</span>
+                                <span class="expand-icon" id="spouse-icon">▼</span>
+                            </div>
+                            <div class="connector" id="spouse-connector"></div>
+
+                            <!-- Level 4: Individual Members -->
+                            <div class="children" id="spouse-children" style="flex-direction: column;">
+                                <div class="member">Jane Doe</div>
+                            </div>
+                        </div>
+
+                        <!-- Children -->
+                        <div class="branch">
+                            <div class="subcategory" onclick="toggleChildren('children')">
+                                Children <span class="badge">4</span>
+                                <span class="expand-icon" id="children-icon">▼</span>
+                            </div>
+                            <div class="connector" id="children-connector"></div>
+
+                            <!-- Level 4: Individual Members -->
+                            <div class="children" id="children-children" style="flex-direction: column;">
+                                <div class="member">Alice Doe</div>
+                                <div class="member">Bob Doe</div>
+                                <div class="member">Charlie Doe</div>
+                                <div class="member">Diana Doe</div>
+                            </div>
+                        </div>
+
+                        <!-- Siblings -->
+                        <div class="branch">
+                            <div class="subcategory" onclick="toggleChildren('siblings')">
+                                Siblings <span class="badge">5</span>
+                                <span class="expand-icon" id="siblings-icon">▼</span>
+                            </div>
+                            <div class="connector" id="siblings-connector"></div>
+
+                            <!-- Level 4: Individual Members -->
+                            <div class="children" id="siblings-children" style="flex-direction: column;">
+                                <div class="member">Mike Doe</div>
+                                <div class="member">Sarah Doe</div>
+                                <div class="member">Tom Doe</div>
+                                <div class="member">Emma Doe</div>
+                                <div class="member">Lisa Doe</div>
+                            </div>
+                        </div>
+
+                        <!-- Parents -->
+                        <div class="branch">
+                            <div class="subcategory" onclick="toggleChildren('parents')">
+                                Parents <span class="badge">2</span>
+                                <span class="expand-icon" id="parents-icon">▼</span>
+                            </div>
+                            <div class="connector" id="parents-connector"></div>
+
+                            <!-- Level 4: Individual Members -->
+                            <div class="children" id="parents-children" style="flex-direction: column;">
+                                <div class="member">Robert Doe Sr.</div>
+                                <div class="member">Mary Doe</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Administrators Branch -->
+                <div class="branch">
+                    <div class="node admin" onclick="toggleChildren('admin')">
+                        Administrators <span class="badge">2</span>
+                        <span class="expand-icon" id="admin-icon">▼</span>
+                    </div>
+                    <div class="connector" id="admin-connector"></div>
+
+                    <!-- Level 3: Direct Admin Members -->
+                    <div class="children" id="admin-children" style="flex-direction: column;">
+                        <div class="member">
+                            <strong>CA1</strong><br>
+                            Admin One<br>
+                            <small>admin1@example.com</small>
+                        </div>
+                        <div class="member">
+                            <strong>CA2</strong><br>
+                            Admin Two<br>
+                            <small>admin2@example.com</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-hint">
+            Client branches into "Family Members" and "Administrators" | Click any node to expand/collapse
+        </div>
+    </div>
+
+    <script>
+        function toggleChildren(id) {
+            const children = document.getElementById(id + '-children');
+            const icon = document.getElementById(id + '-icon');
+            const connector = document.getElementById(id + '-connector');
+
+            if (children.classList.contains('show')) {
+                children.classList.remove('show');
+                icon.classList.remove('expanded');
+                if (connector) connector.classList.remove('show');
+            } else {
+                children.classList.add('show');
+                icon.classList.add('expanded');
+                if (connector) connector.classList.add('show');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permissions Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f7;
+            color: #333;
+        }
+
+        .header {
+            background-color: white;
+            padding: 16px 32px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: #333;
+        }
+
+        .breadcrumb span {
+            margin: 0 8px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .search-bar {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            flex: 1;
+            max-width: 360px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 12px 10px 40px;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #0066cc;
+        }
+
+        .items-per-page {
+            padding: 8px 12px;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #fafafa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            padding: 14px 24px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th.sortable:hover {
+            color: #333;
+        }
+
+        td {
+            padding: 16px 24px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background-color: #fafafa;
+        }
+
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge.administrator {
+            background-color: #d1f4e0;
+            color: #0d7d42;
+        }
+
+        .badge.developer {
+            background-color: #ffe0e0;
+            color: #c41e3a;
+        }
+
+        .badge.analyst {
+            background-color: #d6f0ff;
+            color: #0066cc;
+        }
+
+        .badge.support {
+            background-color: #e6d9f5;
+            color: #6b46c1;
+        }
+
+        .badge.trial {
+            background-color: #fff4e0;
+            color: #cc7a00;
+        }
+
+        .badge.devops {
+            background-color: #cff5f5;
+            color: #006666;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+
+        .icon-btn:hover {
+            color: #333;
+        }
+
+        .icon-btn.delete:hover {
+            color: #c41e3a;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .pagination-info {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .page-btn {
+            padding: 8px 14px;
+            border: 1px solid #d0d0d0;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            border-color: #0066cc;
+            color: #0066cc;
+        }
+
+        .page-btn.active {
+            background-color: #0066cc;
+            color: white;
+            border-color: #0066cc;
+        }
+
+        .page-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .ca-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .ca-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .ca-item.selected {
+            background-color: #f5f9ff;
+            border-color: #0066cc;
+        }
+
+        .ca-checkbox {
+            width: 18px;
+            height: 18px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .ca-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .ca-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .ca-id {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .permission-toggles {
+            display: flex;
+            gap: 16px;
+            margin-left: auto;
+        }
+
+        .permission-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .permission-toggle label {
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 22px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 22px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #0066cc;
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(18px);
+        }
+
+        .toggle-switch input:disabled + .toggle-slider {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-cancel:hover {
+            background-color: #e0e0e0;
+        }
+
+        .btn-primary {
+            background-color: #0066cc;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0052a3;
+        }
+
+        .btn-primary:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .default-badge {
+            background-color: #f0f0f0;
+            color: #666;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+
+        .permission-info {
+            font-size: 12px;
+            color: #666;
+            padding: 12px;
+            background-color: #f5f9ff;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            border-left: 3px solid #0066cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>PERMISSIONS</h1>
+        <div class="breadcrumb">
+            <a href="#">Inspinia</a>
+            <span>›</span>
+            <a href="#">Users</a>
+            <span>›</span>
+            <span>Permissions</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <div class="search-bar">
+                <div class="search-input-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search permissions..." id="searchInput">
+                </div>
+                <select class="items-per-page">
+                    <option value="8">8</option>
+                    <option value="16">16</option>
+                    <option value="32">32</option>
+                </select>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th class="sortable">NAME ↕</th>
+                        <th>ASSIGN TO</th>
+                        <th class="sortable">CREATED DATE ↕</th>
+                        <th class="sortable">USERS ↕</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody id="permissionsTable">
+                    <tr>
+                        <td>User Management</td>
+                        <td>
+                            <div class="badge-container">
+                                <span class="badge administrator">Administrator</span>
+                                <span class="default-badge">self</span>
+                            </div>
+                        </td>
+                        <td>24 Jun 2025, 6:43 am</td>
+                        <td>12</td>
+                        <td>
+                            <div class="actions">
+                                <button class="icon-btn" title="View">👁</button>
+                                <button class="icon-btn" title="Add CA" onclick="openModal('User Management')">➕</button>
+                                <button class="icon-btn delete" title="Delete">🗑</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Content Management</td>
+                        <td>
+                            <div class="badge-container">
+                                <span class="badge administrator">Administrator</span>
+                                <span class="badge developer">Developer</span>
+                                <span class="badge analyst">Analyst</span>
+                                <span class="badge support">Support</span>
+                                <span class="badge trial">Trial</span>
+                                <span class="default-badge">self</span>
+                            </div>
+                        </td>
+                        <td>21 Feb 2025, 11:05 am</td>
+                        <td>5</td>
+                        <td>
+                            <div class="actions">
+                                <button class="icon-btn" title="View">👁</button>
+                                <button class="icon-btn" title="Add CA" onclick="openModal('Content Management')">➕</button>
+                                <button class="icon-btn delete" title="Delete">🗑</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Reporting</td>
+                        <td>
+                            <div class="badge-container">
+                                <span class="badge administrator">Administrator</span>
+                                <span class="badge analyst">Analyst</span>
+                                <span class="default-badge">self</span>
+                            </div>
+                        </td>
+                        <td>21 Feb 2025, 5:20 pm</td>
+                        <td>6</td>
+                        <td>
+                            <div class="actions">
+                                <button class="icon-btn" title="View">👁</button>
+                                <button class="icon-btn" title="Add CA" onclick="openModal('Reporting')">➕</button>
+                                <button class="icon-btn delete" title="Delete">🗑</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Payroll</td>
+                        <td>
+                            <div class="badge-container">
+                                <span class="badge administrator">Administrator</span>
+                                <span class="badge analyst">Analyst</span>
+                                <span class="default-badge">self</span>
+                            </div>
+                        </td>
+                        <td>20 Jun 2025, 6:05 pm</td>
+                        <td>4</td>
+                        <td>
+                            <div class="actions">
+                                <button class="icon-btn" title="View">👁</button>
+                                <button class="icon-btn" title="Add CA" onclick="openModal('Payroll')">➕</button>
+                                <button class="icon-btn delete" title="Delete">🗑</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Disputes Management</td>
+                        <td>
+                            <div class="badge-container">
+                                <span class="badge administrator">Administrator</span>
+                                <span class="badge developer">Developer</span>
+                                <span class="badge support">Support</span>
+                                <span class="default-badge">self</span>
+                            </div>
+                        </td>
+                        <td>24 Jun 2025, 5:20 pm</td>
+                        <td>7</td>
+                        <td>
+                            <div class="actions">
+                                <button class="icon-btn" title="View">👁</button>
+                                <button class="icon-btn" title="Add CA" onclick="openModal('Disputes Management')">➕</button>
+                                <button class="icon-btn delete" title="Delete">🗑</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Audit Logs</td>
+                        <td>
+                            <div class="badge-container">
+                                <span class="badge administrator">Administrator</span>
+                                <span class="default-badge">self</span>
+                            </div>
+                        </td>
+                        <td>23 Jun 2025, 4:00 pm</td>
+                        <td>9</td>
+                        <td>
+                            <div class="actions">
+                                <button class="icon-btn" title="View">👁</button>
+                                <button class="icon-btn" title="Add CA" onclick="openModal('Audit Logs')">➕</button>
+                                <button class="icon-btn delete" title="Delete">🗑</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>API Access</td>
+                        <td>
+                            <div class="badge-container">
+                                <span class="badge administrator">Administrator</span>
+                                <span class="badge trial">Trial</span>
+                                <span class="badge devops">DevOps</span>
+                                <span class="default-badge">self</span>
+                            </div>
+                        </td>
+                        <td>22 Jun 2025, 2:35 pm</td>
+                        <td>3</td>
+                        <td>
+                            <div class="actions">
+                                <button class="icon-btn" title="View">👁</button>
+                                <button class="icon-btn" title="Add CA" onclick="openModal('API Access')">➕</button>
+                                <button class="icon-btn delete" title="Delete">🗑</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Notification Center</td>
+                        <td>
+                            <div class="badge-container">
+                                <span class="badge administrator">Administrator</span>
+                                <span class="badge support">Support</span>
+                                <span class="default-badge">self</span>
+                            </div>
+                        </td>
+                        <td>22 Jun 2025, 8:45 am</td>
+                        <td>2</td>
+                        <td>
+                            <div class="actions">
+                                <button class="icon-btn" title="View">👁</button>
+                                <button class="icon-btn" title="Add CA" onclick="openModal('Notification Center')">➕</button>
+                                <button class="icon-btn delete" title="Delete">🗑</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <div class="pagination-info">Showing 1 to 8 of 9 permissions</div>
+                <div class="pagination-controls">
+                    <button class="page-btn" disabled>‹</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">›</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="assignModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Assign CAs to Feature</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+
+            <div class="permission-info">
+                💡 Select CAs and configure their read/write permissions for this feature
+            </div>
+
+            <div class="ca-list" id="caList">
+                <!-- CA items will be dynamically added here -->
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" id="assignBtn" onclick="assignCAs()">Assign Selected</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample CA data
+        const caData = [
+            { id: 'ca_001', name: 'Administrator', email: 'admin@example.com', class: 'administrator' },
+            { id: 'ca_002', name: 'Developer', email: 'dev@example.com', class: 'developer' },
+            { id: 'ca_003', name: 'Analyst', email: 'analyst@example.com', class: 'analyst' },
+            { id: 'ca_004', name: 'Support', email: 'support@example.com', class: 'support' },
+            { id: 'ca_005', name: 'Trial', email: 'trial@example.com', class: 'trial' },
+            { id: 'ca_006', name: 'DevOps', email: 'devops@example.com', class: 'devops' }
+        ];
+
+        let currentFeature = '';
+        let caPermissions = {};
+
+        function openModal(featureName) {
+            currentFeature = featureName;
+            document.getElementById('modalTitle').textContent = `Assign CAs to ${featureName}`;
+
+            const caList = document.getElementById('caList');
+            caList.innerHTML = '';
+            caPermissions = {};
+
+            caData.forEach(ca => {
+                const caItem = document.createElement('div');
+                caItem.className = 'ca-item';
+                caItem.id = `ca-item-${ca.id}`;
+
+                caItem.innerHTML = `
+                    <input type="checkbox" class="ca-checkbox" id="ca_${ca.id}" onchange="toggleCA('${ca.id}')">
+                    <div class="ca-info">
+                        <div class="ca-name">${ca.name}</div>
+                        <div class="ca-id">${ca.email}</div>
+                    </div>
+                    <div class="permission-toggles">
+                        <div class="permission-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="read_${ca.id}" disabled onchange="updatePermission('${ca.id}', 'read')">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <label for="read_${ca.id}">Read</label>
+                        </div>
+                        <div class="permission-toggle">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="write_${ca.id}" disabled onchange="updatePermission('${ca.id}', 'write')">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <label for="write_${ca.id}">Write</label>
+                        </div>
+                    </div>
+                `;
+
+                caList.appendChild(caItem);
+            });
+
+            updateAssignButton();
+            document.getElementById('assignModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('assignModal').classList.remove('active');
+            caPermissions = {};
+        }
+
+        function toggleCA(caId) {
+            const checkbox = document.getElementById(`ca_${caId}`);
+            const caItem = document.getElementById(`ca-item-${caId}`);
+            const readToggle = document.getElementById(`read_${caId}`);
+            const writeToggle = document.getElementById(`write_${caId}`);
+
+            if (checkbox.checked) {
+                caItem.classList.add('selected');
+                readToggle.disabled = false;
+                writeToggle.disabled = false;
+                caPermissions[caId] = { read: false, write: false };
+            } else {
+                caItem.classList.remove('selected');
+                readToggle.disabled = true;
+                writeToggle.disabled = true;
+                readToggle.checked = false;
+                writeToggle.checked = false;
+                delete caPermissions[caId];
+            }
+
+            updateAssignButton();
+        }
+
+        function updatePermission(caId, permission) {
+            if (caPermissions[caId]) {
+                const toggle = document.getElementById(`${permission}_${caId}`);
+                caPermissions[caId][permission] = toggle.checked;
+            }
+        }
+
+        function updateAssignButton() {
+            const assignBtn = document.getElementById('assignBtn');
+            const selectedCount = Object.keys(caPermissions).length;
+
+            if (selectedCount === 0) {
+                assignBtn.disabled = true;
+                assignBtn.textContent = 'Assign Selected';
+            } else {
+                assignBtn.disabled = false;
+                assignBtn.textContent = `Assign ${selectedCount} CA${selectedCount > 1 ? 's' : ''}`;
+            }
+        }
+
+        function assignCAs() {
+            const selectedCount = Object.keys(caPermissions).length;
+
+            if (selectedCount === 0) {
+                alert('Please select at least one CA');
+                return;
+            }
+
+            console.log(`Assigning CAs to ${currentFeature}:`);
+            console.log(caPermissions);
+
+            // Format data for API
+            const apiPayload = {
+                feature_name: currentFeature,
+                ca_assignments: Object.entries(caPermissions).map(([caId, perms]) => ({
+                    family_member_id: caId,
+                    permissions: perms
+                }))
+            };
+
+            console.log('API Payload:', apiPayload);
+
+            alert(`Successfully assigned ${selectedCount} CA(s) with permissions to ${currentFeature}`);
+            closeModal();
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#permissionsTable tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('assignModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

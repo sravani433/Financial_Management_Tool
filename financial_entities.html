@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Financial Hierarchy Dashboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Roboto, sans-serif;
+            background: #f4f7f9;
+            color: #333;
+        }
+
+        header {
+            padding: 20px 40px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .container {
+            padding: 40px;
+        }
+
+        .tile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        .tile {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            border: 1px solid #e5e8eb;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0px 2px 4px rgba(0,0,0,0.03);
+        }
+
+        .tile:hover {
+            transform: translateY(-4px);
+            box-shadow: 0px 6px 16px rgba(0,0,0,0.10);
+        }
+
+        .tile-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .tile-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .tile-kpi {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .next-section {
+            margin-top: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e8eb;
+        }
+
+        .placeholder {
+            font-size: 16px;
+            text-align: center;
+            padding: 40px 0;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>Financial Overview</header>
+
+<div class="container">
+    <h2 style="margin-bottom: 20px;">Head Categories</h2>
+
+    <!-- HEAD TILES -->
+    <div class="tile-grid">
+
+        <div class="tile" onclick="loadSection('Income')">
+            <div class="tile-icon">💰</div>
+            <div class="tile-title">Income</div>
+            <div class="tile-kpi">₹ 2,45,000 this month</div>
+        </div>
+
+        <div class="tile" onclick="loadSection('Expenses')">
+            <div class="tile-icon">💸</div>
+            <div class="tile-title">Expenses</div>
+            <div class="tile-kpi">₹ 1,12,700 spent</div>
+        </div>
+
+        <div class="tile" onclick="loadSection('Assets')">
+            <div class="tile-icon">📈</div>
+            <div class="tile-title">Assets</div>
+            <div class="tile-kpi">₹ 18,40,000 total</div>
+        </div>
+
+        <div class="tile" onclick="loadSection('Liabilities')">
+            <div class="tile-icon">📉</div>
+            <div class="tile-title">Liabilities</div>
+            <div class="tile-kpi">₹ 6,50,000 outstanding</div>
+        </div>
+
+    </div>
+
+    <!-- NEXT LEVEL PLACEHOLDER -->
+    <div id="next-section" class="next-section">
+        <div class="placeholder">Click any Head category to load Main Classifications...</div>
+    </div>
+</div>
+
+<script>
+    function loadSection(headName) {
+        document.getElementById("next-section").innerHTML = `
+            <h3>${headName} → Main Classifications</h3>
+            <ul style="line-height: 1.9; margin-top: 10px;">
+                <li>Sample Classification 1</li>
+                <li>Sample Classification 2</li>
+                <li>Sample Classification 3</li>
+            </ul>
+        `;
+    }
+</script>
+
+</body>
+</html>
