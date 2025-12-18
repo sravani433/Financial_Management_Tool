@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Net Worth Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: #f8fafc;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    h2 {
+      margin-bottom: 4px;
+    }
+
+    p.subtitle {
+      color: #6b7280;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    select {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      font-size: 14px;
+    }
+
+    /* --- Chart sizing --- */
+    .chart-sm {
+      height: 200px;
+    }
+
+    .chart-md {
+      height: 260px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ================= Net Worth Trend ================= -->
+  <div class="card">
+    <h2>Net Worth Overview</h2>
+    <p class="subtitle">Assets, liabilities, and net worth over time</p>
+    <div class="chart-md">
+      <canvas id="netWorthChart"></canvas>
+    </div>
+  </div>
+
+  <!-- ================= Category Distribution ================= -->
+  <div class="card">
+    <div class="controls">
+      <div>
+        <h2>Category Distribution</h2>
+        <p class="subtitle">Composition for selected month</p>
+      </div>
+
+      <select id="monthSelect"></select>
+    </div>
+
+    <div class="grid">
+      <div>
+        <h3>Assets</h3>
+        <div class="chart-sm">
+          <canvas id="assetChart"></canvas>
+        </div>
+      </div>
+      <div>
+        <h3>Liabilities</h3>
+        <div class="chart-sm">
+          <canvas id="liabilityChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* =================== Simulated Backend Data =================== */
+
+const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+const assets = [1500000,1520000,1510000,1550000,1580000,1600000,1620000,1650000,1680000,1700000,1720000,1750000];
+const liabilities = [-300000,-280000,-290000,-260000,-240000,-220000,-210000,-200000,-190000,-180000,-170000,-160000];
+const netWorth = assets.map((a, i) => a + liabilities[i]);
+
+const categoryDistribution = {
+  "Mar": {
+    assets: [
+      { label: "Real Estate", value: 820000 },
+      { label: "Equity", value: 550000 },
+      { label: "Cash", value: 140000 }
+    ],
+    liabilities: [
+      { label: "Home Loan", value: 260000 },
+      { label: "Credit Card", value: 30000 }
+    ]
+  }
+};
+
+/* =================== Month Dropdown =================== */
+
+const monthSelect = document.getElementById("monthSelect");
+months.forEach(m => {
+  const opt = document.createElement("option");
+  opt.value = m;
+  opt.textContent = m;
+  monthSelect.appendChild(opt);
+});
+monthSelect.value = "Mar";
+
+/* =================== Net Worth Trend Chart =================== */
+
+new Chart(document.getElementById("netWorthChart"), {
+  type: "line",
+  data: {
+    labels: months,
+    datasets: [
+      {
+        label: "Assets",
+        data: assets,
+        fill: true,
+        backgroundColor: "rgba(16,185,129,0.25)",
+        borderColor: "rgba(16,185,129,0.8)",
+        tension: 0.4
+      },
+      {
+        label: "Liabilities",
+        data: liabilities,
+        fill: true,
+        backgroundColor: "rgba(239,68,68,0.25)",
+        borderColor: "rgba(239,68,68,0.8)",
+        tension: 0.4
+      },
+      {
+        label: "Net Worth",
+        data: netWorth,
+        borderColor: "#4f46e5",
+        borderWidth: 3,
+        fill: false,
+        tension: 0.4
+      }
+    ]
+  },
+  options: {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: "bottom" },
+      tooltip: {
+        callbacks: {
+          label: ctx => `${ctx.dataset.label}: ₹${ctx.raw.toLocaleString()}`
+        }
+      }
+    },
+    scales: {
+      y: {
+        ticks: {
+          callback: v => "₹" + v.toLocaleString()
+        }
+      }
+    }
+  }
+});
+
+/* =================== Category Donuts =================== */
+
+let assetChart, liabilityChart;
+
+function renderDistribution(month) {
+  const data = categoryDistribution[month];
+  if (!data) return;
+
+  if (assetChart) assetChart.destroy();
+  if (liabilityChart) liabilityChart.destroy();
+
+  assetChart = new Chart(document.getElementById("assetChart"), {
+    type: "doughnut",
+    data: {
+      labels: data.assets.map(a => a.label),
+      datasets: [{
+        data: data.assets.map(a => a.value),
+        backgroundColor: ["#10b981","#3b82f6","#22c55e"]
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: ctx => `${ctx.label}: ₹${ctx.raw.toLocaleString()}`
+          }
+        }
+      }
+    }
+  });
+
+  liabilityChart = new Chart(document.getElementById("liabilityChart"), {
+    type: "doughnut",
+    data: {
+      labels: data.liabilities.map(l => l.label),
+      datasets: [{
+        data: data.liabilities.map(l => l.value),
+        backgroundColor: ["#ef4444","#f97316"]
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: ctx => `${ctx.label}: ₹${ctx.raw.toLocaleString()}`
+          }
+        }
+      }
+    }
+  });
+}
+
+/* =================== Initial Render =================== */
+
+renderDistribution(monthSelect.value);
+monthSelect.addEventListener("change", e => renderDistribution(e.target.value));
+</script>
+
+</body>
+</html>
