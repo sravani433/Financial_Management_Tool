@@ -1,263 +1,395 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Accounts & Linked Accounts</title>
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
-
-<style>
-    body { background:#f7f9fc; }
-
-    .tab-btn {
-        cursor:pointer; font-weight:500; padding:10px 18px;
-        border-bottom:3px solid transparent; margin-right:20px;
-    }
-    .tab-btn.active { border-bottom:3px solid #0d6efd; color:#0d6efd; }
-
-    .account-type-card {
-        padding:18px; border-radius:12px; background:#fff; border:1px solid #e0e0e0;
-        box-shadow:0 3px 10px rgba(0,0,0,0.04); cursor:pointer; text-align:center;
-        transition:.2s ease;
-    }
-    .account-type-card:hover { transform:translateY(-5px); }
-    .account-type-card.active { border:2px solid #0d6efd; }
-
-    .icon i { font-size:32px; color:#0d6efd; }
-
-    table thead { background:#f1f1f1; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Accounts - Card View</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .card-animate {
+            animation: slideUp 0.5s ease-out forwards;
+        }
+    </style>
 </head>
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 min-h-screen">
+    <div class="p-6">
+        <!-- Header -->
+        <div class="max-w-7xl mx-auto mb-8">
+            <div class="flex items-center justify-between mb-6 flex-wrap gap-4">
+                <div>
+                    <h1 class="text-4xl font-bold text-white mb-2">My Accounts</h1>
+                    <p class="text-slate-400">Manage and track all your financial accounts</p>
+                </div>
+                <button onclick="addAccount()" class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:from-emerald-600 hover:to-teal-600 transition-all shadow-lg hover:shadow-emerald-500/50">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Add Account
+                </button>
+            </div>
 
-<body>
+            <!-- Filters and Search -->
+            <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                <div class="flex-1 relative">
+                    <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search accounts, banks, or account numbers..."
+                        oninput="filterAccounts()"
+                        class="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    />
+                </div>
 
-<div class="container mt-4">
+                <div class="flex gap-2 flex-wrap" id="filterButtons">
+                    <button onclick="setFilter('all')" class="filter-btn active px-4 py-3 rounded-xl font-medium transition-all" data-filter="all">ALL</button>
+                    <button onclick="setFilter('SAVINGS')" class="filter-btn px-4 py-3 rounded-xl font-medium transition-all" data-filter="SAVINGS">SAVINGS</button>
+                    <button onclick="setFilter('CURRENT')" class="filter-btn px-4 py-3 rounded-xl font-medium transition-all" data-filter="CURRENT">CURRENT</button>
+                    <button onclick="setFilter('LOAN')" class="filter-btn px-4 py-3 rounded-xl font-medium transition-all" data-filter="LOAN">LOAN</button>
+                </div>
+            </div>
 
-    <h3 class="fw-bold mb-4">Accounts</h3>
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 rounded-xl p-6">
+                    <div class="text-emerald-400 text-sm font-medium mb-2">Total Accounts</div>
+                    <div class="text-3xl font-bold text-white" id="totalAccounts">9</div>
+                </div>
+                <div class="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30 rounded-xl p-6">
+                    <div class="text-blue-400 text-sm font-medium mb-2">Total Balance</div>
+                    <div class="text-3xl font-bold text-white" id="totalBalance">₹0.00</div>
+                </div>
+                <div class="bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-xl p-6">
+                    <div class="text-purple-400 text-sm font-medium mb-2">Average Growth</div>
+                    <div class="text-3xl font-bold text-white" id="avgGrowth">0.00%</div>
+                </div>
+            </div>
+        </div>
 
-    <!-- TABS -->
-    <div class="d-flex border-bottom mb-3">
-        <div class="tab-btn active" onclick="switchTab('accounts', this)">Accounts</div>
-        <div class="tab-btn" onclick="switchTab('linked', this)">Linked Accounts</div>
+        <!-- Account Cards Grid -->
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="accountsGrid">
+                <!-- Cards will be inserted here by JavaScript -->
+            </div>
+            <div id="noResults" class="text-center py-16 hidden">
+                <div class="text-slate-400 text-lg mb-2">No accounts found</div>
+                <div class="text-slate-500">Try adjusting your search or filters</div>
+            </div>
+        </div>
     </div>
 
-    <!-- ACCOUNTS TAB -->
-    <div id="tab-accounts">
+    <script>
+        const accounts = [
+            {
+                id: 1,
+                beneficiary: 'sravani',
+                type: 'SAVINGS',
+                provider: 'HDFC Bank',
+                accountNumber: '10010987567894',
+                openingBalance: 150000.00,
+                closingBalance: 200000.00,
+                interestRate: 10.00,
+                color: 'from-slate-600 to-slate-700',
+                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/HDFC_Bank_Logo.svg/200px-HDFC_Bank_Logo.svg.png'
+            },
+            {
+                id: 2,
+                beneficiary: 'sravani',
+                type: 'CURRENT',
+                provider: 'ICICI Bank',
+                accountNumber: '10010982345678',
+                openingBalance: 1000.00,
+                closingBalance: 10000.00,
+                interestRate: 10.00,
+                color: 'from-blue-600 to-blue-700',
+                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/ICICI_Bank_Logo.svg/200px-ICICI_Bank_Logo.svg.png'
+            },
+            {
+                id: 3,
+                beneficiary: 'sravani',
+                type: 'SAVINGS',
+                provider: 'HDFC Bank',
+                accountNumber: '10010987654432',
+                openingBalance: 10.00,
+                closingBalance: 100.00,
+                interestRate: 10.00,
+                color: 'from-slate-600 to-slate-700',
+                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/HDFC_Bank_Logo.svg/200px-HDFC_Bank_Logo.svg.png'
+            },
+            {
+                id: 4,
+                beneficiary: 'sravani',
+                type: 'SAVINGS',
+                provider: 'HDFC Bank',
+                accountNumber: '10098763546',
+                openingBalance: 100000.00,
+                closingBalance: 200000.00,
+                interestRate: 10.00,
+                color: 'from-slate-600 to-slate-700',
+                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/HDFC_Bank_Logo.svg/200px-HDFC_Bank_Logo.svg.png'
+            },
+            {
+                id: 5,
+                beneficiary: 'Sravanii',
+                type: 'SAVINGS',
+                provider: 'ICICI Bank',
+                accountNumber: '10010987654543',
+                openingBalance: 10.00,
+                closingBalance: 100.00,
+                interestRate: 10.00,
+                color: 'from-blue-600 to-blue-700',
+                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/ICICI_Bank_Logo.svg/200px-ICICI_Bank_Logo.svg.png'
+            },
+            {
+                id: 6,
+                beneficiary: 'rtertet',
+                type: 'SAVINGS',
+                provider: 'ICICI Lombard',
+                accountNumber: '',
+                openingBalance: 0.00,
+                closingBalance: 0.00,
+                interestRate: 10.00,
+                color: 'from-blue-600 to-blue-700',
+                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/ICICI_Bank_Logo.svg/200px-ICICI_Bank_Logo.svg.png'
+            },
+            {
+                id: 7,
+                beneficiary: 'SRAVANI PALA',
+                type: 'SAVINGS',
+                provider: 'AXIS Bank',
+                accountNumber: '915010012393939',
+                openingBalance: 2696973.65,
+                closingBalance: 37876232.20,
+                interestRate: 3.00,
+                color: 'from-indigo-600 to-indigo-700',
+                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Axis_Bank_logo.svg/200px-Axis_Bank_logo.svg.png'
+            },
+            {
+                id: 8,
+                beneficiary: 'PALA SRAVANI',
+                type: 'SAVINGS',
+                provider: 'AXIS Bank',
+                accountNumber: '9240XXXXXXX3047',
+                openingBalance: 73.99,
+                closingBalance: 184.17,
+                interestRate: 0.00,
+                color: 'from-indigo-600 to-indigo-700',
+                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Axis_Bank_logo.svg/200px-Axis_Bank_logo.svg.png'
+            },
+            {
+                id: 9,
+                beneficiary: 'SANTOSH KUMAR TALACHUTLA',
+                type: 'LOAN',
+                provider: 'AXIS Bank',
+                accountNumber: 'PHR007511338504',
+                openingBalance: 719043.00,
+                closingBalance: 216194.00,
+                interestRate: 7.85,
+                color: 'from-indigo-600 to-indigo-700',
+                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Axis_Bank_logo.svg/200px-Axis_Bank_logo.svg.png'
+            }
+        ];
 
-        <div class="row g-3 mb-4">
+        let currentFilter = 'all';
 
-            <div class="col-md-3">
-                <div class="account-type-card" onclick="selectAccountType('savings', this)">
-                    <div class="icon"><i class="bi bi-piggy-bank"></i></div>
-                    <h6 class="mt-2">Savings</h6>
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 2
+            }).format(amount);
+        }
+
+        function maskAccountNumber(accNum) {
+            if (!accNum || accNum.length < 4) return accNum || 'N/A';
+            return '•••• ' + accNum.slice(-4);
+        }
+
+        function getBalanceChange(opening, closing) {
+            const change = closing - opening;
+            const percentage = opening !== 0 ? ((change / opening) * 100) : 0;
+            return { change, percentage };
+        }
+
+        function createAccountCard(account) {
+            const { change, percentage } = getBalanceChange(account.openingBalance, account.closingBalance);
+            const isPositive = change >= 0;
+            const trendIcon = isPositive
+                ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>'
+                : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>';
+
+            return `
+                <div class="card-animate group bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-300 hover:-translate-y-1">
+                    <!-- Card Header -->
+                    <div class="bg-gradient-to-r ${account.color} p-6 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+                        <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12 -mb-12"></div>
+
+                        <div class="relative z-10">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg">
+                                    <span class="text-white text-sm font-semibold">${account.type}</span>
+                                </div>
+                                <img
+                                    src="${account.logo}"
+                                    alt="${account.provider}"
+                                    class="h-8 bg-white rounded px-2 py-1"
+                                    onerror="this.style.display='none'"
+                                />
+                            </div>
+
+                            <div class="text-white/80 text-sm mb-1">${account.provider}</div>
+                            <div class="text-white text-xl font-mono font-semibold">
+                                ${maskAccountNumber(account.accountNumber)}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="p-6">
+                        <div class="mb-4">
+                            <div class="text-slate-400 text-xs mb-1">Account Holder</div>
+                            <div class="text-white font-medium">${account.beneficiary}</div>
+                        </div>
+
+                        <div class="space-y-3 mb-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400 text-sm">Current Balance</span>
+                                <span class="text-white font-bold">${formatCurrency(account.closingBalance)}</span>
+                            </div>
+
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400 text-sm">Opening Balance</span>
+                                <span class="text-slate-400">${formatCurrency(account.openingBalance)}</span>
+                            </div>
+
+                            <div class="flex justify-between items-center p-3 rounded-lg ${isPositive ? 'bg-emerald-500/10' : 'bg-red-500/10'}">
+                                <span class="text-sm font-medium text-white flex items-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        ${trendIcon}
+                                    </svg>
+                                    Growth
+                                </span>
+                                <span class="font-bold ${isPositive ? 'text-emerald-400' : 'text-red-400'}">
+                                    ${isPositive ? '+' : ''}${percentage.toFixed(2)}%
+                                </span>
+                            </div>
+
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400 text-sm">Interest Rate</span>
+                                <span class="text-amber-400 font-semibold">${account.interestRate}%</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-2 pt-4 border-t border-slate-700/50">
+                            <button onclick="editAccount(${account.id})" class="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-slate-700/50 hover:bg-slate-700 text-white rounded-lg transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                </svg>
+                                Edit
+                            </button>
+                            <button onclick="deleteAccount(${account.id})" class="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            `;
+        }
 
-            <div class="col-md-3">
-                <div class="account-type-card" onclick="selectAccountType('current', this)">
-                    <div class="icon"><i class="bi bi-wallet2"></i></div>
-                    <h6 class="mt-2">Current / Salary</h6>
-                </div>
-            </div>
+        function filterAccounts() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = accounts.filter(account => {
+                const matchesSearch = account.beneficiary.toLowerCase().includes(searchTerm) ||
+                                     account.provider.toLowerCase().includes(searchTerm) ||
+                                     account.accountNumber.toLowerCase().includes(searchTerm);
+                const matchesType = currentFilter === 'all' || account.type === currentFilter;
+                return matchesSearch && matchesType;
+            });
 
-            <div class="col-md-3">
-                <div class="account-type-card" onclick="selectAccountType('credit', this)">
-                    <div class="icon"><i class="bi bi-credit-card"></i></div>
-                    <h6 class="mt-2">Credit Card</h6>
-                </div>
-            </div>
+            renderAccounts(filtered);
+            updateSummary(filtered);
+        }
 
-            <div class="col-md-3">
-                <div class="account-type-card" onclick="selectAccountType('loan', this)">
-                    <div class="icon"><i class="bi bi-cash-stack"></i></div>
-                    <h6 class="mt-2">Loan</h6>
-                </div>
-            </div>
+        function setFilter(type) {
+            currentFilter = type;
 
-        </div>
+            // Update button styles
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.dataset.filter === type) {
+                    btn.classList.add('active', 'bg-emerald-500', 'text-white', 'shadow-lg', 'shadow-emerald-500/50');
+                    btn.classList.remove('bg-slate-800/50', 'text-slate-400');
+                } else {
+                    btn.classList.remove('active', 'bg-emerald-500', 'text-white', 'shadow-lg', 'shadow-emerald-500/50');
+                    btn.classList.add('bg-slate-800/50', 'text-slate-400');
+                }
+            });
 
-        <!-- Accounts Table -->
-        <div class="card">
-            <div class="card-header"><strong id="accounts-title">Select an account type</strong></div>
-            <div class="card-body p-0">
-                <table class="table table-hover mb-0">
-                    <thead>
-                        <tr>
-                            <th>Beneficiary Name</th>
-                            <th>Account Type</th>
-                            <th>Provider</th>
-                            <th>Account Number</th>
-                            <th>ROI</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="accounts-table"></tbody>
-                </table>
-            </div>
-        </div>
+            filterAccounts();
+        }
 
-    </div>
+        function renderAccounts(accountsToRender) {
+            const grid = document.getElementById('accountsGrid');
+            const noResults = document.getElementById('noResults');
 
-    <!-- LINKED ACCOUNTS (FAMILY) TAB -->
-    <div id="tab-linked" class="d-none">
+            if (accountsToRender.length === 0) {
+                grid.innerHTML = '';
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+                grid.innerHTML = accountsToRender.map(account => createAccountCard(account)).join('');
+            }
+        }
 
-        <h5 class="fw-bold mb-3">Family Members</h5>
+        function updateSummary(accountsToShow) {
+            const totalBalance = accountsToShow.reduce((sum, acc) => sum + acc.closingBalance, 0);
+            const avgGrowth = accountsToShow.length > 0
+                ? accountsToShow.reduce((sum, acc) => {
+                    const { percentage } = getBalanceChange(acc.openingBalance, acc.closingBalance);
+                    return sum + percentage;
+                  }, 0) / accountsToShow.length
+                : 0;
 
-        <div class="row g-3 mb-4">
+            document.getElementById('totalAccounts').textContent = accountsToShow.length;
+            document.getElementById('totalBalance').textContent = formatCurrency(totalBalance);
+            document.getElementById('avgGrowth').textContent = avgGrowth.toFixed(2) + '%';
+        }
 
-            <div class="col-md-3">
-                <div class="account-type-card" onclick="selectFamily('SRAVANI', this)">
-                    <div class="icon"><i class="bi bi-person-circle"></i></div>
-                    <h6 class="mt-2">Sravani Pala</h6>
-                </div>
-            </div>
+        function addAccount() {
+            alert('Add Account functionality - Connect to your backend API');
+        }
 
-            <div class="col-md-3">
-                <div class="account-type-card" onclick="selectFamily('TEJA', this)">
-                    <div class="icon"><i class="bi bi-person-circle"></i></div>
-                    <h6 class="mt-2">Manepalli Prabhu Teja</h6>
-                </div>
-            </div>
+        function editAccount(id) {
+            alert(`Edit account ${id} - Connect to your backend API`);
+        }
 
-            <div class="col-md-3">
-                <div class="account-type-card" onclick="selectFamily('SANTOSH', this)">
-                    <div class="icon"><i class="bi bi-person-circle"></i></div>
-                    <h6 class="mt-2">Santosh Kumar Talachutla</h6>
-                </div>
-            </div>
+        function deleteAccount(id) {
+            if (confirm('Are you sure you want to delete this account?')) {
+                alert(`Delete account ${id} - Connect to your backend API`);
+            }
+        }
 
-            <div class="col-md-3">
-                <div class="account-type-card" onclick="selectFamily('REDDY', this)">
-                    <div class="icon"><i class="bi bi-person-circle"></i></div>
-                    <h6 class="mt-2">Bomanna Vamsidhara Reddy</h6>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Family Linked Accounts Table -->
-        <div class="card">
-            <div class="card-header"><strong id="linked-title">Select a family member</strong></div>
-            <div class="card-body p-0">
-                <table class="table table-hover mb-0">
-                    <thead>
-                        <tr>
-                            <th>Account Type</th>
-                            <th>Provider</th>
-                            <th>Account Number</th>
-                            <th>ROI</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="linked-table"></tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
-
-</div>
-
-
-<script>
-/* Mock Data */
-
-// Accounts Tab
-const accountData = {
-    savings: [
-        { name:"SRAVANI PALA", type:"SAVINGS", provider:"AXIS BANK", acc:"91501012399339", roi:"3.00" }
-    ],
-    current: [
-        { name:"MANEPALLI PRABHU TEJA", type:"CURRENT", provider:"HDFC", acc:"XXXX9922", roi:"N/A" }
-    ],
-    credit: [
-        { name:"SRAVANI PALA", type:"CREDIT CARD", provider:"ICICI Coral", acc:"XXXX5566", roi:"N/A" }
-    ],
-    loan: [
-        { name:"SANTOSH KUMAR", type:"LOAN", provider:"AXIS BANK", acc:"PHR007511338504", roi:"7.85" }
-    ]
-};
-
-// Family Linked Accounts
-const familyData = {
-    SRAVANI: [
-        { type:"SAVINGS", provider:"AXIS", acc:"91501012399339", roi:"3.0", status:"Active" }
-    ],
-    TEJA: [
-        { type:"SAVINGS", provider:"AXIS", acc:"91501012399339", roi:"N/A", status:"Active" }
-    ],
-    SANTOSH: [
-        { type:"LOAN", provider:"AXIS BANK", acc:"PHR007511338504", roi:"7.85", status:"Active" }
-    ],
-    REDDY: [
-        { type:"LOAN", provider:"IDFC First", acc:"151021497", roi:"11.25", status:"Active" }
-    ]
-};
-
-
-/* Tab Switching */
-function switchTab(tab, el) {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    el.classList.add('active');
-
-    document.getElementById('tab-accounts').classList.toggle('d-none', tab !== 'accounts');
-    document.getElementById('tab-linked').classList.toggle('d-none', tab !== 'linked');
-}
-
-
-/* Accounts Tab Logic */
-function selectAccountType(type, card) {
-    document.querySelectorAll('#tab-accounts .account-type-card')
-        .forEach(c => c.classList.remove('active'));
-
-    card.classList.add('active');
-
-    document.getElementById('accounts-title').innerText = type.toUpperCase() + " ACCOUNTS";
-
-    const tbody = document.getElementById('accounts-table');
-    tbody.innerHTML = "";
-
-    accountData[type].forEach(a => {
-        tbody.innerHTML += `
-        <tr>
-            <td>${a.name}</td>
-            <td>${a.type}</td>
-            <td>${a.provider}</td>
-            <td>${a.acc}</td>
-            <td>${a.roi}</td>
-            <td><i class="bi bi-three-dots-vertical"></i></td>
-        </tr>`;
-    });
-}
-
-
-/* Linked Accounts (Family) Logic */
-function selectFamily(member, card) {
-    document.querySelectorAll('#tab-linked .account-type-card')
-        .forEach(c => c.classList.remove('active'));
-
-    card.classList.add('active');
-
-    document.getElementById('linked-title').innerText = "Accounts of " + card.innerText.trim();
-
-    const tbody = document.getElementById('linked-table');
-    tbody.innerHTML = "";
-
-    familyData[member].forEach(a => {
-        tbody.innerHTML += `
-        <tr>
-            <td>${a.type}</td>
-            <td>${a.provider}</td>
-            <td>${a.acc}</td>
-            <td>${a.roi}</td>
-            <td>${a.status}</td>
-        </tr>`;
-    });
-}
-
-</script>
-
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderAccounts(accounts);
+            updateSummary(accounts);
+        });
+    </script>
 </body>
 </html>
