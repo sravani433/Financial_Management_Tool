@@ -3,392 +3,919 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank Accounts - Card View</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Financial Account Manager</title>
     <style>
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .card-animate {
-            animation: slideUp 0.5s ease-out forwards;
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1f35 0%, #0f1419 100%);
+            color: #e5e7eb;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .header p {
+            color: #9ca3af;
+            font-size: 1rem;
+        }
+
+        .back-btn {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            color: #9ca3af;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 8px 0;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover {
+            color: #fff;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Search and Filters */
+        .search-filter-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .search-bar {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 14px 20px 14px 45px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #e5e7eb;
+            font-size: 0.95rem;
+        }
+
+        .search-bar input::placeholder {
+            color: #6b7280;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-tab {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #9ca3af;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-tab.active {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+            color: #60a5fa;
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            padding: 25px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-card.teal {
+            background: linear-gradient(135deg, #14b8a6 0%, #0f766e 100%);
+        }
+
+        .summary-card.blue {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+        }
+
+        .summary-card.purple {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+        }
+
+        .summary-card-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 10px;
+        }
+
+        .summary-card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* Account Cards Grid */
+        .accounts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .account-card {
+            padding: 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .account-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        .account-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .account-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .account-card.red {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .account-card.orange {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        }
+
+        .account-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .account-type-badge {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .bank-logo {
+            background: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logo-icon {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border-radius: 3px;
+        }
+
+        .account-bank {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 12px;
+        }
+
+        .account-number {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .account-balance {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .account-holder {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Detail View */
+        .detail-view {
+            display: none;
+        }
+
+        .detail-header {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .detail-header-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .detail-logo {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-logo .logo-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .detail-info h3 {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            margin-bottom: 5px;
+        }
+
+        .detail-balance {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .detail-account-number {
+            color: #9ca3af;
+            font-size: 0.95rem;
+        }
+
+        .detail-header-right {
+            text-align: right;
+        }
+
+        .account-holder-label {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            margin-bottom: 5px;
+        }
+
+        .account-holder-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .account-holder-bank {
+            color: #9ca3af;
+        }
+
+        /* Account Details Section */
+        .detail-section {
+            margin-bottom: 30px;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .info-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .info-card-label {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            margin-bottom: 8px;
+        }
+
+        .info-card-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .info-card.small .info-card-value {
+            font-size: 1.2rem;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 25px;
+            height: 100%;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .pie-chart {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #ef4444 0% 40%,
+                #f59e0b 40% 65%,
+                #10b981 65% 85%,
+                #3b82f6 85% 100%
+            );
+        }
+
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .legend-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+
+        .legend-amount {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Insights Section */
+        .insights-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .insights-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .insight-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 18px;
+            display: flex;
+            align-items: start;
+            gap: 15px;
+        }
+
+        .insight-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .insight-icon.blue {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+
+        .insight-icon.green {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+
+        .insight-icon.yellow {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        .insight-content h4 {
+            font-size: 0.9rem;
+            color: #9ca3af;
+            margin-bottom: 5px;
+        }
+
+        .insight-content p {
+            font-size: 1rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Transactions Section */
+        .transactions-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .transactions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .transactions-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .view-statements-btn {
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid #3b82f6;
+            color: #60a5fa;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .view-statements-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        .transactions-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .transactions-table th {
+            text-align: left;
+            padding: 15px;
+            font-size: 0.85rem;
+            color: #9ca3af;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+        }
+
+        .transactions-table td {
+            padding: 18px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .transaction-row:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .amount-credit {
+            color: #34d399;
+            font-weight: 600;
+        }
+
+        .amount-debit {
+            color: #f87171;
+            font-weight: 600;
+        }
+
+        .confidence-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .confidence-high {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+
+        .confidence-medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        @media (max-width: 768px) {
+            .section-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .accounts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .transactions-table {
+                font-size: 0.85rem;
+            }
+
+            .transactions-table th,
+            .transactions-table td {
+                padding: 10px;
+            }
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 min-h-screen">
-    <div class="p-6">
-        <!-- Header -->
-        <div class="max-w-7xl mx-auto mb-8">
-            <div class="flex items-center justify-between mb-6 flex-wrap gap-4">
-                <div>
-                    <h1 class="text-4xl font-bold text-white mb-2">My Accounts</h1>
-                    <p class="text-slate-400">Manage and track all your financial accounts</p>
-                </div>
-                <button onclick="addAccount()" class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:from-emerald-600 hover:to-teal-600 transition-all shadow-lg hover:shadow-emerald-500/50">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Add Account
-                </button>
-            </div>
-
-            <!-- Filters and Search -->
-            <div class="flex flex-col sm:flex-row gap-4 mb-6">
-                <div class="flex-1 relative">
-                    <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Search accounts, banks, or account numbers..."
-                        oninput="filterAccounts()"
-                        class="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                    />
-                </div>
-
-                <div class="flex gap-2 flex-wrap" id="filterButtons">
-                    <button onclick="setFilter('all')" class="filter-btn active px-4 py-3 rounded-xl font-medium transition-all" data-filter="all">ALL</button>
-                    <button onclick="setFilter('SAVINGS')" class="filter-btn px-4 py-3 rounded-xl font-medium transition-all" data-filter="SAVINGS">SAVINGS</button>
-                    <button onclick="setFilter('CURRENT')" class="filter-btn px-4 py-3 rounded-xl font-medium transition-all" data-filter="CURRENT">CURRENT</button>
-                    <button onclick="setFilter('LOAN')" class="filter-btn px-4 py-3 rounded-xl font-medium transition-all" data-filter="LOAN">LOAN</button>
+<body>
+    <div class="container">
+        <!-- Accounts Overview -->
+        <div id="accountsView">
+            <div class="header">
+                <div class="header-actions">
+                    <div>
+                        <h1>My Accounts</h1>
+                        <p>Manage and track all your financial accounts</p>
+                    </div>
+                    <button class="add-btn">
+                        <span>+</span>
+                        Add Account
+                    </button>
                 </div>
             </div>
 
-            <!-- Summary Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                <div class="bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 rounded-xl p-6">
-                    <div class="text-emerald-400 text-sm font-medium mb-2">Total Accounts</div>
-                    <div class="text-3xl font-bold text-white" id="totalAccounts">9</div>
+            <div class="search-filter-section">
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" placeholder="Search accounts, banks, or account numbers...">
                 </div>
-                <div class="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30 rounded-xl p-6">
-                    <div class="text-blue-400 text-sm font-medium mb-2">Total Balance</div>
-                    <div class="text-3xl font-bold text-white" id="totalBalance">₹0.00</div>
+                <div class="filter-tabs">
+                    <button class="filter-tab active">ALL</button>
+                    <button class="filter-tab">SAVINGS</button>
+                    <button class="filter-tab">CURRENT</button>
+                    <button class="filter-tab">LOAN</button>
                 </div>
-                <div class="bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-xl p-6">
-                    <div class="text-purple-400 text-sm font-medium mb-2">Average Growth</div>
-                    <div class="text-3xl font-bold text-white" id="avgGrowth">0.00%</div>
+            </div>
+
+            <div class="summary-grid">
+                <div class="summary-card teal">
+                    <div class="summary-card-label">Total Accounts</div>
+                    <div class="summary-card-value">9</div>
+                </div>
+                <div class="summary-card blue">
+                    <div class="summary-card-label">Total Balance</div>
+                    <div class="summary-card-value">₹3,85,02,810.37</div>
+                </div>
+                <div class="summary-card purple">
+                    <div class="summary-card-label">Average Growth</div>
+                    <div class="summary-card-value">468.52%</div>
+                </div>
+            </div>
+
+            <div class="accounts-grid">
+                <div class="account-card red" onclick="showDetailView()">
+                    <div class="account-card-header">
+                        <div class="account-type-badge">SAVINGS</div>
+                        <div class="bank-logo">
+                            <div class="logo-icon"></div>
+                            HDFC BANK
+                        </div>
+                    </div>
+                    <div class="account-bank">HDFC Bank</div>
+                    <div class="account-number">●●●● 7894</div>
+                    <div class="account-balance">₹1,25,000.50</div>
+                    <div class="account-holder">JOHN DOE</div>
+                </div>
+
+                <div class="account-card orange" onclick="showDetailView()">
+                    <div class="account-card-header">
+                        <div class="account-type-badge">CURRENT</div>
+                        <div class="bank-logo">
+                            <div class="logo-icon" style="background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);"></div>
+                            ICICI Bank
+                        </div>
+                    </div>
+                    <div class="account-bank">ICICI Bank</div>
+                    <div class="account-number">●●●● 5678</div>
+                    <div class="account-balance">₹2,45,500.00</div>
+                    <div class="account-holder">JANE SMITH</div>
+                </div>
+
+                <div class="account-card red" onclick="showDetailView()">
+                    <div class="account-card-header">
+                        <div class="account-type-badge">SAVINGS</div>
+                        <div class="bank-logo">
+                            <div class="logo-icon"></div>
+                            HDFC BANK
+                        </div>
+                    </div>
+                    <div class="account-bank">HDFC Bank</div>
+                    <div class="account-number">●●●● 4432</div>
+                    <div class="account-balance">₹85,200.75</div>
+                    <div class="account-holder">ROBERT BROWN</div>
                 </div>
             </div>
         </div>
 
-        <!-- Account Cards Grid -->
-        <div class="max-w-7xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="accountsGrid">
-                <!-- Cards will be inserted here by JavaScript -->
+        <!-- Account Detail View -->
+        <div id="detailView" class="detail-view">
+            <button class="back-btn" onclick="showAccountsView()">
+                ← Back to Accounts
+            </button>
+
+            <div class="detail-header">
+                <div class="detail-header-left">
+                    <div class="detail-logo">
+                        <div class="logo-icon"></div>
+                        HDFC BANK
+                    </div>
+                    <div class="detail-info">
+                        <h3>SAVINGS</h3>
+                        <div class="detail-balance">₹1,25,000.50</div>
+                        <div class="detail-account-number">50100012344432</div>
+                    </div>
+                </div>
+                <div class="detail-header-right">
+                    <div class="account-holder-label">Account Holder</div>
+                    <div class="account-holder-name">JOHN DOE</div>
+                    <div class="account-holder-bank">HDFC Bank</div>
+                </div>
             </div>
-            <div id="noResults" class="text-center py-16 hidden">
-                <div class="text-slate-400 text-lg mb-2">No accounts found</div>
-                <div class="text-slate-500">Try adjusting your search or filters</div>
+
+            <div class="detail-section">
+                <div class="section-grid">
+                    <div class="info-cards-grid">
+                        <div class="info-card">
+                            <div class="info-card-label">Total Credits</div>
+                            <div class="info-card-value amount-credit">₹1,25,000.00</div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-label">Total Debits</div>
+                            <div class="info-card-value amount-debit">₹5,000.00</div>
+                        </div>
+                        <div class="info-card small">
+                            <div class="info-card-label">Avg Monthly Balance</div>
+                            <div class="info-card-value">₹1,22,500.25</div>
+                        </div>
+                        <div class="info-card small">
+                            <div class="info-card-label">Min Balance Observed</div>
+                            <div class="info-card-value">₹1,20,000.00</div>
+                        </div>
+                        <div class="info-card small">
+                            <div class="info-card-label">Max Balance Observed</div>
+                            <div class="info-card-value">₹1,25,000.50</div>
+                        </div>
+                        <div class="info-card small">
+                            <div class="info-card-label">Total Transactions</div>
+                            <div class="info-card-value">2</div>
+                        </div>
+                        <div class="info-card small">
+                            <div class="info-card-label">Beneficiary Name</div>
+                            <div class="info-card-value" style="font-size: 1rem;">John Doe</div>
+                        </div>
+                        <div class="info-card small">
+                            <div class="info-card-label">Interest Rate</div>
+                            <div class="info-card-value">3.5%</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">Top Category</div>
+                        <div class="pie-chart"></div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-label">
+                                    <div class="legend-color" style="background: #ef4444;"></div>
+                                    <span>Food</span>
+                                </div>
+                                <span class="legend-amount">₹5,000.00</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-label">
+                                    <div class="legend-color" style="background: #f59e0b;"></div>
+                                    <span>Shopping</span>
+                                </div>
+                                <span class="legend-amount">₹0.00</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-label">
+                                    <div class="legend-color" style="background: #10b981;"></div>
+                                    <span>Transport</span>
+                                </div>
+                                <span class="legend-amount">₹0.00</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-label">
+                                    <div class="legend-color" style="background: #3b82f6;"></div>
+                                    <span>Others</span>
+                                </div>
+                                <span class="legend-amount">₹0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="insights-section">
+                <div class="insights-title">Account Insights</div>
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <div class="insight-icon blue">💰</div>
+                        <div class="insight-content">
+                            <h4>Cash Flow Status</h4>
+                            <p>Healthy - Positive inflow</p>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon green">📈</div>
+                        <div class="insight-content">
+                            <h4>Account Activity</h4>
+                            <p>Low - 2 transactions/month</p>
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon yellow">⚠️</div>
+                        <div class="insight-content">
+                            <h4>Spending Pattern</h4>
+                            <p>96% saved this month</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="transactions-section">
+                <div class="transactions-header">
+                    <h2 class="transactions-title">Transactions</h2>
+                    <button class="view-statements-btn" onclick="alert('Navigate to Statement Uploads')">
+                        📄 View Statement Uploads
+                    </button>
+                </div>
+                <table class="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Balance</th>
+                            <th>Confidence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="transaction-row">
+                            <td>01/06/2025</td>
+                            <td>Initial Deposit</td>
+                            <td class="amount-credit">+₹1,25,000.00</td>
+                            <td>₹1,25,000.00</td>
+                            <td><span class="confidence-badge confidence-high">99%</span></td>
+                        </tr>
+                        <tr class="transaction-row">
+                            <td>05/06/2025</td>
+                            <td>Restaurant</td>
+                            <td class="amount-debit">-₹5,000.00</td>
+                            <td>₹1,20,000.00</td>
+                            <td><span class="confidence-badge confidence-medium">87%</span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
     <script>
-        const accounts = [
-            {
-                id: 1,
-                beneficiary: 'sravani',
-                type: 'SAVINGS',
-                provider: 'HDFC Bank',
-                accountNumber: '10010987567894',
-                openingBalance: 150000.00,
-                closingBalance: 200000.00,
-                interestRate: 10.00,
-                color: 'from-slate-600 to-slate-700',
-                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/HDFC_Bank_Logo.svg/200px-HDFC_Bank_Logo.svg.png'
-            },
-            {
-                id: 2,
-                beneficiary: 'sravani',
-                type: 'CURRENT',
-                provider: 'ICICI Bank',
-                accountNumber: '10010982345678',
-                openingBalance: 1000.00,
-                closingBalance: 10000.00,
-                interestRate: 10.00,
-                color: 'from-blue-600 to-blue-700',
-                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/ICICI_Bank_Logo.svg/200px-ICICI_Bank_Logo.svg.png'
-            },
-            {
-                id: 3,
-                beneficiary: 'sravani',
-                type: 'SAVINGS',
-                provider: 'HDFC Bank',
-                accountNumber: '10010987654432',
-                openingBalance: 10.00,
-                closingBalance: 100.00,
-                interestRate: 10.00,
-                color: 'from-slate-600 to-slate-700',
-                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/HDFC_Bank_Logo.svg/200px-HDFC_Bank_Logo.svg.png'
-            },
-            {
-                id: 4,
-                beneficiary: 'sravani',
-                type: 'SAVINGS',
-                provider: 'HDFC Bank',
-                accountNumber: '10098763546',
-                openingBalance: 100000.00,
-                closingBalance: 200000.00,
-                interestRate: 10.00,
-                color: 'from-slate-600 to-slate-700',
-                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/HDFC_Bank_Logo.svg/200px-HDFC_Bank_Logo.svg.png'
-            },
-            {
-                id: 5,
-                beneficiary: 'Sravanii',
-                type: 'SAVINGS',
-                provider: 'ICICI Bank',
-                accountNumber: '10010987654543',
-                openingBalance: 10.00,
-                closingBalance: 100.00,
-                interestRate: 10.00,
-                color: 'from-blue-600 to-blue-700',
-                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/ICICI_Bank_Logo.svg/200px-ICICI_Bank_Logo.svg.png'
-            },
-            {
-                id: 6,
-                beneficiary: 'rtertet',
-                type: 'SAVINGS',
-                provider: 'ICICI Lombard',
-                accountNumber: '',
-                openingBalance: 0.00,
-                closingBalance: 0.00,
-                interestRate: 10.00,
-                color: 'from-blue-600 to-blue-700',
-                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/ICICI_Bank_Logo.svg/200px-ICICI_Bank_Logo.svg.png'
-            },
-            {
-                id: 7,
-                beneficiary: 'SRAVANI PALA',
-                type: 'SAVINGS',
-                provider: 'AXIS Bank',
-                accountNumber: '915010012393939',
-                openingBalance: 2696973.65,
-                closingBalance: 37876232.20,
-                interestRate: 3.00,
-                color: 'from-indigo-600 to-indigo-700',
-                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Axis_Bank_logo.svg/200px-Axis_Bank_logo.svg.png'
-            },
-            {
-                id: 8,
-                beneficiary: 'PALA SRAVANI',
-                type: 'SAVINGS',
-                provider: 'AXIS Bank',
-                accountNumber: '9240XXXXXXX3047',
-                openingBalance: 73.99,
-                closingBalance: 184.17,
-                interestRate: 0.00,
-                color: 'from-indigo-600 to-indigo-700',
-                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Axis_Bank_logo.svg/200px-Axis_Bank_logo.svg.png'
-            },
-            {
-                id: 9,
-                beneficiary: 'SANTOSH KUMAR TALACHUTLA',
-                type: 'LOAN',
-                provider: 'AXIS Bank',
-                accountNumber: 'PHR007511338504',
-                openingBalance: 719043.00,
-                closingBalance: 216194.00,
-                interestRate: 7.85,
-                color: 'from-indigo-600 to-indigo-700',
-                logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Axis_Bank_logo.svg/200px-Axis_Bank_logo.svg.png'
-            }
-        ];
-
-        let currentFilter = 'all';
-
-        function formatCurrency(amount) {
-            return new Intl.NumberFormat('en-IN', {
-                style: 'currency',
-                currency: 'INR',
-                minimumFractionDigits: 2
-            }).format(amount);
+        function showDetailView() {
+            document.getElementById('accountsView').style.display = 'none';
+            document.getElementById('detailView').style.display = 'block';
+            document.querySelector('.back-btn').style.display = 'flex';
         }
 
-        function maskAccountNumber(accNum) {
-            if (!accNum || accNum.length < 4) return accNum || 'N/A';
-            return '•••• ' + accNum.slice(-4);
+        function showAccountsView() {
+            document.getElementById('accountsView').style.display = 'block';
+            document.getElementById('detailView').style.display = 'none';
         }
 
-        function getBalanceChange(opening, closing) {
-            const change = closing - opening;
-            const percentage = opening !== 0 ? ((change / opening) * 100) : 0;
-            return { change, percentage };
-        }
-
-        function createAccountCard(account) {
-            const { change, percentage } = getBalanceChange(account.openingBalance, account.closingBalance);
-            const isPositive = change >= 0;
-            const trendIcon = isPositive
-                ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>'
-                : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>';
-
-            return `
-                <div class="card-animate group bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-300 hover:-translate-y-1">
-                    <!-- Card Header -->
-                    <div class="bg-gradient-to-r ${account.color} p-6 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
-                        <div class="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12 -mb-12"></div>
-
-                        <div class="relative z-10">
-                            <div class="flex items-start justify-between mb-4">
-                                <div class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-lg">
-                                    <span class="text-white text-sm font-semibold">${account.type}</span>
-                                </div>
-                                <img
-                                    src="${account.logo}"
-                                    alt="${account.provider}"
-                                    class="h-8 bg-white rounded px-2 py-1"
-                                    onerror="this.style.display='none'"
-                                />
-                            </div>
-
-                            <div class="text-white/80 text-sm mb-1">${account.provider}</div>
-                            <div class="text-white text-xl font-mono font-semibold">
-                                ${maskAccountNumber(account.accountNumber)}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card Body -->
-                    <div class="p-6">
-                        <div class="mb-4">
-                            <div class="text-slate-400 text-xs mb-1">Account Holder</div>
-                            <div class="text-white font-medium">${account.beneficiary}</div>
-                        </div>
-
-                        <div class="space-y-3 mb-4">
-                            <div class="flex justify-between items-center">
-                                <span class="text-slate-400 text-sm">Current Balance</span>
-                                <span class="text-white font-bold">${formatCurrency(account.closingBalance)}</span>
-                            </div>
-
-                            <div class="flex justify-between items-center">
-                                <span class="text-slate-400 text-sm">Opening Balance</span>
-                                <span class="text-slate-400">${formatCurrency(account.openingBalance)}</span>
-                            </div>
-
-                            <div class="flex justify-between items-center p-3 rounded-lg ${isPositive ? 'bg-emerald-500/10' : 'bg-red-500/10'}">
-                                <span class="text-sm font-medium text-white flex items-center gap-2">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        ${trendIcon}
-                                    </svg>
-                                    Growth
-                                </span>
-                                <span class="font-bold ${isPositive ? 'text-emerald-400' : 'text-red-400'}">
-                                    ${isPositive ? '+' : ''}${percentage.toFixed(2)}%
-                                </span>
-                            </div>
-
-                            <div class="flex justify-between items-center">
-                                <span class="text-slate-400 text-sm">Interest Rate</span>
-                                <span class="text-amber-400 font-semibold">${account.interestRate}%</span>
-                            </div>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="flex gap-2 pt-4 border-t border-slate-700/50">
-                            <button onclick="editAccount(${account.id})" class="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-slate-700/50 hover:bg-slate-700 text-white rounded-lg transition-all">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                </svg>
-                                Edit
-                            </button>
-                            <button onclick="deleteAccount(${account.id})" class="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-all">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                </svg>
-                                Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function filterAccounts() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = accounts.filter(account => {
-                const matchesSearch = account.beneficiary.toLowerCase().includes(searchTerm) ||
-                                     account.provider.toLowerCase().includes(searchTerm) ||
-                                     account.accountNumber.toLowerCase().includes(searchTerm);
-                const matchesType = currentFilter === 'all' || account.type === currentFilter;
-                return matchesSearch && matchesType;
+        // Filter tabs functionality
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
             });
-
-            renderAccounts(filtered);
-            updateSummary(filtered);
-        }
-
-        function setFilter(type) {
-            currentFilter = type;
-
-            // Update button styles
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                if (btn.dataset.filter === type) {
-                    btn.classList.add('active', 'bg-emerald-500', 'text-white', 'shadow-lg', 'shadow-emerald-500/50');
-                    btn.classList.remove('bg-slate-800/50', 'text-slate-400');
-                } else {
-                    btn.classList.remove('active', 'bg-emerald-500', 'text-white', 'shadow-lg', 'shadow-emerald-500/50');
-                    btn.classList.add('bg-slate-800/50', 'text-slate-400');
-                }
-            });
-
-            filterAccounts();
-        }
-
-        function renderAccounts(accountsToRender) {
-            const grid = document.getElementById('accountsGrid');
-            const noResults = document.getElementById('noResults');
-
-            if (accountsToRender.length === 0) {
-                grid.innerHTML = '';
-                noResults.classList.remove('hidden');
-            } else {
-                noResults.classList.add('hidden');
-                grid.innerHTML = accountsToRender.map(account => createAccountCard(account)).join('');
-            }
-        }
-
-        function updateSummary(accountsToShow) {
-            const totalBalance = accountsToShow.reduce((sum, acc) => sum + acc.closingBalance, 0);
-            const avgGrowth = accountsToShow.length > 0
-                ? accountsToShow.reduce((sum, acc) => {
-                    const { percentage } = getBalanceChange(acc.openingBalance, acc.closingBalance);
-                    return sum + percentage;
-                  }, 0) / accountsToShow.length
-                : 0;
-
-            document.getElementById('totalAccounts').textContent = accountsToShow.length;
-            document.getElementById('totalBalance').textContent = formatCurrency(totalBalance);
-            document.getElementById('avgGrowth').textContent = avgGrowth.toFixed(2) + '%';
-        }
-
-        function addAccount() {
-            alert('Add Account functionality - Connect to your backend API');
-        }
-
-        function editAccount(id) {
-            alert(`Edit account ${id} - Connect to your backend API`);
-        }
-
-        function deleteAccount(id) {
-            if (confirm('Are you sure you want to delete this account?')) {
-                alert(`Delete account ${id} - Connect to your backend API`);
-            }
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            renderAccounts(accounts);
-            updateSummary(accounts);
         });
     </script>
 </body>
