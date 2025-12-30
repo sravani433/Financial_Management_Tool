@@ -377,52 +377,52 @@
 
         .info-cards-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
         }
 
         .info-card {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            padding: 20px;
+            padding: 15px;
         }
 
         .info-card-label {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: #9ca3af;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .info-card-value {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 600;
             color: #fff;
         }
 
         .info-card.small .info-card-value {
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
 
         .chart-container {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            padding: 25px;
+            padding: 20px;
             height: 100%;
         }
 
         .chart-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: #fff;
         }
 
         .pie-chart {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 20px;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 15px;
             border-radius: 50%;
             background: conic-gradient(
                 #ef4444 0% 40%,
@@ -435,13 +435,14 @@
         .legend {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .legend-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-size: 0.85rem;
         }
 
         .legend-label {
@@ -763,36 +764,52 @@
                 <div class="section-grid">
                     <div class="info-cards-grid">
                         <div class="info-card">
-                            <div class="info-card-label">Total Credits</div>
+                            <div class="info-card-label">Total Credit Amount</div>
                             <div class="info-card-value amount-credit">₹1,25,000.00</div>
                         </div>
                         <div class="info-card">
-                            <div class="info-card-label">Total Debits</div>
+                            <div class="info-card-label">Total Debit Amount</div>
                             <div class="info-card-value amount-debit">₹5,000.00</div>
                         </div>
-                        <div class="info-card small">
-                            <div class="info-card-label">Avg Monthly Balance</div>
-                            <div class="info-card-value">₹1,22,500.25</div>
-                        </div>
-                        <div class="info-card small">
-                            <div class="info-card-label">Min Balance Observed</div>
-                            <div class="info-card-value">₹1,20,000.00</div>
-                        </div>
-                        <div class="info-card small">
-                            <div class="info-card-label">Max Balance Observed</div>
-                            <div class="info-card-value">₹1,25,000.50</div>
-                        </div>
-                        <div class="info-card small">
+                        <div class="info-card">
                             <div class="info-card-label">Total Transactions</div>
                             <div class="info-card-value">2</div>
                         </div>
                         <div class="info-card small">
+                            <div class="info-card-label">Number of Credits</div>
+                            <div class="info-card-value">1</div>
+                        </div>
+                        <div class="info-card small">
+                            <div class="info-card-label">Number of Debits</div>
+                            <div class="info-card-value">1</div>
+                        </div>
+                        <div class="info-card small">
+                            <div class="info-card-label">Avg Monthly Balance</div>
+                            <div class="info-card-value">₹1,22,500</div>
+                        </div>
+                        <div class="info-card small">
+                            <div class="info-card-label">Min Balance</div>
+                            <div class="info-card-value">₹1,20,000</div>
+                        </div>
+                        <div class="info-card small">
+                            <div class="info-card-label">Max Balance</div>
+                            <div class="info-card-value">₹1,25,000</div>
+                        </div>
+                        <div class="info-card small">
+                            <div class="info-card-label">Statements Uploaded</div>
+                            <div class="info-card-value">3</div>
+                        </div>
+                        <div class="info-card small">
                             <div class="info-card-label">Beneficiary Name</div>
-                            <div class="info-card-value" style="font-size: 1rem;">John Doe</div>
+                            <div class="info-card-value" style="font-size: 0.85rem;">John Doe</div>
                         </div>
                         <div class="info-card small">
                             <div class="info-card-label">Interest Rate</div>
                             <div class="info-card-value">3.5%</div>
+                        </div>
+                        <div class="info-card small">
+                            <div class="info-card-label">Account Status</div>
+                            <div class="info-card-value" style="font-size: 0.85rem; color: #34d399;">Active</div>
                         </div>
                     </div>
 
@@ -805,28 +822,28 @@
                                     <div class="legend-color" style="background: #ef4444;"></div>
                                     <span>Food</span>
                                 </div>
-                                <span class="legend-amount">₹5,000.00</span>
+                                <span class="legend-amount">₹5,000</span>
                             </div>
                             <div class="legend-item">
                                 <div class="legend-label">
                                     <div class="legend-color" style="background: #f59e0b;"></div>
                                     <span>Shopping</span>
                                 </div>
-                                <span class="legend-amount">₹0.00</span>
+                                <span class="legend-amount">₹0</span>
                             </div>
                             <div class="legend-item">
                                 <div class="legend-label">
                                     <div class="legend-color" style="background: #10b981;"></div>
                                     <span>Transport</span>
                                 </div>
-                                <span class="legend-amount">₹0.00</span>
+                                <span class="legend-amount">₹0</span>
                             </div>
                             <div class="legend-item">
                                 <div class="legend-label">
                                     <div class="legend-color" style="background: #3b82f6;"></div>
                                     <span>Others</span>
                                 </div>
-                                <span class="legend-amount">₹0.00</span>
+                                <span class="legend-amount">₹0</span>
                             </div>
                         </div>
                     </div>
