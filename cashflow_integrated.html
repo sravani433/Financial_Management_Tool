@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income Analytics Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #e2e8f0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #94a3b8;
+        }
+
+        /* Cards Section - 15% */
+        .cards-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(34, 211, 238, 0.5);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .icon-green {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .icon-blue {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3b82f6;
+        }
+
+        .icon-purple {
+            background: rgba(168, 85, 247, 0.2);
+            color: #a855f7;
+        }
+
+        .icon-cyan {
+            background: rgba(34, 211, 238, 0.2);
+            color: #22d3ee;
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .card-subtitle {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .card-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-top: 5px;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        /* Filters Section - 5% */
+        .filters-section {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-group label {
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .filter-select {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #e2e8f0;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-left: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: rgba(34, 211, 238, 0.2);
+            border-color: #22d3ee;
+            color: #22d3ee;
+        }
+
+        /* Graphs and Insights Section - 50% */
+        .analytics-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .chart-subtitle {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+
+        .insights-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Declarations Section - 30% */
+        .declarations-section {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .tab-nav {
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid rgba(71, 85, 105, 0.5);
+            margin-bottom: 20px;
+        }
+
+        .tab-nav button {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 10px 20px;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-nav button.active {
+            border-bottom-color: #22d3ee;
+            color: #22d3ee;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        th {
+            padding: 12px;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #10b981;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(71, 85, 105, 0.3);
+            font-size: 0.875rem;
+            color: #cbd5e1;
+        }
+
+        tbody tr:hover {
+            background: rgba(15, 23, 42, 0.4);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            background: transparent;
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 6px;
+            padding: 6px;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-icon:hover {
+            border-color: #22d3ee;
+            color: #22d3ee;
+        }
+
+        .btn-delete:hover {
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .btn-primary {
+            background: #22d3ee;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: #0f172a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #06b6d4;
+        }
+
+        .classification-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .classification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .classification-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .classification-stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 2px;
+        }
+
+        .stat-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .stat-value.green {
+            color: #10b981;
+        }
+
+        .stat-value.red {
+            color: #ef4444;
+        }
+
+        @media (max-width: 1200px) {
+            .analytics-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cards-section {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-tabs {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Income Analytics</h1>
+            <p>Track and analyze your income sources and cashflow</p>
+        </div>
+
+        <!-- Cards Section (15%) -->
+        <div class="cards-section">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Monthly Income</span>
+                    <div class="card-icon icon-green">₹</div>
+                </div>
+                <div class="card-value">₹159,000</div>
+                <div class="card-subtitle">Current month total</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Avg Monthly Income</span>
+                    <div class="card-icon icon-blue">📊</div>
+                </div>
+                <div class="card-value">₹151,050</div>
+                <div class="card-subtitle">Last 6 months average</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Income Growth Rate</span>
+                    <div class="card-icon icon-purple">📈</div>
+                </div>
+                <div class="card-value">+12.5%</div>
+                <div class="card-subtitle">vs previous month</div>
+                <span class="card-badge badge-success">↑ 2.3% higher than usual</span>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Top Income Source</span>
+                    <div class="card-icon icon-cyan">💼</div>
+                </div>
+                <div class="card-value">Salary</div>
+                <div class="card-subtitle">₹125,000 / monthly</div>
+            </div>
+        </div>
+
+        <!-- Filters Section (5%) -->
+        <div class="filters-section">
+            <div class="filter-group">
+                <label>Month:</label>
+                <select class="filter-select" id="monthSelect">
+                    <option>December</option>
+                    <option>November</option>
+                    <option>October</option>
+                    <option>September</option>
+                    <option>August</option>
+                    <option>July</option>
+                </select>
+            </div>
+            <div class="filter-tabs">
+                <button class="tab-btn active">Income</button>
+                <button class="tab-btn">Cashflow</button>
+            </div>
+        </div>
+
+        <!-- Graphs and Insights Section (50%) -->
+        <div class="analytics-section">
+            <!-- Left: Graphs -->
+            <div>
+                <div class="chart-container" style="margin-bottom: 20px;">
+                    <div class="chart-title">Income vs Expenses</div>
+                    <div class="chart-subtitle">Last 6 months comparison</div>
+                    <canvas id="incomeExpensesChart" height="80"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">Income Trend</div>
+                    <div class="chart-subtitle">Monthly income over time</div>
+                    <canvas id="incomeTrendChart" height="80"></canvas>
+                </div>
+            </div>
+
+            <!-- Right: Insights -->
+            <div class="insights-panel">
+                <div class="chart-container">
+                    <div class="chart-title">Income Distribution</div>
+                    <div class="chart-subtitle">By source type</div>
+                    <canvas id="incomeDistributionChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">Quick Insights</div>
+                    <div style="padding: 10px 0;">
+                        <div style="margin-bottom: 15px; padding: 12px; background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; border-radius: 6px;">
+                            <div style="font-size: 0.875rem; color: #10b981; margin-bottom: 5px;">✓ Strong Growth</div>
+                            <div style="font-size: 0.75rem; color: #94a3b8;">Your income increased by 12.5% this month</div>
+                        </div>
+                        <div style="margin-bottom: 15px; padding: 12px; background: rgba(59, 130, 246, 0.1); border-left: 3px solid #3b82f6; border-radius: 6px;">
+                            <div style="font-size: 0.875rem; color: #3b82f6; margin-bottom: 5px;">ℹ Stable Source</div>
+                            <div style="font-size: 0.75rem; color: #94a3b8;">Salary remains your primary income at 78.6%</div>
+                        </div>
+                        <div style="padding: 12px; background: rgba(168, 85, 247, 0.1); border-left: 3px solid #a855f7; border-radius: 6px;">
+                            <div style="font-size: 0.875rem; color: #a855f7; margin-bottom: 5px;">⚡ Diversification</div>
+                            <div style="font-size: 0.75rem; color: #94a3b8;">Consider increasing secondary income sources</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Declarations Section (30%) -->
+        <div class="declarations-section">
+            <div class="section-header">
+                <div class="section-title">Income Classifications</div>
+                <button class="btn-primary">+ Add Income</button>
+            </div>
+
+            <div class="tab-nav">
+                <button class="active">Income</button>
+                <button>Asset</button>
+                <button>Liability</button>
+                <button>Demat</button>
+            </div>
+
+            <!-- Main Classifications -->
+            <div class="classification-card">
+                <div class="classification-header">
+                    <div class="classification-name">Primary Income</div>
+                    <div style="display: flex; gap: 20px; align-items: center;">
+                        <div class="stat-item">
+                            <span class="stat-label">SUB CLASSIFICATIONS</span>
+                            <span class="stat-value">1</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="classification-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">TOTAL VALUE</span>
+                        <span class="stat-value green">₹1,810,000</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">TOTAL OUTSTANDING</span>
+                        <span class="stat-value red">₹0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">ITEMS COUNT</span>
+                        <span class="stat-value">5</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="classification-card">
+                <div class="classification-header">
+                    <div class="classification-name">Secondary Income</div>
+                    <div style="display: flex; gap: 20px; align-items: center;">
+                        <div class="stat-item">
+                            <span class="stat-label">SUB CLASSIFICATIONS</span>
+                            <span class="stat-value">1</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="classification-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">TOTAL VALUE</span>
+                        <span class="stat-value green">₹7,200,580</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">TOTAL OUTSTANDING</span>
+                        <span class="stat-value red">₹0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">ITEMS COUNT</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Income Declarations Table -->
+            <div style="margin-top: 30px;">
+                <div class="section-header">
+                    <div class="section-title">Income Declarations</div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>PERSON NAME</th>
+                                <th>SOURCE</th>
+                                <th>INCOME</th>
+                                <th>CATEGORY TYPE</th>
+                                <th>HAS ASSET</th>
+                                <th>FREQUENCY</th>
+                                <th>MAIN CLASSIFICATION</th>
+                                <th>SUB CLASSIFICATION</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Prabhu Teja</td>
+                                <td>Salary</td>
+                                <td>125,000</td>
+                                <td>-</td>
+                                <td>No</td>
+                                <td>Monthly</td>
+                                <td>Primary Income</td>
+                                <td>Salary</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon">✏️</button>
+                                        <button class="btn-icon btn-delete">🗑️</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Prabhu Teja</td>
+                                <td>Others</td>
+                                <td>6,000</td>
+                                <td>-</td>
+                                <td>No</td>
+                                <td>Monthly</td>
+                                <td>Primary Income</td>
+                                <td>Income 2</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon">✏️</button>
+                                        <button class="btn-icon btn-delete">🗑️</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart configurations
+        const chartColors = {
+            income: '#10b981',
+            expenses: '#ef4444',
+            salary: '#10b981',
+            rentals: '#3b82f6',
+            others: '#8b5cf6'
+        };
+
+        // Income vs Expenses Chart
+        const ctx1 = document.getElementById('incomeExpensesChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Income',
+                    data: [145000, 152000, 148000, 155000, 151000, 159000],
+                    backgroundColor: chartColors.income
+                }, {
+                    label: 'Expenses',
+                    data: [98000, 102000, 99000, 103000, 107000, 105000],
+                    backgroundColor: chartColors.expenses
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#cbd5e1' }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: 'rgba(71, 85, 105, 0.3)' }
+                    },
+                    y: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: 'rgba(71, 85, 105, 0.3)' }
+                    }
+                }
+            }
+        });
+
+        // Income Trend Chart
+        const ctx2 = document.getElementById('incomeTrendChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Income',
+                    data: [145000, 152000, 148000, 155000, 151000, 159000],
+                    borderColor: chartColors.income,
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#cbd5e1' }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: 'rgba(71, 85, 105, 0.3)' }
+                    },
+                    y: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: 'rgba(71, 85, 105, 0.3)' }
+                    }
+                }
+            }
+        });
+
+        // Income Distribution Pie Chart
+        const ctx3 = document.getElementById('incomeDistributionChart').getContext('2d');
+        new Chart(ctx3, {
+            type: 'doughnut',
+            data: {
+                labels: ['Salary', 'Rentals', 'Others'],
+                datasets: [{
+                    data: [125000, 28000, 6000],
+                    backgroundColor: [chartColors.salary, chartColors.rentals, chartColors.others]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#cbd5e1' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
