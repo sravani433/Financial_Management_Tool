@@ -225,6 +225,14 @@
             background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
         }
 
+        .account-card.purple {
+            background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+        }
+
+        .account-card.green {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
         .account-card-header {
             display: flex;
             justify-content: space-between;
@@ -655,7 +663,7 @@
                         <h1>My Accounts</h1>
                         <p>Manage and track all your financial accounts</p>
                     </div>
-                    <button class="add-btn">
+                    <button class="add-btn" aria-label="Add Account">
                         <span>+</span>
                         Add Account
                     </button>
@@ -665,13 +673,15 @@
             <div class="search-filter-section">
                 <div class="search-bar">
                     <span class="search-icon">🔍</span>
-                    <input type="text" placeholder="Search accounts, banks, or account numbers...">
+                    <input type="text" aria-label="Search accounts" placeholder="Search accounts, banks, or account numbers...">
                 </div>
                 <div class="filter-tabs">
-                    <button class="filter-tab active">ALL</button>
+                    <!-- Removed ALL filter as requested, added CREDIT CARD and DEMAT -->
                     <button class="filter-tab">SAVINGS</button>
-                    <button class="filter-tab">CURRENT</button>
+                    <button class="filter-tab active">CURRENT</button>
                     <button class="filter-tab">LOAN</button>
+                    <button class="filter-tab">CREDIT CARD</button>
+                    <button class="filter-tab">DEMAT</button>
                 </div>
             </div>
 
@@ -691,7 +701,8 @@
             </div>
 
             <div class="accounts-grid">
-                <div class="account-card red" onclick="showDetailView()">
+                <!-- Savings -->
+                <div class="account-card red" data-type="SAVINGS" onclick="showDetailView(this)">
                     <div class="account-card-header">
                         <div class="account-type-badge">SAVINGS</div>
                         <div class="bank-logo">
@@ -705,7 +716,8 @@
                     <div class="account-holder">JOHN DOE</div>
                 </div>
 
-                <div class="account-card orange" onclick="showDetailView()">
+                <!-- Current -->
+                <div class="account-card orange" data-type="CURRENT" onclick="showDetailView(this)">
                     <div class="account-card-header">
                         <div class="account-type-badge">CURRENT</div>
                         <div class="bank-logo">
@@ -719,7 +731,8 @@
                     <div class="account-holder">JANE SMITH</div>
                 </div>
 
-                <div class="account-card red" onclick="showDetailView()">
+                <!-- Another Savings -->
+                <div class="account-card red" data-type="SAVINGS" onclick="showDetailView(this)">
                     <div class="account-card-header">
                         <div class="account-type-badge">SAVINGS</div>
                         <div class="bank-logo">
@@ -732,6 +745,92 @@
                     <div class="account-balance">₹85,200.75</div>
                     <div class="account-holder">ROBERT BROWN</div>
                 </div>
+
+                <!-- Loan Card -->
+                <div class="account-card purple" data-type="LOAN"
+                     data-original_principal_amount="₹10,00,000.00"
+                     data-current_outstanding_principal="₹7,50,000.00"
+                     data-principal_repaid="₹2,50,000.00"
+                     data-emi_amount="₹18,500.00"
+                     data-installments_paid="36"
+                     data-installments_remaining="84"
+                     data-next_emi_due_date="15/04/2026"
+                     data-last_emi_paid_date="15/03/2026"
+                     data-interest_rate="8.5%"
+                     data-total_interest_paid="₹1,20,000.00"
+                     data-overdue_amount="₹0.00"
+                     data-loan_status="Active"
+                     onclick="showDetailView(this)">
+                    <div class="account-card-header">
+                        <div class="account-type-badge">LOAN</div>
+                        <div class="bank-logo">
+                            <div class="logo-icon" style="background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);"></div>
+                            SBI
+                        </div>
+                    </div>
+                    <div class="account-bank">State Bank of India</div>
+                    <div class="account-number">Loan **** 1023</div>
+                    <div class="account-balance">Outstanding: ₹7,50,000.00</div>
+                    <div class="account-holder">Home Loan</div>
+                </div>
+
+                <!-- Credit Card Card -->
+                <div class="account-card green" data-type="CREDIT CARD"
+                     data-credit_limit="₹2,00,000.00"
+                     data-available_credit="₹1,20,000.00"
+                     data-current_outstanding_balance="₹80,000.00"
+                     data-credit_utilization_ratio="40%"
+                     data-current_statement_balance="₹25,000.00"
+                     data-minimum_amount_due="₹2,500.00"
+                     data-payment_due_date="25/03/2026"
+                     data-apr_interest_rate="24%"
+                     data-total_spend="₹1,50,000.00"
+                     data-total_payments_made="₹70,000.00"
+                     data-transaction_count="120"
+                     data-last_transaction_date="12/03/2026"
+                     data-card_status="Active"
+                     onclick="showDetailView(this)">
+                    <div class="account-card-header">
+                        <div class="account-type-badge">CREDIT CARD</div>
+                        <div class="bank-logo">
+                            <div class="logo-icon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);"></div>
+                            AXIS
+                        </div>
+                    </div>
+                    <div class="account-bank">Axis Bank</div>
+                    <div class="account-number">Card ●●●● 3344</div>
+                    <div class="account-balance">Limit: ₹2,00,000.00</div>
+                    <div class="account-holder">JOHN DOE</div>
+                </div>
+
+                <!-- Demat Account Card -->
+                <div class="account-card" data-type="DEMAT"
+                     data-total_portfolio_value="₹5,00,000.00"
+                     data-total_invested_value="₹3,50,000.00"
+                     data-total_profit_loss="₹1,50,000.00"
+                     data-portfolio_return_percentage="42.86%"
+                     data-total_holdings_count="18"
+                     data-largest_holding_symbol="RELIANCE"
+                     data-largest_holding_value="₹1,20,000.00"
+                     data-total_buy_transactions="45"
+                     data-total_sell_transactions="12"
+                     data-total_dividend_received="₹6,500.00"
+                     data-last_transaction_date="05/03/2026"
+                     data-account_status="Active"
+                     onclick="showDetailView(this)">
+                    <div class="account-card-header">
+                        <div class="account-type-badge">DEMAT</div>
+                        <div class="bank-logo">
+                            <div class="logo-icon" style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);"></div>
+                            ICICI Securities
+                        </div>
+                    </div>
+                    <div class="account-bank">ICICI Securities</div>
+                    <div class="account-number">Demat **** 7788</div>
+                    <div class="account-balance">Portfolio: ₹5,00,000.00</div>
+                    <div class="account-holder">Investments</div>
+                </div>
+
             </div>
         </div>
 
@@ -745,108 +844,33 @@
                 <div class="detail-header-left">
                     <div class="detail-logo">
                         <div class="logo-icon"></div>
-                        HDFC BANK
+                        <span id="detailBank">HDFC BANK</span>
                     </div>
                     <div class="detail-info">
-                        <h3>SAVINGS</h3>
-                        <div class="detail-balance">₹1,25,000.50</div>
-                        <div class="detail-account-number">50100012344432</div>
+                        <h3 id="detailType">SAVINGS</h3>
+                        <div class="detail-balance" id="detailBalance">₹1,25,000.50</div>
+                        <div class="detail-account-number" id="detailAccountNumber">50100012344432</div>
                     </div>
                 </div>
                 <div class="detail-header-right">
                     <div class="account-holder-label">Account Holder</div>
-                    <div class="account-holder-name">JOHN DOE</div>
-                    <div class="account-holder-bank">HDFC Bank</div>
+                    <div class="account-holder-name" id="detailHolder">JOHN DOE</div>
+                    <div class="account-holder-bank" id="detailHolderBank">HDFC Bank</div>
                 </div>
             </div>
 
             <div class="detail-section">
                 <div class="section-grid">
-                    <div class="info-cards-grid">
-                        <div class="info-card">
-                            <div class="info-card-label">Total Credit Amount</div>
-                            <div class="info-card-value amount-credit">₹1,25,000.00</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-card-label">Total Debit Amount</div>
-                            <div class="info-card-value amount-debit">₹5,000.00</div>
-                        </div>
-                        <div class="info-card">
-                            <div class="info-card-label">Total Transactions</div>
-                            <div class="info-card-value">2</div>
-                        </div>
-                        <div class="info-card small">
-                            <div class="info-card-label">Number of Credits</div>
-                            <div class="info-card-value">1</div>
-                        </div>
-                        <div class="info-card small">
-                            <div class="info-card-label">Number of Debits</div>
-                            <div class="info-card-value">1</div>
-                        </div>
-                        <div class="info-card small">
-                            <div class="info-card-label">Avg Monthly Balance</div>
-                            <div class="info-card-value">₹1,22,500</div>
-                        </div>
-                        <div class="info-card small">
-                            <div class="info-card-label">Min Balance</div>
-                            <div class="info-card-value">₹1,20,000</div>
-                        </div>
-                        <div class="info-card small">
-                            <div class="info-card-label">Max Balance</div>
-                            <div class="info-card-value">₹1,25,000</div>
-                        </div>
-                        <div class="info-card small">
-                            <div class="info-card-label">Statements Uploaded</div>
-                            <div class="info-card-value">3</div>
-                        </div>
-                        <div class="info-card small">
-                            <div class="info-card-label">Beneficiary Name</div>
-                            <div class="info-card-value" style="font-size: 0.85rem;">John Doe</div>
-                        </div>
-                        <div class="info-card small">
-                            <div class="info-card-label">Interest Rate</div>
-                            <div class="info-card-value">3.5%</div>
-                        </div>
-                        <div class="info-card small">
-                            <div class="info-card-label">Account Status</div>
-                            <div class="info-card-value" style="font-size: 0.85rem; color: #34d399;">Active</div>
-                        </div>
+                    <div id="summaryGrid" class="info-cards-grid">
+                        <!-- This grid will be populated dynamically based on account type (SAVINGS/CURRENT/LOAN/CREDIT CARD) -->
                     </div>
 
                     <div class="chart-container">
-                        <div class="chart-title">Top Category</div>
-                        <div class="pie-chart"></div>
-                        <div class="legend">
-                            <div class="legend-item">
-                                <div class="legend-label">
-                                    <div class="legend-color" style="background: #ef4444;"></div>
-                                    <span>Food</span>
-                                </div>
-                                <span class="legend-amount">₹5,000</span>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-label">
-                                    <div class="legend-color" style="background: #f59e0b;"></div>
-                                    <span>Shopping</span>
-                                </div>
-                                <span class="legend-amount">₹0</span>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-label">
-                                    <div class="legend-color" style="background: #10b981;"></div>
-                                    <span>Transport</span>
-                                </div>
-                                <span class="legend-amount">₹0</span>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-label">
-                                    <div class="legend-color" style="background: #3b82f6;"></div>
-                                    <span>Others</span>
-                                </div>
-                                <span class="legend-amount">₹0</span>
-                            </div>
-                        </div>
-                    </div>
+                        <!-- Dynamic chart area: content is rendered by JS depending on account type -->
+                        <div id="chartTitle" class="chart-title">Top Category</div>
+                        <div id="chartArea" style="padding: 10px;"></div>
+                        <div id="chartLegend" class="legend"></div>
+                     </div>
                 </div>
             </div>
 
@@ -916,24 +940,283 @@
     </div>
 
     <script>
-        function showDetailView() {
+        function showDetailView(cardEl) {
+            // Hide accounts and show detail
             document.getElementById('accountsView').style.display = 'none';
             document.getElementById('detailView').style.display = 'block';
             document.querySelector('.back-btn').style.display = 'flex';
+
+            // Populate header details from clicked card
+            var bank = cardEl.querySelector('.account-bank') ? cardEl.querySelector('.account-bank').innerText : '';
+            var number = cardEl.querySelector('.account-number') ? cardEl.querySelector('.account-number').innerText : '';
+            var balance = cardEl.querySelector('.account-balance') ? cardEl.querySelector('.account-balance').innerText : '';
+            var holder = cardEl.querySelector('.account-holder') ? cardEl.querySelector('.account-holder').innerText : '';
+            var type = cardEl.querySelector('.account-type-badge') ? cardEl.querySelector('.account-type-badge').innerText : '';
+
+            document.getElementById('detailBank').innerText = bank;
+            document.getElementById('detailType').innerText = type;
+            document.getElementById('detailBalance').innerText = balance;
+            document.getElementById('detailAccountNumber').innerText = number;
+            document.getElementById('detailHolder').innerText = holder;
+            document.getElementById('detailHolderBank').innerText = bank;
+
+            // Populate summary grid dynamically based on account type
+            var summaryGrid = document.getElementById('summaryGrid');
+            summaryGrid.innerHTML = ''; // clear
+
+            var accountType = (type || '').toUpperCase();
+
+            function createCard(label, value, small) {
+                var cls = 'info-card' + (small ? ' small' : '');
+                return '<div class="' + cls + '">\n' +
+                    '    <div class="info-card-label">' + label + '</div>\n' +
+                    '    <div class="info-card-value">' + (value || '-') + '</div>\n' +
+                    '</div>';
+            }
+
+            if (accountType === 'LOAN') {
+                // render charts for loan
+                renderCharts(accountType, cardEl);
+                 var loanFields = [
+                    ['original_principal_amount', 'Original Principal Amount'],
+                    ['current_outstanding_principal', 'Current Outstanding Principal'],
+                    ['principal_repaid', 'Principal Repaid'],
+                    ['emi_amount', 'EMI Amount'],
+                    ['installments_paid', 'Installments Paid'],
+                    ['installments_remaining', 'Installments Remaining'],
+                    ['next_emi_due_date', 'Next EMI Due Date'],
+                    ['last_emi_paid_date', 'Last EMI Paid Date'],
+                    ['interest_rate', 'Interest Rate'],
+                    ['total_interest_paid', 'Total Interest Paid'],
+                    ['overdue_amount', 'Overdue Amount'],
+                    ['loan_status', 'Loan Status']
+                ];
+
+                loanFields.forEach(function(f) {
+                    var val = cardEl.getAttribute('data-' + f[0]) || '-';
+                    // create small card for numeric/short fields
+                    summaryGrid.innerHTML += createCard(f[1], val, false);
+                });
+
+            } else if (accountType === 'CREDIT CARD' || accountType === 'CREDIT') {
+                // render charts for credit card
+                renderCharts(accountType, cardEl);
+                 var cardFields = [
+                    ['credit_limit', 'Credit Limit'],
+                    ['available_credit', 'Available Credit'],
+                    ['current_outstanding_balance', 'Current Outstanding Balance'],
+                    ['credit_utilization_ratio', 'Credit Utilization Ratio'],
+                    ['current_statement_balance', 'Current Statement Balance'],
+                    ['minimum_amount_due', 'Minimum Amount Due'],
+                    ['payment_due_date', 'Payment Due Date'],
+                    ['apr_interest_rate', 'APR / Interest Rate'],
+                    ['total_spend', 'Total Spend'],
+                    ['total_payments_made', 'Total Payments Made'],
+                    ['transaction_count', 'Transaction Count'],
+                    ['last_transaction_date', 'Last Transaction Date'],
+                    ['card_status', 'Card Status']
+                ];
+
+                cardFields.forEach(function(f) {
+                    var val = cardEl.getAttribute('data-' + f[0]) || '-';
+                    summaryGrid.innerHTML += createCard(f[1], val, false);
+                });
+
+            } else if (accountType === 'DEMAT') {
+                // render charts for demat
+                renderCharts(accountType, cardEl);
+                 var dematFields = [
+                    ['total_portfolio_value', 'Total Portfolio Value'],
+                    ['total_invested_value', 'Total Invested Value'],
+                    ['total_profit_loss', 'Total Profit / Loss'],
+                    ['portfolio_return_percentage', 'Portfolio Return %'],
+                    ['total_holdings_count', 'Total Holdings Count'],
+                    ['largest_holding_symbol', 'Largest Holding Symbol'],
+                    ['largest_holding_value', 'Largest Holding Value'],
+                    ['total_buy_transactions', 'Total Buy Transactions'],
+                    ['total_sell_transactions', 'Total Sell Transactions'],
+                    ['total_dividend_received', 'Total Dividend Received'],
+                    ['last_transaction_date', 'Last Transaction Date'],
+                    ['account_status', 'Account Status']
+                ];
+
+                dematFields.forEach(function(f) {
+                    var val = cardEl.getAttribute('data-' + f[0]) || '-';
+                    summaryGrid.innerHTML += createCard(f[1], val, false);
+                });
+
+            } else {
+                // render generic charts for other account types
+                renderCharts(accountType, cardEl);
+                 // Default: show a set of generic account info (for SAVINGS/CURRENT)
+                 var generic = [
+                    ['Total Credit Amount', cardEl.getAttribute('data-total_credit') || '₹1,25,000.00'],
+                    ['Total Debit Amount', cardEl.getAttribute('data-total_debit') || '₹5,000.00'],
+                    ['Total Transactions', cardEl.getAttribute('data-total_txn') || '2'],
+                    ['Number of Credits', cardEl.getAttribute('data-num_credits') || '1'],
+                    ['Number of Debits', cardEl.getAttribute('data-num_debits') || '1'],
+                    ['Avg Monthly Balance', cardEl.getAttribute('data-avg_balance') || '₹1,22,500'],
+                    ['Min Balance', cardEl.getAttribute('data-min_balance') || '₹1,20,000'],
+                    ['Max Balance', cardEl.getAttribute('data-max_balance') || '₹1,25,000'],
+                    ['Statements Uploaded', cardEl.getAttribute('data-statements') || '3']
+                ];
+                generic.forEach(function(g) {
+                    summaryGrid.innerHTML += createCard(g[0], g[1], false);
+                });
+            }
         }
 
         function showAccountsView() {
             document.getElementById('accountsView').style.display = 'block';
             document.getElementById('detailView').style.display = 'none';
+            document.querySelector('.back-btn').style.display = 'none';
         }
 
-        // Filter tabs functionality
+        // Filter tabs functionality: now filters by specific type (ALL removed)
         document.querySelectorAll('.filter-tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
+
+                var type = this.innerText.trim().toUpperCase();
+                document.querySelectorAll('.account-card').forEach(card => {
+                    var cardType = (card.getAttribute('data-type') || '').toUpperCase();
+                    if (cardType === type) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
             });
         });
+
+        // On page load, apply the currently active filter (if any). If none active, show all.
+        (function applyInitialFilter(){
+            var active = document.querySelector('.filter-tab.active');
+            if (active) {
+                active.click();
+            }
+        })();
+
+        // --- Chart rendering helpers ---
+        function parseCurrencyToNumber(str) {
+            if (!str) return NaN;
+            // remove non-digit, non-dot, non-minus
+            try {
+                var cleaned = str.replace(/[^0-9.-]+/g, '');
+                return parseFloat(cleaned);
+            } catch (e) { return NaN; }
+        }
+
+        function formatCurrency(n) {
+            if (isNaN(n)) return '-';
+            return '₹' + n.toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2});
+        }
+
+        function renderCharts(type, cardEl) {
+            var chartArea = document.getElementById('chartArea');
+            var chartLegend = document.getElementById('chartLegend');
+            var chartTitle = document.getElementById('chartTitle');
+            chartArea.innerHTML = '';
+            chartLegend.innerHTML = '';
+            chartTitle.innerText = '';
+
+            type = (type || '').toUpperCase();
+
+            if (type === 'LOAN') {
+                chartTitle.innerText = 'Loan Overview';
+                // create a simple SVG line chart for outstanding principal over time
+                var outstanding = parseCurrencyToNumber(cardEl.getAttribute('data-current_outstanding_principal')) || 0;
+                var original = parseCurrencyToNumber(cardEl.getAttribute('data-original_principal_amount')) || outstanding;
+                var installmentsPaid = parseInt(cardEl.getAttribute('data-installments_paid')) || 0;
+                var installmentsRemaining = parseInt(cardEl.getAttribute('data-installments_remaining')) || 10;
+                var total = installmentsPaid + installmentsRemaining || 10;
+                // simulate outstanding values across total+1 points
+                var points = [];
+                for (var i=0;i<=total;i++) {
+                    var factor = 1 - (i / total);
+                    points.push(original * factor);
+                }
+                // draw SVG
+                var w = 320, h = 160, padding = 20;
+                var max = Math.max.apply(null, points);
+                var min = Math.min.apply(null, points);
+                var svg = '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg">';
+                // axes
+                svg += '<rect x="0" y="0" width="'+w+'" height="'+h+'" fill="transparent"/>';
+                // polyline points
+                var pts = points.map(function(val, idx){
+                    var x = padding + ( (w - 2*padding) * (idx / total) );
+                    var y = padding + ( (h - 2*padding) * (1 - (val - min) / (max - min || 1)) );
+                    return x+','+y;
+                }).join(' ');
+                svg += '<polyline points="'+pts+'" fill="none" stroke="#60a5fa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>';
+                // markers for next EMI and last paid
+                svg += '</svg>';
+                chartArea.innerHTML = svg;
+                // legend
+                chartLegend.innerHTML = '<div class="legend-item"><div class="legend-label"><div class="legend-color" style="background:#60a5fa"></div><span>Outstanding Principal (simulated)</span></div><div class="legend-amount">'+formatCurrency(outstanding)+'</div></div>';
+                // small bar showing installments paid vs remaining
+                var barHtml = '<div style="margin-top:12px;"><div style="font-size:0.9rem;color:#9ca3af;margin-bottom:6px;">Installments</div>'+
+                    '<div style="display:flex;gap:8px;align-items:center;"><div style="width:140px;background:#111827;border-radius:6px;padding:4px;">'+
+                    '<div style="width:'+ (installmentsPaid/total*100) +'% ;background:#10b981;height:12px;border-radius:4px;"></div></div>'+
+                    '<div style="font-weight:600;color:#fff;">Paid: '+installmentsPaid+'</div><div style="margin-left:8px;font-weight:600;color:#fff;">Remaining: '+installmentsRemaining+'</div></div></div>';
+                chartArea.innerHTML += barHtml;
+
+            } else if (type === 'CREDIT CARD') {
+                chartTitle.innerText = 'Credit Card Activity';
+                var balance = parseCurrencyToNumber(cardEl.getAttribute('data-current_outstanding_balance')) || 0;
+                var totalSpend = parseCurrencyToNumber(cardEl.getAttribute('data-total_spend')) || 0;
+                var totalPaid = parseCurrencyToNumber(cardEl.getAttribute('data-total_payments_made')) || 0;
+                // small sparkline for balance vs time (simulated)
+                var vals = [totalSpend*0.7, totalSpend*0.6, totalSpend*0.8, totalSpend*0.9, balance];
+                var w = 320, h = 120, padding = 10;
+                var max = Math.max.apply(null, vals);
+                var min = Math.min.apply(null, vals);
+                var pts = vals.map(function(val, idx){
+                    var x = padding + ( (w - 2*padding) * (idx / (vals.length-1)) );
+                    var y = padding + ( (h - 2*padding) * (1 - (val - min) / (max - min || 1)) );
+                    return x+','+y;
+                }).join(' ');
+                var svg = '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg">';
+                svg += '<polyline points="'+pts+'" fill="none" stroke="#f97316" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>';
+                svg += '</svg>';
+                chartArea.innerHTML = svg;
+                chartLegend.innerHTML = '<div class="legend-item"><div class="legend-label"><div class="legend-color" style="background:#f97316"></div><span>Outstanding Balance (simulated)</span></div><div class="legend-amount">'+formatCurrency(balance)+'</div></div>';
+                // spend vs payments bar
+                var barHtml = '<div style="margin-top:10px;font-size:0.9rem;color:#9ca3af;">Spend vs Payments</div>'+
+                    '<div style="display:flex;gap:12px;margin-top:6px;">'+
+                    '<div style="flex:1;background:#111827;padding:8px;border-radius:8px;">'+
+                    '<div style="height:12px;background:#ef4444;width:'+ (Math.min(100,(totalSpend/(totalSpend+totalPaid||1))*100)) +'% ;border-radius:6px;"></div>'+
+                    '<div style="color:#9ca3af;margin-top:6px;">Total Spend: '+formatCurrency(totalSpend)+'</div></div>'+
+                    '<div style="flex:1;background:#111827;padding:8px;border-radius:8px;">'+
+                    '<div style="height:12px;background:#10b981;width:'+ (Math.min(100,(totalPaid/(totalSpend+totalPaid||1))*100)) +'% ;border-radius:6px;"></div>'+
+                    '<div style="color:#9ca3af;margin-top:6px;">Total Payments: '+formatCurrency(totalPaid)+'</div></div></div>';
+                chartArea.innerHTML += barHtml;
+
+            } else if (type === 'DEMAT') {
+                chartTitle.innerText = 'Portfolio Composition';
+                // reuse a pie-like visual: since we don't have holdings data, show a placeholder pie and legend using largest holding and rest
+                var largestSymbol = cardEl.getAttribute('data-largest_holding_symbol') || 'TOP';
+                var largestValue = parseCurrencyToNumber(cardEl.getAttribute('data-largest_holding_value')) || 0;
+                var total = parseCurrencyToNumber(cardEl.getAttribute('data-total_portfolio_value')) || 0;
+                var rest = Math.max(0, total - largestValue);
+                // simple pie using conic-gradient via inline style
+                var pieHtml = '<div style="width:160px;height:160px;border-radius:50%;background:conic-gradient(#3b82f6 0 '+ (largestValue/total*100||50) + '%, #10b981 '+ (largestValue/total*100||50) + '% 100%);margin:0 auto 10px"></div>';
+                chartArea.innerHTML = pieHtml;
+                chartLegend.innerHTML = '<div class="legend-item"><div class="legend-label"><div class="legend-color" style="background:#3b82f6"></div><span>'+largestSymbol+'</span></div><div class="legend-amount">'+formatCurrency(largestValue)+'</div></div>' +
+                    '<div class="legend-item"><div class="legend-label"><div class="legend-color" style="background:#10b981"></div><span>Others</span></div><div class="legend-amount">'+formatCurrency(rest)+'</div></div>';
+
+            } else {
+                chartTitle.innerText = 'Top Category';
+                // default: show the original pie and legend placeholders
+                chartArea.innerHTML = '<div class="pie-chart"></div>';
+                chartLegend.innerHTML = '<div class="legend-item"><div class="legend-label"><div class="legend-color" style="background: #ef4444;"></div><span>Food</span></div><span class="legend-amount">₹5,000</span></div>'+
+                    '<div class="legend-item"><div class="legend-label"><div class="legend-color" style="background: #f59e0b;"></div><span>Shopping</span></div><span class="legend-amount">₹0</span></div>'+
+                    '<div class="legend-item"><div class="legend-label"><div class="legend-color" style="background: #10b981;"></div><span>Transport</span></div><span class="legend-amount">₹0</span></div>'+
+                    '<div class="legend-item"><div class="legend-label"><div class="legend-color" style="background: #3b82f6;"></div><span>Others</span></div><span class="legend-amount">₹0</span></div>';
+            }
+        }
     </script>
 </body>
 </html>

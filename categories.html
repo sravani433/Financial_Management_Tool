@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,10 +41,31 @@
         .main-left { display: flex; align-items: center; }
         .main-title { font-size: 15px; font-weight: 500; color: #60a5fa; }
         .item-count { padding: 4px 10px; background: rgba(96, 165, 250, 0.1); color: #60a5fa; border-radius: 12px; font-size: 12px; font-weight: 500; }
-        .sub-header { display: grid; grid-template-columns: 2.5fr 1fr 1fr 1fr 1fr 80px; gap: 15px; padding: 10px 20px 10px 60px; font-size: 11px; font-weight: 600; color: #8899a6; text-transform: uppercase; letter-spacing: 0.5px; }
-        .sub-item { display: grid; grid-template-columns: 2.5fr 1fr 1fr 1fr 1fr 80px; gap: 15px; padding: 14px 20px 14px 60px; background: #0f1419; border-bottom: 1px solid #1e2732; align-items: center; transition: all 0.2s; }
+        .sub-header { display: grid; grid-template-columns: 2.5fr 1fr 1fr 1fr 80px; gap: 15px; padding: 10px 20px 10px 60px; font-size: 11px; font-weight: 600; color: #8899a6; text-transform: uppercase; letter-spacing: 0.5px; }
+        .sub-item { display: grid; grid-template-columns: 2.5fr 1fr 1fr 1fr 80px; gap: 15px; padding: 14px 20px 14px 60px; background: #0f1419; border-bottom: 1px solid #1e2732; align-items: center; transition: all 0.2s; }
         .sub-item:hover { background: #1a2332; transform: translateX(4px); }
         .sub-item:last-child { border-bottom: none; }
+        .edit-controls { display: none; padding: 12px 20px; background: #1a2332; margin: 0 40px; border-radius: 6px; }
+        .preview-area { background: rgba(16,185,129,0.12); padding: 12px; border-radius: 6px; margin: 12px 0; border-left: 4px solid #10b981; display: none; }
+        .preview-area ul { margin: 8px 0; padding-left: 20px; font-size: 13px; }
+        .edit-mode-btn { padding: 6px 14px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; margin-left: 10px; }
+        .edit-mode-btn:hover { background: #2563eb; }
+        .edit-mode-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .bulk-apply-btn, .ok-btn, .cancel-btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; margin: 0 5px; }
+        .bulk-apply-btn { background: #8b5cf6; color: white; }
+        .ok-btn { background: #10b981; color: white; }
+        .cancel-btn { background: #ef4444; color: white; }
+        .sub-select { margin-right: 8px; accent-color: #10b981; }
+        .select-all { margin-right: 8px; }
+        .name-display, .type-display, .freq-display { cursor: pointer; }
+        .name-edit { background: #0f1419; border: 1px solid #2a3441; color: #e1e8ed; padding: 4px 8px; border-radius: 4px; width: 100%; }
+        .type-edit { background: #0f1419; border: 1px solid #2a3441; color: #e1e8ed; padding: 4px 8px; border-radius: 4px; }
+        .freq-edit { background: #0f1419; border: 1px solid #2a3441; color: #e1e8ed; padding: 4px 8px; border-radius: 4px; }
+        .budget-display { font-weight: 600; color: #10b981; font-size: 15px; cursor: pointer; }
+        .budget-editor { display: none; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 6px; }
+        .inline-slider { width: 100px; accent-color: #10b981; }
+        .inline-number { width: 50px; background: #0f1419; border: 1px solid #2a3441; color: #e1e8ed; padding: 4px 8px; border-radius: 4px; font-size: 13px; }
+        .hidden { display: none !important; }
         .card-view { display: none; }
         .card-view.active { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 20px; }
         .head-card { background: #1e2732; border-radius: 10px; padding: 20px; border-top: 4px solid #10b981; }
@@ -69,7 +91,6 @@
         .badge { display: inline-block; padding: 5px 12px; background: #fef3c7; color: #92400e; border-radius: 12px; font-size: 12px; font-weight: 500; }
         .badge.optional { background: #dbeafe; color: #1e40af; }
         .budget-highlight { font-weight: 600; color: #10b981; font-size: 15px; }
-        .source-tag { padding: 5px 12px; background: #1e293b; color: #94a3b8; border-radius: 6px; font-size: 12px; }
         .delete-btn { padding: 8px; background: #ef4444; border: none; border-radius: 6px; color: white; cursor: pointer; transition: background 0.2s; }
         .delete-btn:hover { background: #dc2626; }
         .collapsed { display: none; }
@@ -93,7 +114,6 @@
                 <button class="toggle-btn" onclick="switchView('table')">📋 Table</button>
             </div>
         </div>
-
         <div class="stats-bar">
             <div class="stat-card border-income">
                 <div class="stat-label">Income</div>
@@ -112,7 +132,6 @@
                 <div class="stat-value" style="color: #8b5cf6;">3</div>
             </div>
         </div>
-
         <div class="actions-bar">
             <div class="search-box">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -123,7 +142,6 @@
             </div>
             <button class="add-btn">+ Add Category</button>
         </div>
-
         <!-- Hierarchy / Tree View -->
         <div class="hierarchy-view" id="hierarchyView">
             <div class="head-section">
@@ -132,7 +150,7 @@
                         <span class="chevron expanded" id="c-income">▶</span>
                         <span class="head-title head-color-income">Income</span>
                     </div>
-                    <span class="head-badge">5 items</span>
+                    <span class="head-badge" id="income-badge">5 items • 100%</span>
                 </div>
                 <div id="income">
                     <div class="main-classification border-income">
@@ -141,13 +159,47 @@
                                 <span class="chevron expanded" id="c-salary">▶</span>
                                 <span class="main-title">Salary & Wages</span>
                             </div>
-                            <span class="item-count">3 items</span>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="item-count" id="salary-count">3 items • 75%</span>
+                                <button class="edit-mode-btn" disabled onclick="enterEditMode('salary')">Update Budgets</button>
+                            </div>
                         </div>
                         <div id="salary">
-                            <div class="sub-header"><div>NAME</div><div>TYPE</div><div>FREQUENCY</div><div>BUDGET</div><div>SOURCE</div><div>ACTION</div></div>
-                            <div class="sub-item"><div>Base Salary</div><div><span class="badge">Mandatory</span></div><div>Monthly</div><div class="budget-highlight">60%</div><div><span class="source-tag">system</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>Bonuses</div><div><span class="badge optional">Optional</span></div><div>Quarterly</div><div class="budget-highlight">10%</div><div><span class="source-tag">user</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>Overtime</div><div><span class="badge optional">Optional</span></div><div>Monthly</div><div class="budget-highlight">5%</div><div><span class="source-tag">user</span></div><div><button class="delete-btn">🗑</button></div></div>
+                            <div class="edit-controls hidden" id="salary-controls">
+                                <div class="preview-area" id="salary-preview">
+                                    <strong>Preview of changes:</strong>
+                                    <ul id="salary-preview-list"></ul>
+                                    <div>Net change: <span id="salary-net-change">0%</span></div>
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    <label><input type="checkbox" class="select-all" id="salary-select-all"> Select All</label>
+                                    <button class="bulk-apply-btn hidden" onclick="applyBulkChanges('salary')">Preview Changes</button>
+                                    <button class="ok-btn hidden" onclick="okEdits('salary')">OK</button>
+                                    <button class="cancel-btn hidden" onclick="cancelEdits('salary')">Cancel</button>
+                                </div>
+                            </div>
+                            <div class="sub-header"><div><input type="checkbox" class="select-all-header" id="salary-select-header">NAME</div><div>TYPE</div><div>FREQUENCY</div><div>BUDGET</div><div>ACTION</div></div>
+                            <div class="sub-item" data-original-name="Base Salary" data-original-type="Mandatory" data-original-freq="Monthly" data-original-budget="60">
+                                <div><input type="checkbox" class="sub-select" id="salary-base-check"><span class="name-display" onclick="toggleEdit('salary-base-name', this)">Base Salary</span><input type="text" class="name-edit hidden" id="salary-base-name" value="Base Salary"></div>
+                                <div><span class="type-display" onclick="toggleEdit('salary-base-type', this)"><span class="badge">Mandatory</span></span><select class="type-edit hidden" id="salary-base-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('salary-base-freq', this)">Monthly</span><select class="freq-edit hidden" id="salary-base-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('salary-base-budget', this)">60%</span><div class="budget-editor" id="salary-base-budget"><input type="range" min="0" max="100" step="0.5" value="60" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="60" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="Bonuses" data-original-type="Optional" data-original-freq="Quarterly" data-original-budget="10">
+                                <div><input type="checkbox" class="sub-select" id="salary-bonuses-check"><span class="name-display" onclick="toggleEdit('salary-bonuses-name', this)">Bonuses</span><input type="text" class="name-edit hidden" id="salary-bonuses-name" value="Bonuses"></div>
+                                <div><span class="type-display" onclick="toggleEdit('salary-bonuses-type', this)"><span class="badge optional">Optional</span></span><select class="type-edit hidden" id="salary-bonuses-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('salary-bonuses-freq', this)">Quarterly</span><select class="freq-edit hidden" id="salary-bonuses-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('salary-bonuses-budget', this)">10%</span><div class="budget-editor" id="salary-bonuses-budget"><input type="range" min="0" max="100" step="0.5" value="10" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="10" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="Overtime" data-original-type="Optional" data-original-freq="Monthly" data-original-budget="5">
+                                <div><input type="checkbox" class="sub-select" id="salary-overtime-check"><span class="name-display" onclick="toggleEdit('salary-overtime-name', this)">Overtime</span><input type="text" class="name-edit hidden" id="salary-overtime-name" value="Overtime"></div>
+                                <div><span class="type-display" onclick="toggleEdit('salary-overtime-type', this)"><span class="badge optional">Optional</span></span><select class="type-edit hidden" id="salary-overtime-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('salary-overtime-freq', this)">Monthly</span><select class="freq-edit hidden" id="salary-overtime-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('salary-overtime-budget', this)">5%</span><div class="budget-editor" id="salary-overtime-budget"><input type="range" min="0" max="100" step="0.5" value="5" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="5" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
                         </div>
                     </div>
                     <div class="main-classification border-income">
@@ -156,24 +208,51 @@
                                 <span class="chevron expanded" id="c-freelance">▶</span>
                                 <span class="main-title">Freelance</span>
                             </div>
-                            <span class="item-count">2 items</span>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="item-count" id="freelance-count">2 items • 25%</span>
+                                <button class="edit-mode-btn" disabled onclick="enterEditMode('freelance')">Update Budgets</button>
+                            </div>
                         </div>
                         <div id="freelance">
-                            <div class="sub-header"><div>NAME</div><div>TYPE</div><div>FREQUENCY</div><div>BUDGET</div><div>SOURCE</div><div>ACTION</div></div>
-                            <div class="sub-item"><div>Consulting</div><div><span class="badge optional">Optional</span></div><div>Monthly</div><div class="budget-highlight">15%</div><div><span class="source-tag">user</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>Projects</div><div><span class="badge optional">Optional</span></div><div>Irregular</div><div class="budget-highlight">10%</div><div><span class="source-tag">user</span></div><div><button class="delete-btn">🗑</button></div></div>
+                            <div class="edit-controls hidden" id="freelance-controls">
+                                <div class="preview-area" id="freelance-preview">
+                                    <strong>Preview of changes:</strong>
+                                    <ul id="freelance-preview-list"></ul>
+                                    <div>Net change: <span id="freelance-net-change">0%</span></div>
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    <label><input type="checkbox" class="select-all" id="freelance-select-all"> Select All</label>
+                                    <button class="bulk-apply-btn hidden" onclick="applyBulkChanges('freelance')">Preview Changes</button>
+                                    <button class="ok-btn hidden" onclick="okEdits('freelance')">OK</button>
+                                    <button class="cancel-btn hidden" onclick="cancelEdits('freelance')">Cancel</button>
+                                </div>
+                            </div>
+                            <div class="sub-header"><div><input type="checkbox" class="select-all-header" id="freelance-select-header">NAME</div><div>TYPE</div><div>FREQUENCY</div><div>BUDGET</div><div>ACTION</div></div>
+                            <div class="sub-item" data-original-name="Consulting" data-original-type="Optional" data-original-freq="Monthly" data-original-budget="15">
+                                <div><input type="checkbox" class="sub-select" id="freelance-consulting-check"><span class="name-display" onclick="toggleEdit('freelance-consulting-name', this)">Consulting</span><input type="text" class="name-edit hidden" id="freelance-consulting-name" value="Consulting"></div>
+                                <div><span class="type-display" onclick="toggleEdit('freelance-consulting-type', this)"><span class="badge optional">Optional</span></span><select class="type-edit hidden" id="freelance-consulting-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('freelance-consulting-freq', this)">Monthly</span><select class="freq-edit hidden" id="freelance-consulting-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('freelance-consulting-budget', this)">15%</span><div class="budget-editor" id="freelance-consulting-budget"><input type="range" min="0" max="100" step="0.5" value="15" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="15" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="Projects" data-original-type="Optional" data-original-freq="Irregular" data-original-budget="10">
+                                <div><input type="checkbox" class="sub-select" id="freelance-projects-check"><span class="name-display" onclick="toggleEdit('freelance-projects-name', this)">Projects</span><input type="text" class="name-edit hidden" id="freelance-projects-name" value="Projects"></div>
+                                <div><span class="type-display" onclick="toggleEdit('freelance-projects-type', this)"><span class="badge optional">Optional</span></span><select class="type-edit hidden" id="freelance-projects-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('freelance-projects-freq', this)">Irregular</span><select class="freq-edit hidden" id="freelance-projects-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('freelance-projects-budget', this)">10%</span><div class="budget-editor" id="freelance-projects-budget"><input type="range" min="0" max="100" step="0.5" value="10" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="10" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="head-section">
                 <div class="head-header" onclick="toggleHead('expenditure')">
                     <div class="head-left">
                         <span class="chevron expanded" id="c-expenditure">▶</span>
                         <span class="head-title head-color-expenditure">Expenditure</span>
                     </div>
-                    <span class="head-badge">11 items</span>
+                    <span class="head-badge" id="expenditure-badge">11 items • 16.5%</span>
                 </div>
                 <div id="expenditure">
                     <div class="main-classification border-expenditure">
@@ -182,17 +261,75 @@
                                 <span class="chevron expanded" id="c-appliances">▶</span>
                                 <span class="main-title">Appliances</span>
                             </div>
-                            <span class="item-count">7 items</span>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="item-count" id="appliances-count">7 items • 5%</span>
+                                <button class="edit-mode-btn" disabled onclick="enterEditMode('appliances')">Update Budgets</button>
+                            </div>
                         </div>
                         <div id="appliances">
-                            <div class="sub-header"><div>NAME</div><div>TYPE</div><div>FREQUENCY</div><div>BUDGET</div><div>SOURCE</div><div>ACTION</div></div>
-                            <div class="sub-item"><div>AC</div><div><span class="badge">Mandatory</span></div><div>-</div><div class="budget-highlight">2%</div><div><span class="source-tag">system</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>Electronics</div><div><span class="badge">Mandatory</span></div><div>-</div><div class="budget-highlight">0.5%</div><div><span class="source-tag">system</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>Geyser</div><div><span class="badge">Mandatory</span></div><div>-</div><div class="budget-highlight">0.5%</div><div><span class="source-tag">system</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>Refrigerator</div><div><span class="badge">Mandatory</span></div><div>-</div><div class="budget-highlight">0.5%</div><div><span class="source-tag">system</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>TV</div><div><span class="badge">Mandatory</span></div><div>-</div><div class="budget-highlight">0.5%</div><div><span class="source-tag">system</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>Washing Machine</div><div><span class="badge">Mandatory</span></div><div>-</div><div class="budget-highlight">0.5%</div><div><span class="source-tag">system</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>Water Purifier</div><div><span class="badge">Mandatory</span></div><div>-</div><div class="budget-highlight">0.5%</div><div><span class="source-tag">system</span></div><div><button class="delete-btn">🗑</button></div></div>
+                            <div class="edit-controls hidden" id="appliances-controls">
+                                <div class="preview-area" id="appliances-preview">
+                                    <strong>Preview of changes:</strong>
+                                    <ul id="appliances-preview-list"></ul>
+                                    <div>Net change: <span id="appliances-net-change">0%</span></div>
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    <label><input type="checkbox" class="select-all" id="appliances-select-all"> Select All</label>
+                                    <button class="bulk-apply-btn hidden" onclick="applyBulkChanges('appliances')">Preview Changes</button>
+                                    <button class="ok-btn hidden" onclick="okEdits('appliances')">OK</button>
+                                    <button class="cancel-btn hidden" onclick="cancelEdits('appliances')">Cancel</button>
+                                </div>
+                            </div>
+                            <div class="sub-header"><div><input type="checkbox" class="select-all-header" id="appliances-select-header">NAME</div><div>TYPE</div><div>FREQUENCY</div><div>BUDGET</div><div>ACTION</div></div>
+                            <div class="sub-item" data-original-name="AC" data-original-type="Mandatory" data-original-freq="-" data-original-budget="2">
+                                <div><input type="checkbox" class="sub-select" id="appliances-ac-check"><span class="name-display" onclick="toggleEdit('appliances-ac-name', this)">AC</span><input type="text" class="name-edit hidden" id="appliances-ac-name" value="AC"></div>
+                                <div><span class="type-display" onclick="toggleEdit('appliances-ac-type', this)"><span class="badge">Mandatory</span></span><select class="type-edit hidden" id="appliances-ac-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('appliances-ac-freq', this)">-</span><select class="freq-edit hidden" id="appliances-ac-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('appliances-ac-budget', this)">2%</span><div class="budget-editor" id="appliances-ac-budget"><input type="range" min="0" max="100" step="0.5" value="2" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="2" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="Electronics" data-original-type="Mandatory" data-original-freq="-" data-original-budget="0.5">
+                                <div><input type="checkbox" class="sub-select" id="appliances-electronics-check"><span class="name-display" onclick="toggleEdit('appliances-electronics-name', this)">Electronics</span><input type="text" class="name-edit hidden" id="appliances-electronics-name" value="Electronics"></div>
+                                <div><span class="type-display" onclick="toggleEdit('appliances-electronics-type', this)"><span class="badge">Mandatory</span></span><select class="type-edit hidden" id="appliances-electronics-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('appliances-electronics-freq', this)">-</span><select class="freq-edit hidden" id="appliances-electronics-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('appliances-electronics-budget', this)">0.5%</span><div class="budget-editor" id="appliances-electronics-budget"><input type="range" min="0" max="100" step="0.5" value="0.5" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="0.5" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="Geyser" data-original-type="Mandatory" data-original-freq="-" data-original-budget="0.5">
+                                <div><input type="checkbox" class="sub-select" id="appliances-geyser-check"><span class="name-display" onclick="toggleEdit('appliances-geyser-name', this)">Geyser</span><input type="text" class="name-edit hidden" id="appliances-geyser-name" value="Geyser"></div>
+                                <div><span class="type-display" onclick="toggleEdit('appliances-geyser-type', this)"><span class="badge">Mandatory</span></span><select class="type-edit hidden" id="appliances-geyser-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('appliances-geyser-freq', this)">-</span><select class="freq-edit hidden" id="appliances-geyser-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('appliances-geyser-budget', this)">0.5%</span><div class="budget-editor" id="appliances-geyser-budget"><input type="range" min="0" max="100" step="0.5" value="0.5" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="0.5" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="Refrigerator" data-original-type="Mandatory" data-original-freq="-" data-original-budget="0.5">
+                                <div><input type="checkbox" class="sub-select" id="appliances-refrigerator-check"><span class="name-display" onclick="toggleEdit('appliances-refrigerator-name', this)">Refrigerator</span><input type="text" class="name-edit hidden" id="appliances-refrigerator-name" value="Refrigerator"></div>
+                                <div><span class="type-display" onclick="toggleEdit('appliances-refrigerator-type', this)"><span class="badge">Mandatory</span></span><select class="type-edit hidden" id="appliances-refrigerator-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('appliances-refrigerator-freq', this)">-</span><select class="freq-edit hidden" id="appliances-refrigerator-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('appliances-refrigerator-budget', this)">0.5%</span><div class="budget-editor" id="appliances-refrigerator-budget"><input type="range" min="0" max="100" step="0.5" value="0.5" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="0.5" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="TV" data-original-type="Mandatory" data-original-freq="-" data-original-budget="0.5">
+                                <div><input type="checkbox" class="sub-select" id="appliances-tv-check"><span class="name-display" onclick="toggleEdit('appliances-tv-name', this)">TV</span><input type="text" class="name-edit hidden" id="appliances-tv-name" value="TV"></div>
+                                <div><span class="type-display" onclick="toggleEdit('appliances-tv-type', this)"><span class="badge">Mandatory</span></span><select class="type-edit hidden" id="appliances-tv-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('appliances-tv-freq', this)">-</span><select class="freq-edit hidden" id="appliances-tv-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('appliances-tv-budget', this)">0.5%</span><div class="budget-editor" id="appliances-tv-budget"><input type="range" min="0" max="100" step="0.5" value="0.5" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="0.5" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="Washing Machine" data-original-type="Mandatory" data-original-freq="-" data-original-budget="0.5">
+                                <div><input type="checkbox" class="sub-select" id="appliances-washing-check"><span class="name-display" onclick="toggleEdit('appliances-washing-name', this)">Washing Machine</span><input type="text" class="name-edit hidden" id="appliances-washing-name" value="Washing Machine"></div>
+                                <div><span class="type-display" onclick="toggleEdit('appliances-washing-type', this)"><span class="badge">Mandatory</span></span><select class="type-edit hidden" id="appliances-washing-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('appliances-washing-freq', this)">-</span><select class="freq-edit hidden" id="appliances-washing-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('appliances-washing-budget', this)">0.5%</span><div class="budget-editor" id="appliances-washing-budget"><input type="range" min="0" max="100" step="0.5" value="0.5" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="0.5" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="Water Purifier" data-original-type="Mandatory" data-original-freq="-" data-original-budget="0.5">
+                                <div><input type="checkbox" class="sub-select" id="appliances-purifier-check"><span class="name-display" onclick="toggleEdit('appliances-purifier-name', this)">Water Purifier</span><input type="text" class="name-edit hidden" id="appliances-purifier-name" value="Water Purifier"></div>
+                                <div><span class="type-display" onclick="toggleEdit('appliances-purifier-type', this)"><span class="badge">Mandatory</span></span><select class="type-edit hidden" id="appliances-purifier-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('appliances-purifier-freq', this)">-</span><select class="freq-edit hidden" id="appliances-purifier-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('appliances-purifier-budget', this)">0.5%</span><div class="budget-editor" id="appliances-purifier-budget"><input type="range" min="0" max="100" step="0.5" value="0.5" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="0.5" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
                         </div>
                     </div>
                     <div class="main-classification border-expenditure">
@@ -201,26 +338,65 @@
                                 <span class="chevron expanded" id="c-utilities">▶</span>
                                 <span class="main-title">Utilities</span>
                             </div>
-                            <span class="item-count">4 items</span>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="item-count" id="utilities-count">4 items • 11.5%</span>
+                                <button class="edit-mode-btn" disabled onclick="enterEditMode('utilities')">Update Budgets</button>
+                            </div>
                         </div>
                         <div id="utilities">
-                            <div class="sub-header"><div>NAME</div><div>TYPE</div><div>FREQUENCY</div><div>BUDGET</div><div>SOURCE</div><div>ACTION</div></div>
-                            <div class="sub-item"><div>Electricity</div><div><span class="badge">Mandatory</span></div><div>Monthly</div><div class="budget-highlight">5%</div><div><span class="source-tag">system</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>Water</div><div><span class="badge">Mandatory</span></div><div>Monthly</div><div class="budget-highlight">2%</div><div><span class="source-tag">system</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>Internet</div><div><span class="badge">Mandatory</span></div><div>Monthly</div><div class="budget-highlight">3%</div><div><span class="source-tag">system</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>Gas</div><div><span class="badge">Mandatory</span></div><div>Monthly</div><div class="budget-highlight">1.5%</div><div><span class="source-tag">system</span></div><div><button class="delete-btn">🗑</button></div></div>
+                            <div class="edit-controls hidden" id="utilities-controls">
+                                <div class="preview-area" id="utilities-preview">
+                                    <strong>Preview of changes:</strong>
+                                    <ul id="utilities-preview-list"></ul>
+                                    <div>Net change: <span id="utilities-net-change">0%</span></div>
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    <label><input type="checkbox" class="select-all" id="utilities-select-all"> Select All</label>
+                                    <button class="bulk-apply-btn hidden" onclick="applyBulkChanges('utilities')">Preview Changes</button>
+                                    <button class="ok-btn hidden" onclick="okEdits('utilities')">OK</button>
+                                    <button class="cancel-btn hidden" onclick="cancelEdits('utilities')">Cancel</button>
+                                </div>
+                            </div>
+                            <div class="sub-header"><div><input type="checkbox" class="select-all-header" id="utilities-select-header">NAME</div><div>TYPE</div><div>FREQUENCY</div><div>BUDGET</div><div>ACTION</div></div>
+                            <div class="sub-item" data-original-name="Electricity" data-original-type="Mandatory" data-original-freq="Monthly" data-original-budget="5">
+                                <div><input type="checkbox" class="sub-select" id="utilities-electricity-check"><span class="name-display" onclick="toggleEdit('utilities-electricity-name', this)">Electricity</span><input type="text" class="name-edit hidden" id="utilities-electricity-name" value="Electricity"></div>
+                                <div><span class="type-display" onclick="toggleEdit('utilities-electricity-type', this)"><span class="badge">Mandatory</span></span><select class="type-edit hidden" id="utilities-electricity-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('utilities-electricity-freq', this)">Monthly</span><select class="freq-edit hidden" id="utilities-electricity-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('utilities-electricity-budget', this)">5%</span><div class="budget-editor" id="utilities-electricity-budget"><input type="range" min="0" max="100" step="0.5" value="5" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="5" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="Water" data-original-type="Mandatory" data-original-freq="Monthly" data-original-budget="2">
+                                <div><input type="checkbox" class="sub-select" id="utilities-water-check"><span class="name-display" onclick="toggleEdit('utilities-water-name', this)">Water</span><input type="text" class="name-edit hidden" id="utilities-water-name" value="Water"></div>
+                                <div><span class="type-display" onclick="toggleEdit('utilities-water-type', this)"><span class="badge">Mandatory</span></span><select class="type-edit hidden" id="utilities-water-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('utilities-water-freq', this)">Monthly</span><select class="freq-edit hidden" id="utilities-water-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('utilities-water-budget', this)">2%</span><div class="budget-editor" id="utilities-water-budget"><input type="range" min="0" max="100" step="0.5" value="2" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="2" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="Internet" data-original-type="Mandatory" data-original-freq="Monthly" data-original-budget="3">
+                                <div><input type="checkbox" class="sub-select" id="utilities-internet-check"><span class="name-display" onclick="toggleEdit('utilities-internet-name', this)">Internet</span><input type="text" class="name-edit hidden" id="utilities-internet-name" value="Internet"></div>
+                                <div><span class="type-display" onclick="toggleEdit('utilities-internet-type', this)"><span class="badge">Mandatory</span></span><select class="type-edit hidden" id="utilities-internet-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('utilities-internet-freq', this)">Monthly</span><select class="freq-edit hidden" id="utilities-internet-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('utilities-internet-budget', this)">3%</span><div class="budget-editor" id="utilities-internet-budget"><input type="range" min="0" max="100" step="0.5" value="3" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="3" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="Gas" data-original-type="Mandatory" data-original-freq="Monthly" data-original-budget="1.5">
+                                <div><input type="checkbox" class="sub-select" id="utilities-gas-check"><span class="name-display" onclick="toggleEdit('utilities-gas-name', this)">Gas</span><input type="text" class="name-edit hidden" id="utilities-gas-name" value="Gas"></div>
+                                <div><span class="type-display" onclick="toggleEdit('utilities-gas-type', this)"><span class="badge">Mandatory</span></span><select class="type-edit hidden" id="utilities-gas-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('utilities-gas-freq', this)">Monthly</span><select class="freq-edit hidden" id="utilities-gas-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('utilities-gas-budget', this)">1.5%</span><div class="budget-editor" id="utilities-gas-budget"><input type="range" min="0" max="100" step="0.5" value="1.5" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="1.5" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="head-section">
                 <div class="head-header" onclick="toggleHead('investment')">
                     <div class="head-left">
                         <span class="chevron expanded" id="c-investment">▶</span>
                         <span class="head-title head-color-investment">Investment</span>
                     </div>
-                    <span class="head-badge">5 items</span>
+                    <span class="head-badge" id="investment-badge">5 items • 50%</span>
                 </div>
                 <div id="investment">
                     <div class="main-classification border-investment">
@@ -229,13 +405,47 @@
                                 <span class="chevron expanded" id="c-stocks">▶</span>
                                 <span class="main-title">Stocks</span>
                             </div>
-                            <span class="item-count">3 items</span>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="item-count" id="stocks-count">3 items • 30%</span>
+                                <button class="edit-mode-btn" disabled onclick="enterEditMode('stocks')">Update Budgets</button>
+                            </div>
                         </div>
                         <div id="stocks">
-                            <div class="sub-header"><div>NAME</div><div>TYPE</div><div>FREQUENCY</div><div>BUDGET</div><div>SOURCE</div><div>ACTION</div></div>
-                            <div class="sub-item"><div>Direct Equity</div><div><span class="badge optional">Optional</span></div><div>Monthly</div><div class="budget-highlight">10%</div><div><span class="source-tag">user</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>Mutual Funds</div><div><span class="badge optional">Optional</span></div><div>Monthly</div><div class="budget-highlight">15%</div><div><span class="source-tag">user</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>ETFs</div><div><span class="badge optional">Optional</span></div><div>Monthly</div><div class="budget-highlight">5%</div><div><span class="source-tag">user</span></div><div><button class="delete-btn">🗑</button></div></div>
+                            <div class="edit-controls hidden" id="stocks-controls">
+                                <div class="preview-area" id="stocks-preview">
+                                    <strong>Preview of changes:</strong>
+                                    <ul id="stocks-preview-list"></ul>
+                                    <div>Net change: <span id="stocks-net-change">0%</span></div>
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    <label><input type="checkbox" class="select-all" id="stocks-select-all"> Select All</label>
+                                    <button class="bulk-apply-btn hidden" onclick="applyBulkChanges('stocks')">Preview Changes</button>
+                                    <button class="ok-btn hidden" onclick="okEdits('stocks')">OK</button>
+                                    <button class="cancel-btn hidden" onclick="cancelEdits('stocks')">Cancel</button>
+                                </div>
+                            </div>
+                            <div class="sub-header"><div><input type="checkbox" class="select-all-header" id="stocks-select-header">NAME</div><div>TYPE</div><div>FREQUENCY</div><div>BUDGET</div><div>ACTION</div></div>
+                            <div class="sub-item" data-original-name="Direct Equity" data-original-type="Optional" data-original-freq="Monthly" data-original-budget="10">
+                                <div><input type="checkbox" class="sub-select" id="stocks-direct-check"><span class="name-display" onclick="toggleEdit('stocks-direct-name', this)">Direct Equity</span><input type="text" class="name-edit hidden" id="stocks-direct-name" value="Direct Equity"></div>
+                                <div><span class="type-display" onclick="toggleEdit('stocks-direct-type', this)"><span class="badge optional">Optional</span></span><select class="type-edit hidden" id="stocks-direct-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('stocks-direct-freq', this)">Monthly</span><select class="freq-edit hidden" id="stocks-direct-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('stocks-direct-budget', this)">10%</span><div class="budget-editor" id="stocks-direct-budget"><input type="range" min="0" max="100" step="0.5" value="10" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="10" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="Mutual Funds" data-original-type="Optional" data-original-freq="Monthly" data-original-budget="15">
+                                <div><input type="checkbox" class="sub-select" id="stocks-mutual-check"><span class="name-display" onclick="toggleEdit('stocks-mutual-name', this)">Mutual Funds</span><input type="text" class="name-edit hidden" id="stocks-mutual-name" value="Mutual Funds"></div>
+                                <div><span class="type-display" onclick="toggleEdit('stocks-mutual-type', this)"><span class="badge optional">Optional</span></span><select class="type-edit hidden" id="stocks-mutual-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('stocks-mutual-freq', this)">Monthly</span><select class="freq-edit hidden" id="stocks-mutual-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('stocks-mutual-budget', this)">15%</span><div class="budget-editor" id="stocks-mutual-budget"><input type="range" min="0" max="100" step="0.5" value="15" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="15" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="ETFs" data-original-type="Optional" data-original-freq="Monthly" data-original-budget="5">
+                                <div><input type="checkbox" class="sub-select" id="stocks-etfs-check"><span class="name-display" onclick="toggleEdit('stocks-etfs-name', this)">ETFs</span><input type="text" class="name-edit hidden" id="stocks-etfs-name" value="ETFs"></div>
+                                <div><span class="type-display" onclick="toggleEdit('stocks-etfs-type', this)"><span class="badge optional">Optional</span></span><select class="type-edit hidden" id="stocks-etfs-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('stocks-etfs-freq', this)">Monthly</span><select class="freq-edit hidden" id="stocks-etfs-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('stocks-etfs-budget', this)">5%</span><div class="budget-editor" id="stocks-etfs-budget"><input type="range" min="0" max="100" step="0.5" value="5" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="5" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
                         </div>
                     </div>
                     <div class="main-classification border-investment">
@@ -244,24 +454,51 @@
                                 <span class="chevron expanded" id="c-realestate">▶</span>
                                 <span class="main-title">Real Estate</span>
                             </div>
-                            <span class="item-count">2 items</span>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="item-count" id="realestate-count">2 items • 20%</span>
+                                <button class="edit-mode-btn" disabled onclick="enterEditMode('realestate')">Update Budgets</button>
+                            </div>
                         </div>
                         <div id="realestate">
-                            <div class="sub-header"><div>NAME</div><div>TYPE</div><div>FREQUENCY</div><div>BUDGET</div><div>SOURCE</div><div>ACTION</div></div>
-                            <div class="sub-item"><div>REITs</div><div><span class="badge optional">Optional</span></div><div>Quarterly</div><div class="budget-highlight">8%</div><div><span class="source-tag">user</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>Property</div><div><span class="badge optional">Optional</span></div><div>Annual</div><div class="budget-highlight">12%</div><div><span class="source-tag">user</span></div><div><button class="delete-btn">🗑</button></div></div>
+                            <div class="edit-controls hidden" id="realestate-controls">
+                                <div class="preview-area" id="realestate-preview">
+                                    <strong>Preview of changes:</strong>
+                                    <ul id="realestate-preview-list"></ul>
+                                    <div>Net change: <span id="realestate-net-change">0%</span></div>
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    <label><input type="checkbox" class="select-all" id="realestate-select-all"> Select All</label>
+                                    <button class="bulk-apply-btn hidden" onclick="applyBulkChanges('realestate')">Preview Changes</button>
+                                    <button class="ok-btn hidden" onclick="okEdits('realestate')">OK</button>
+                                    <button class="cancel-btn hidden" onclick="cancelEdits('realestate')">Cancel</button>
+                                </div>
+                            </div>
+                            <div class="sub-header"><div><input type="checkbox" class="select-all-header" id="realestate-select-header">NAME</div><div>TYPE</div><div>FREQUENCY</div><div>BUDGET</div><div>ACTION</div></div>
+                            <div class="sub-item" data-original-name="REITs" data-original-type="Optional" data-original-freq="Quarterly" data-original-budget="8">
+                                <div><input type="checkbox" class="sub-select" id="realestate-reits-check"><span class="name-display" onclick="toggleEdit('realestate-reits-name', this)">REITs</span><input type="text" class="name-edit hidden" id="realestate-reits-name" value="REITs"></div>
+                                <div><span class="type-display" onclick="toggleEdit('realestate-reits-type', this)"><span class="badge optional">Optional</span></span><select class="type-edit hidden" id="realestate-reits-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('realestate-reits-freq', this)">Quarterly</span><select class="freq-edit hidden" id="realestate-reits-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('realestate-reits-budget', this)">8%</span><div class="budget-editor" id="realestate-reits-budget"><input type="range" min="0" max="100" step="0.5" value="8" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="8" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="Property" data-original-type="Optional" data-original-freq="Annual" data-original-budget="12">
+                                <div><input type="checkbox" class="sub-select" id="realestate-property-check"><span class="name-display" onclick="toggleEdit('realestate-property-name', this)">Property</span><input type="text" class="name-edit hidden" id="realestate-property-name" value="Property"></div>
+                                <div><span class="type-display" onclick="toggleEdit('realestate-property-type', this)"><span class="badge optional">Optional</span></span><select class="type-edit hidden" id="realestate-property-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('realestate-property-freq', this)">Annual</span><select class="freq-edit hidden" id="realestate-property-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('realestate-property-budget', this)">12%</span><div class="budget-editor" id="realestate-property-budget"><input type="range" min="0" max="100" step="0.5" value="12" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="12" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="head-section">
                 <div class="head-header" onclick="toggleHead('financial')">
                     <div class="head-left">
                         <span class="chevron expanded" id="c-financial">▶</span>
                         <span class="head-title head-color-financial">Financial Obligations</span>
                     </div>
-                    <span class="head-badge">3 items</span>
+                    <span class="head-badge" id="financial-badge">3 items • 38%</span>
                 </div>
                 <div id="financial">
                     <div class="main-classification border-financial">
@@ -270,134 +507,163 @@
                                 <span class="chevron expanded" id="c-loans">▶</span>
                                 <span class="main-title">Loans</span>
                             </div>
-                            <span class="item-count">3 items</span>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="item-count" id="loans-count">3 items • 38%</span>
+                                <button class="edit-mode-btn" disabled onclick="enterEditMode('loans')">Update Budgets</button>
+                            </div>
                         </div>
                         <div id="loans">
-                            <div class="sub-header"><div>NAME</div><div>TYPE</div><div>FREQUENCY</div><div>BUDGET</div><div>SOURCE</div><div>ACTION</div></div>
-                            <div class="sub-item"><div>Home Loan</div><div><span class="badge">Mandatory</span></div><div>Monthly</div><div class="budget-highlight">25%</div><div><span class="source-tag">system</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>Car Loan</div><div><span class="badge">Mandatory</span></div><div>Monthly</div><div class="budget-highlight">8%</div><div><span class="source-tag">system</span></div><div><button class="delete-btn">🗑</button></div></div>
-                            <div class="sub-item"><div>Personal Loan</div><div><span class="badge">Mandatory</span></div><div>Monthly</div><div class="budget-highlight">5%</div><div><span class="source-tag">user</span></div><div><button class="delete-btn">🗑</button></div></div>
+                            <div class="edit-controls hidden" id="loans-controls">
+                                <div class="preview-area" id="loans-preview">
+                                    <strong>Preview of changes:</strong>
+                                    <ul id="loans-preview-list"></ul>
+                                    <div>Net change: <span id="loans-net-change">0%</span></div>
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    <label><input type="checkbox" class="select-all" id="loans-select-all"> Select All</label>
+                                    <button class="bulk-apply-btn hidden" onclick="applyBulkChanges('loans')">Preview Changes</button>
+                                    <button class="ok-btn hidden" onclick="okEdits('loans')">OK</button>
+                                    <button class="cancel-btn hidden" onclick="cancelEdits('loans')">Cancel</button>
+                                </div>
+                            </div>
+                            <div class="sub-header"><div><input type="checkbox" class="select-all-header" id="loans-select-header">NAME</div><div>TYPE</div><div>FREQUENCY</div><div>BUDGET</div><div>ACTION</div></div>
+                            <div class="sub-item" data-original-name="Home Loan" data-original-type="Mandatory" data-original-freq="Monthly" data-original-budget="25">
+                                <div><input type="checkbox" class="sub-select" id="loans-home-check"><span class="name-display" onclick="toggleEdit('loans-home-name', this)">Home Loan</span><input type="text" class="name-edit hidden" id="loans-home-name" value="Home Loan"></div>
+                                <div><span class="type-display" onclick="toggleEdit('loans-home-type', this)"><span class="badge">Mandatory</span></span><select class="type-edit hidden" id="loans-home-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('loans-home-freq', this)">Monthly</span><select class="freq-edit hidden" id="loans-home-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('loans-home-budget', this)">25%</span><div class="budget-editor" id="loans-home-budget"><input type="range" min="0" max="100" step="0.5" value="25" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="25" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="Car Loan" data-original-type="Mandatory" data-original-freq="Monthly" data-original-budget="8">
+                                <div><input type="checkbox" class="sub-select" id="loans-car-check"><span class="name-display" onclick="toggleEdit('loans-car-name', this)">Car Loan</span><input type="text" class="name-edit hidden" id="loans-car-name" value="Car Loan"></div>
+                                <div><span class="type-display" onclick="toggleEdit('loans-car-type', this)"><span class="badge">Mandatory</span></span><select class="type-edit hidden" id="loans-car-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('loans-car-freq', this)">Monthly</span><select class="freq-edit hidden" id="loans-car-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('loans-car-budget', this)">8%</span><div class="budget-editor" id="loans-car-budget"><input type="range" min="0" max="100" step="0.5" value="8" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="8" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
+                            <div class="sub-item" data-original-name="Personal Loan" data-original-type="Mandatory" data-original-freq="Monthly" data-original-budget="5">
+                                <div><input type="checkbox" class="sub-select" id="loans-personal-check"><span class="name-display" onclick="toggleEdit('loans-personal-name', this)">Personal Loan</span><input type="text" class="name-edit hidden" id="loans-personal-name" value="Personal Loan"></div>
+                                <div><span class="type-display" onclick="toggleEdit('loans-personal-type', this)"><span class="badge">Mandatory</span></span><select class="type-edit hidden" id="loans-personal-type"><option>Mandatory</option><option>Optional</option></select></div>
+                                <div><span class="freq-display" onclick="toggleEdit('loans-personal-freq', this)">Monthly</span><select class="freq-edit hidden" id="loans-personal-freq"><option>Monthly</option><option>Quarterly</option><option>Annual</option><option>Irregular</option><option>-</option></select></div>
+                                <div><span class="budget-display" onclick="toggleEdit('loans-personal-budget', this)">5%</span><div class="budget-editor" id="loans-personal-budget"><input type="range" min="0" max="100" step="0.5" value="5" class="inline-slider"><input type="number" min="0" max="100" step="0.5" value="5" class="inline-number">%</div></div>
+                                <div><button class="delete-btn">🗑</button></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
         <!-- Card View -->
         <div class="card-view" id="cardView">
             <div class="head-card income">
-                <h2 class="card-head-title head-color-income">💰 Income</h2>
+                <h2 class="card-head-title head-color-income">💰 Income <span class="head-badge">5 items • 100%</span></h2>
                 <div class="main-card">
-                    <div class="card-main-title"><span>Salary & Wages</span><span class="item-count">3</span></div>
+                    <div class="card-main-title"><span>Salary & Wages</span><span class="item-count">3 items • 75%</span></div>
                     <div class="sub-list">
-                        <div class="sub-chip">Base Salary <span class="chip-budget">60%</span></div>
-                        <div class="sub-chip">Bonuses <span class="chip-budget">10%</span></div>
-                        <div class="sub-chip">Overtime <span class="chip-budget">5%</span></div>
+                        <div class="sub-chip" data-name="Base Salary" data-freq="Monthly" data-type="Mandatory" data-budget="60">Base Salary <span class="chip-budget">60%</span></div>
+                        <div class="sub-chip" data-name="Bonuses" data-freq="Quarterly" data-type="Optional" data-budget="10">Bonuses <span class="chip-budget">10%</span></div>
+                        <div class="sub-chip" data-name="Overtime" data-freq="Monthly" data-type="Optional" data-budget="5">Overtime <span class="chip-budget">5%</span></div>
                     </div>
                 </div>
                 <div class="main-card">
-                    <div class="card-main-title"><span>Freelance</span><span class="item-count">2</span></div>
+                    <div class="card-main-title"><span>Freelance</span><span class="item-count">2 items • 25%</span></div>
                     <div class="sub-list">
-                        <div class="sub-chip">Consulting <span class="chip-budget">15%</span></div>
-                        <div class="sub-chip">Projects <span class="chip-budget">10%</span></div>
+                        <div class="sub-chip" data-name="Consulting" data-freq="Monthly" data-type="Optional" data-budget="15">Consulting <span class="chip-budget">15%</span></div>
+                        <div class="sub-chip" data-name="Projects" data-freq="Irregular" data-type="Optional" data-budget="10">Projects <span class="chip-budget">10%</span></div>
                     </div>
                 </div>
             </div>
-
             <div class="head-card expenditure">
-                <h2 class="card-head-title head-color-expenditure">💸 Expenditure</h2>
+                <h2 class="card-head-title head-color-expenditure">💸 Expenditure <span class="head-badge">11 items • 16.5%</span></h2>
                 <div class="main-card">
-                    <div class="card-main-title"><span>Appliances</span><span class="item-count">7</span></div>
+                    <div class="card-main-title"><span>Appliances</span><span class="item-count">7 items • 5%</span></div>
                     <div class="sub-list">
-                        <div class="sub-chip">AC <span class="chip-budget">2%</span></div>
-                        <div class="sub-chip">Electronics <span class="chip-budget">0.5%</span></div>
-                        <div class="sub-chip">Geyser <span class="chip-budget">0.5%</span></div>
-                        <div class="sub-chip">Refrigerator <span class="chip-budget">0.5%</span></div>
-                        <div class="sub-chip">TV <span class="chip-budget">0.5%</span></div>
-                        <div class="sub-chip">Washing Machine <span class="chip-budget">0.5%</span></div>
-                        <div class="sub-chip">Water Purifier <span class="chip-budget">0.5%</span></div>
+                        <div class="sub-chip" data-name="AC" data-freq="-" data-type="Mandatory" data-budget="2">AC <span class="chip-budget">2%</span></div>
+                        <div class="sub-chip" data-name="Electronics" data-freq="-" data-type="Mandatory" data-budget="0.5">Electronics <span class="chip-budget">0.5%</span></div>
+                        <div class="sub-chip" data-name="Geyser" data-freq="-" data-type="Mandatory" data-budget="0.5">Geyser <span class="chip-budget">0.5%</span></div>
+                        <div class="sub-chip" data-name="Refrigerator" data-freq="-" data-type="Mandatory" data-budget="0.5">Refrigerator <span class="chip-budget">0.5%</span></div>
+                        <div class="sub-chip" data-name="TV" data-freq="-" data-type="Mandatory" data-budget="0.5">TV <span class="chip-budget">0.5%</span></div>
+                        <div class="sub-chip" data-name="Washing Machine" data-freq="-" data-type="Mandatory" data-budget="0.5">Washing Machine <span class="chip-budget">0.5%</span></div>
+                        <div class="sub-chip" data-name="Water Purifier" data-freq="-" data-type="Mandatory" data-budget="0.5">Water Purifier <span class="chip-budget">0.5%</span></div>
                     </div>
                 </div>
                 <div class="main-card">
-                    <div class="card-main-title"><span>Utilities</span><span class="item-count">4</span></div>
+                    <div class="card-main-title"><span>Utilities</span><span class="item-count">4 items • 11.5%</span></div>
                     <div class="sub-list">
-                        <div class="sub-chip">Electricity <span class="chip-budget">5%</span></div>
-                        <div class="sub-chip">Water <span class="chip-budget">2%</span></div>
-                        <div class="sub-chip">Internet <span class="chip-budget">3%</span></div>
-                        <div class="sub-chip">Gas <span class="chip-budget">1.5%</span></div>
+                        <div class="sub-chip" data-name="Electricity" data-freq="Monthly" data-type="Mandatory" data-budget="5">Electricity <span class="chip-budget">5%</span></div>
+                        <div class="sub-chip" data-name="Water" data-freq="Monthly" data-type="Mandatory" data-budget="2">Water <span class="chip-budget">2%</span></div>
+                        <div class="sub-chip" data-name="Internet" data-freq="Monthly" data-type="Mandatory" data-budget="3">Internet <span class="chip-budget">3%</span></div>
+                        <div class="sub-chip" data-name="Gas" data-freq="Monthly" data-type="Mandatory" data-budget="1.5">Gas <span class="chip-budget">1.5%</span></div>
                     </div>
                 </div>
             </div>
-
             <div class="head-card investment">
-                <h2 class="card-head-title head-color-investment">📈 Investment</h2>
+                <h2 class="card-head-title head-color-investment">📈 Investment <span class="head-badge">5 items • 50%</span></h2>
                 <div class="main-card">
-                    <div class="card-main-title"><span>Stocks</span><span class="item-count">3</span></div>
+                    <div class="card-main-title"><span>Stocks</span><span class="item-count">3 items • 30%</span></div>
                     <div class="sub-list">
-                        <div class="sub-chip">Direct Equity <span class="chip-budget">10%</span></div>
-                        <div class="sub-chip">Mutual Funds <span class="chip-budget">15%</span></div>
-                        <div class="sub-chip">ETFs <span class="chip-budget">5%</span></div>
+                        <div class="sub-chip" data-name="Direct Equity" data-freq="Monthly" data-type="Optional" data-budget="10">Direct Equity <span class="chip-budget">10%</span></div>
+                        <div class="sub-chip" data-name="Mutual Funds" data-freq="Monthly" data-type="Optional" data-budget="15">Mutual Funds <span class="chip-budget">15%</span></div>
+                        <div class="sub-chip" data-name="ETFs" data-freq="Monthly" data-type="Optional" data-budget="5">ETFs <span class="chip-budget">5%</span></div>
                     </div>
                 </div>
                 <div class="main-card">
-                    <div class="card-main-title"><span>Real Estate</span><span class="item-count">2</span></div>
+                    <div class="card-main-title"><span>Real Estate</span><span class="item-count">2 items • 20%</span></div>
                     <div class="sub-list">
-                        <div class="sub-chip">REITs <span class="chip-budget">8%</span></div>
-                        <div class="sub-chip">Property <span class="chip-budget">12%</span></div>
+                        <div class="sub-chip" data-name="REITs" data-freq="Quarterly" data-type="Optional" data-budget="8">REITs <span class="chip-budget">8%</span></div>
+                        <div class="sub-chip" data-name="Property" data-freq="Annual" data-type="Optional" data-budget="12">Property <span class="chip-budget">12%</span></div>
                     </div>
                 </div>
             </div>
-
             <div class="head-card financial">
-                <h2 class="card-head-title head-color-financial">📋 Financial Obligations</h2>
+                <h2 class="card-head-title head-color-financial">📋 Financial Obligations <span class="head-badge">3 items • 38%</span></h2>
                 <div class="main-card">
-                    <div class="card-main-title"><span>Loans</span><span class="item-count">3</span></div>
+                    <div class="card-main-title"><span>Loans</span><span class="item-count">3 items • 38%</span></div>
                     <div class="sub-list">
-                        <div class="sub-chip">Home Loan <span class="chip-budget">25%</span></div>
-                        <div class="sub-chip">Car Loan <span class="chip-budget">8%</span></div>
-                        <div class="sub-chip">Personal Loan <span class="chip-budget">5%</span></div>
+                        <div class="sub-chip" data-name="Home Loan" data-freq="Monthly" data-type="Mandatory" data-budget="25">Home Loan <span class="chip-budget">25%</span></div>
+                        <div class="sub-chip" data-name="Car Loan" data-freq="Monthly" data-type="Mandatory" data-budget="8">Car Loan <span class="chip-budget">8%</span></div>
+                        <div class="sub-chip" data-name="Personal Loan" data-freq="Monthly" data-type="Mandatory" data-budget="5">Personal Loan <span class="chip-budget">5%</span></div>
                     </div>
                 </div>
             </div>
         </div>
-
         <!-- Table View -->
         <div class="table-view" id="tableView">
             <table>
                 <thead>
-                    <tr><th>HEAD</th><th>MAIN</th><th>SUB</th><th>TYPE</th><th>FREQUENCY</th><th>BUDGET</th><th>SOURCE</th><th>ACTION</th></tr>
+                    <tr><th>HEAD</th><th>MAIN</th><th>SUB</th><th>TYPE</th><th>FREQUENCY</th><th>BUDGET</th><th>ACTION</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td class="head-color-income">Income</td><td>Salary & Wages</td><td>Base Salary</td><td><span class="badge">Mandatory</span></td><td>Monthly</td><td class="budget-highlight">60%</td><td><span class="source-tag">system</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-income">Income</td><td>Salary & Wages</td><td>Bonuses</td><td><span class="badge optional">Optional</span></td><td>Quarterly</td><td class="budget-highlight">10%</td><td><span class="source-tag">user</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-income">Income</td><td>Salary & Wages</td><td>Overtime</td><td><span class="badge optional">Optional</span></td><td>Monthly</td><td class="budget-highlight">5%</td><td><span class="source-tag">user</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-income">Income</td><td>Freelance</td><td>Consulting</td><td><span class="badge optional">Optional</span></td><td>Monthly</td><td class="budget-highlight">15%</td><td><span class="source-tag">user</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-income">Income</td><td>Freelance</td><td>Projects</td><td><span class="badge optional">Optional</span></td><td>Irregular</td><td class="budget-highlight">10%</td><td><span class="source-tag">user</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-expenditure">Expenditure</td><td>Appliances</td><td>AC</td><td><span class="badge">Mandatory</span></td><td>-</td><td class="budget-highlight">2%</td><td><span class="source-tag">system</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-expenditure">Expenditure</td><td>Appliances</td><td>Electronics</td><td><span class="badge">Mandatory</span></td><td>-</td><td class="budget-highlight">0.5%</td><td><span class="source-tag">system</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-expenditure">Expenditure</td><td>Appliances</td><td>Geyser</td><td><span class="badge">Mandatory</span></td><td>-</td><td class="budget-highlight">0.5%</td><td><span class="source-tag">system</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-expenditure">Expenditure</td><td>Appliances</td><td>Refrigerator</td><td><span class="badge">Mandatory</span></td><td>-</td><td class="budget-highlight">0.5%</td><td><span class="source-tag">system</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-expenditure">Expenditure</td><td>Appliances</td><td>TV</td><td><span class="badge">Mandatory</span></td><td>-</td><td class="budget-highlight">0.5%</td><td><span class="source-tag">system</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-expenditure">Expenditure</td><td>Appliances</td><td>Washing Machine</td><td><span class="badge">Mandatory</span></td><td>-</td><td class="budget-highlight">0.5%</td><td><span class="source-tag">system</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-expenditure">Expenditure</td><td>Appliances</td><td>Water Purifier</td><td><span class="badge">Mandatory</span></td><td>-</td><td class="budget-highlight">0.5%</td><td><span class="source-tag">system</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-expenditure">Expenditure</td><td>Utilities</td><td>Electricity</td><td><span class="badge">Mandatory</span></td><td>Monthly</td><td class="budget-highlight">5%</td><td><span class="source-tag">system</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-expenditure">Expenditure</td><td>Utilities</td><td>Water</td><td><span class="badge">Mandatory</span></td><td>Monthly</td><td class="budget-highlight">2%</td><td><span class="source-tag">system</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-expenditure">Expenditure</td><td>Utilities</td><td>Internet</td><td><span class="badge">Mandatory</span></td><td>Monthly</td><td class="budget-highlight">3%</td><td><span class="source-tag">system</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-expenditure">Expenditure</td><td>Utilities</td><td>Gas</td><td><span class="badge">Mandatory</span></td><td>Monthly</td><td class="budget-highlight">1.5%</td><td><span class="source-tag">system</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-investment">Investment</td><td>Stocks</td><td>Direct Equity</td><td><span class="badge optional">Optional</span></td><td>Monthly</td><td class="budget-highlight">10%</td><td><span class="source-tag">user</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-investment">Investment</td><td>Stocks</td><td>Mutual Funds</td><td><span class="badge optional">Optional</span></td><td>Monthly</td><td class="budget-highlight">15%</td><td><span class="source-tag">user</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-investment">Investment</td><td>Stocks</td><td>ETFs</td><td><span class="badge optional">Optional</span></td><td>Monthly</td><td class="budget-highlight">5%</td><td><span class="source-tag">user</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-investment">Investment</td><td>Real Estate</td><td>REITs</td><td><span class="badge optional">Optional</span></td><td>Quarterly</td><td class="budget-highlight">8%</td><td><span class="source-tag">user</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-investment">Investment</td><td>Real Estate</td><td>Property</td><td><span class="badge optional">Optional</span></td><td>Annual</td><td class="budget-highlight">12%</td><td><span class="source-tag">user</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-financial">Financial Obligations</td><td>Loans</td><td>Home Loan</td><td><span class="badge">Mandatory</span></td><td>Monthly</td><td class="budget-highlight">25%</td><td><span class="source-tag">system</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-financial">Financial Obligations</td><td>Loans</td><td>Car Loan</td><td><span class="badge">Mandatory</span></td><td>Monthly</td><td class="budget-highlight">8%</td><td><span class="source-tag">system</span></td><td><button class="delete-btn">🗑</button></td></tr>
-                    <tr><td class="head-color-financial">Financial Obligations</td><td>Loans</td><td>Personal Loan</td><td><span class="badge">Mandatory</span></td><td>Monthly</td><td class="budget-highlight">5%</td><td><span class="source-tag">user</span></td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-income">Income</td><td>Salary & Wages</td><td>Base Salary</td><td><span class="badge">Mandatory</span></td><td>Monthly</td><td class="budget-highlight">60%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-income">Income</td><td>Salary & Wages</td><td>Bonuses</td><td><span class="badge optional">Optional</span></td><td>Quarterly</td><td class="budget-highlight">10%</td><td><button class="delete-btn">🗑</button></td></tr><tr><td class="head-color-income">Income</td><td>Salary & Wages</td><td>Bonuses</td><td><span class="badge optional">Optional</span></td><td>Quarterly</td><td class="budget-highlight">10%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-income">Income</td><td>Salary & Wages</td><td>Overtime</td><td><span class="badge optional">Optional</span></td><td>Monthly</td><td class="budget-highlight">5%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-income">Income</td><td>Freelance</td><td>Consulting</td><td><span class="badge optional">Optional</span></td><td>Monthly</td><td class="budget-highlight">15%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-income">Income</td><td>Freelance</td><td>Projects</td><td><span class="badge optional">Optional</span></td><td>Irregular</td><td class="budget-highlight">10%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-expenditure">Expenditure</td><td>Appliances</td><td>AC</td><td><span class="badge">Mandatory</span></td><td>-</td><td class="budget-highlight">2%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-expenditure">Expenditure</td><td>Appliances</td><td>Electronics</td><td><span class="badge">Mandatory</span></td><td>-</td><td class="budget-highlight">0.5%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-expenditure">Expenditure</td><td>Appliances</td><td>Geyser</td><td><span class="badge">Mandatory</span></td><td>-</td><td class="budget-highlight">0.5%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-expenditure">Expenditure</td><td>Appliances</td><td>Refrigerator</td><td><span class="badge">Mandatory</span></td><td>-</td><td class="budget-highlight">0.5%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-expenditure">Expenditure</td><td>Appliances</td><td>TV</td><td><span class="badge">Mandatory</span></td><td>-</td><td class="budget-highlight">0.5%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-expenditure">Expenditure</td><td>Appliances</td><td>Washing Machine</td><td><span class="badge">Mandatory</span></td><td>-</td><td class="budget-highlight">0.5%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-expenditure">Expenditure</td><td>Appliances</td><td>Water Purifier</td><td><span class="badge">Mandatory</span></td><td>-</td><td class="budget-highlight">0.5%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-expenditure">Expenditure</td><td>Utilities</td><td>Electricity</td><td><span class="badge">Mandatory</span></td><td>Monthly</td><td class="budget-highlight">5%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-expenditure">Expenditure</td><td>Utilities</td><td>Water</td><td><span class="badge">Mandatory</span></td><td>Monthly</td><td class="budget-highlight">2%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-expenditure">Expenditure</td><td>Utilities</td><td>Internet</td><td><span class="badge">Mandatory</span></td><td>Monthly</td><td class="budget-highlight">3%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-expenditure">Expenditure</td><td>Utilities</td><td>Gas</td><td><span class="badge">Mandatory</span></td><td>Monthly</td><td class="budget-highlight">1.5%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-investment">Investment</td><td>Stocks</td><td>Direct Equity</td><td><span class="badge optional">Optional</span></td><td>Monthly</td><td class="budget-highlight">10%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-investment">Investment</td><td>Stocks</td><td>Mutual Funds</td><td><span class="badge optional">Optional</span></td><td>Monthly</td><td class="budget-highlight">15%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-investment">Investment</td><td>Stocks</td><td>ETFs</td><td><span class="badge optional">Optional</span></td><td>Monthly</td><td class="budget-highlight">5%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-investment">Investment</td><td>Real Estate</td><td>REITs</td><td><span class="badge optional">Optional</span></td><td>Quarterly</td><td class="budget-highlight">8%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-investment">Investment</td><td>Real Estate</td><td>Property</td><td><span class="badge optional">Optional</span></td><td>Annual</td><td class="budget-highlight">12%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-financial">Financial Obligations</td><td>Loans</td><td>Home Loan</td><td><span class="badge">Mandatory</span></td><td>Monthly</td><td class="budget-highlight">25%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-financial">Financial Obligations</td><td>Loans</td><td>Car Loan</td><td><span class="badge">Mandatory</span></td><td>Monthly</td><td class="budget-highlight">8%</td><td><button class="delete-btn">🗑</button></td></tr>
+                    <tr><td class="head-color-financial">Financial Obligations</td><td>Loans</td><td>Personal Loan</td><td><span class="badge">Mandatory</span></td><td>Monthly</td><td class="budget-highlight">5%</td><td><button class="delete-btn">🗑</button></td></tr>
                 </tbody>
             </table>
         </div>
     </div>
-
     <script>
+        // Toggle sections
         function toggleHead(id) {
             const content = document.getElementById(id);
             const chevron = document.getElementById('c-' + id);
@@ -412,50 +678,271 @@
             chevron.classList.toggle('expanded');
         }
 
+        // View switching
         function switchView(view) {
-            const hierarchyView = document.getElementById('hierarchyView');
-            const cardView = document.getElementById('cardView');
-            const tableView = document.getElementById('tableView');
-            const buttons = document.querySelectorAll('.toggle-btn');
+            document.getElementById('hierarchyView').classList.toggle('hidden', view !== 'hierarchy');
+            document.getElementById('cardView').classList.toggle('active', view === 'card');
+            document.getElementById('tableView').classList.toggle('active', view === 'table');
 
-            buttons.forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.toggle-btn').forEach((btn, i) => {
+                btn.classList.toggle('active',
+                    (view === 'hierarchy' && i === 0) ||
+                    (view === 'card'      && i === 1) ||
+                    (view === 'table'     && i === 2)
+                );
+            });
+        }
 
-            if (view === 'hierarchy') {
-                hierarchyView.classList.remove('hidden');
-                cardView.classList.remove('active');
-                tableView.classList.remove('active');
-                buttons[0].classList.add('active');
-            } else if (view === 'card') {
-                hierarchyView.classList.add('hidden');
-                cardView.classList.add('active');
-                tableView.classList.remove('active');
-                buttons[1].classList.add('active');
-            } else if (view === 'table') {
-                hierarchyView.classList.add('hidden');
-                cardView.classList.remove('active');
-                tableView.classList.add('active');
-                buttons[2].classList.add('active');
+        // Live search
+        function filterCategories(searchText) {
+            searchText = searchText.toLowerCase().trim();
+            document.querySelectorAll('.sub-item, .sub-chip, tbody tr').forEach(el => {
+                el.style.display = el.textContent.toLowerCase().includes(searchText) ? '' : 'none';
+            });
+        }
+
+        // ────────────────────────────────────────────────
+        //           EDIT MODE LOGIC
+        // ────────────────────────────────────────────────
+
+        let currentEditGroup = null;
+
+        function enterEditMode(group) {
+            currentEditGroup = group;
+            const container = document.getElementById(group);
+            const controls = document.getElementById(group + '-controls');
+
+            controls.classList.remove('hidden');
+
+            // Show editors, hide displays
+            container.querySelectorAll('.name-display, .type-display, .freq-display, .budget-display')
+                .forEach(el => el.style.display = 'none');
+            container.querySelectorAll('.name-edit, .type-edit, .freq-edit, .budget-editor')
+                .forEach(el => el.classList.remove('hidden'));
+            container.querySelectorAll('.sub-select')
+                .forEach(cb => cb.classList.remove('hidden'));
+
+            // Disable all other update buttons
+            document.querySelectorAll('.edit-mode-btn').forEach(btn => btn.disabled = true);
+
+            // Wire up select-all
+            const selectAll = document.getElementById(group + '-select-all');
+            const selectHeader = document.getElementById(group + '-select-header');
+
+            selectAll.onchange = e => {
+                container.querySelectorAll('.sub-select').forEach(cb => cb.checked = e.target.checked);
+                updateEditControlsVisibility(group);
+            };
+
+            selectHeader.onchange = e => {
+                container.querySelectorAll('.sub-select').forEach(cb => cb.checked = e.target.checked);
+                updateEditControlsVisibility(group);
+            };
+
+            container.querySelectorAll('.sub-select').forEach(cb => {
+                cb.onchange = () => updateEditControlsVisibility(group);
+            });
+
+            // Initial check
+            updateEditControlsVisibility(group);
+        }
+
+        function updateEditControlsVisibility(group) {
+            const anyChecked = [...document.getElementById(group).querySelectorAll('.sub-select')]
+                .some(cb => cb.checked);
+
+            const updateBtn = document.querySelector(`[onclick="enterEditMode('${group}')"]`);
+            updateBtn.disabled = !anyChecked;
+
+            document.getElementById(group + '-controls')
+                .querySelector('.bulk-apply-btn')
+                .classList.toggle('hidden', !anyChecked);
+        }
+
+        function applyBulkChanges(group) {
+            const container = document.getElementById(group);
+            const previewList = document.getElementById(group + '-preview-list');
+            const netChangeEl = document.getElementById(group + '-net-change');
+
+            previewList.innerHTML = '';
+            let totalDelta = 0;
+
+            container.querySelectorAll('.sub-item').forEach(item => {
+                const cb = item.querySelector('.sub-select');
+                if (!cb.checked) return;
+
+                const orig = parseFloat(item.dataset.originalBudget);
+                const now = parseFloat(item.querySelector('.inline-number').value);
+                const delta = now - orig;
+                totalDelta += delta;
+
+                const li = document.createElement('li');
+                li.textContent = `${item.dataset.originalName}: ${orig}% → ${now}% (${delta >= 0 ? '+' : ''}${delta.toFixed(1)}%)`;
+                previewList.appendChild(li);
+            });
+
+            netChangeEl.textContent = (totalDelta >= 0 ? '+' : '') + totalDelta.toFixed(1) + '%';
+            document.getElementById(group + '-preview').style.display = 'block';
+
+            // Show OK/Cancel
+            document.getElementById(group + '-controls').querySelectorAll('.ok-btn, .cancel-btn')
+                .forEach(btn => btn.classList.remove('hidden'));
+        }
+
+        function okEdits(group) {
+            const container = document.getElementById(group);
+
+            container.querySelectorAll('.sub-item').forEach(item => {
+                const nameEl   = item.querySelector('.name-edit');
+                const typeEl   = item.querySelector('.type-edit');
+                const freqEl   = item.querySelector('.freq-edit');
+                const budgetEl = item.querySelector('.inline-number');
+
+                // Commit new values to data attributes
+                item.dataset.originalName   = nameEl.value;
+                item.dataset.originalType   = typeEl.value;
+                item.dataset.originalFreq   = freqEl.value;
+                item.dataset.originalBudget = budgetEl.value;
+
+                // Update visible display
+                item.querySelector('.name-display').textContent = nameEl.value;
+                item.querySelector('.type-display').innerHTML =
+                    `<span class="badge${typeEl.value === 'Optional' ? ' optional' : ''}">${typeEl.value}</span>`;
+                item.querySelector('.freq-display').textContent = freqEl.value;
+                item.querySelector('.budget-display').textContent = budgetEl.value + '%';
+            });
+
+            exitEditMode(group);
+            recalculateTotals();
+            console.log(`Saved changes for ${group}`);
+        }
+
+        function cancelEdits(group) {
+            const container = document.getElementById(group);
+
+            container.querySelectorAll('.sub-item').forEach(item => {
+                const nameEl   = item.querySelector('.name-edit');
+                const typeEl   = item.querySelector('.type-edit');
+                const freqEl   = item.querySelector('.freq-edit');
+                const budgetEl = item.querySelector('.inline-number');
+
+                nameEl.value   = item.dataset.originalName;
+                typeEl.value   = item.dataset.originalType;
+                freqEl.value   = item.dataset.originalFreq;
+                budgetEl.value = item.dataset.originalBudget;
+
+                item.querySelector('.name-display').textContent = item.dataset.originalName;
+                item.querySelector('.type-display').innerHTML =
+                    `<span class="badge${item.dataset.originalType === 'Optional' ? ' optional' : ''}">${item.dataset.originalType}</span>`;
+                item.querySelector('.freq-display').textContent = item.dataset.originalFreq;
+                item.querySelector('.budget-display').textContent = item.dataset.originalBudget + '%';
+            });
+
+            exitEditMode(group);
+        }
+
+        function exitEditMode(group) {
+            const container = document.getElementById(group);
+            const controls = document.getElementById(group + '-controls');
+
+            controls.classList.add('hidden');
+            document.getElementById(group + '-preview').style.display = 'none';
+
+            container.querySelectorAll('.name-display, .type-display, .freq-display, .budget-display')
+                .forEach(el => el.style.display = 'block');
+            container.querySelectorAll('.name-edit, .type-edit, .freq-edit, .budget-editor, .sub-select')
+                .forEach(el => el.classList.add('hidden'));
+
+            // Re-enable all update buttons
+            document.querySelectorAll('.edit-mode-btn').forEach(btn => btn.disabled = false);
+
+            // Clear checkboxes
+            container.querySelectorAll('.sub-select, .select-all, .select-all-header').forEach(el => el.checked = false);
+
+            controls.querySelectorAll('.bulk-apply-btn, .ok-btn, .cancel-btn').forEach(btn => btn.classList.add('hidden'));
+
+            currentEditGroup = null;
+        }
+
+        // Single field inline edit (optional – can be removed if you only want bulk editing)
+        function toggleEdit(id, displayEl) {
+            if (!currentEditGroup) return;
+            const editEl = document.getElementById(id);
+            displayEl.style.display = 'none';
+            editEl.classList.remove('hidden');
+            editEl.focus();
+
+            const save = () => {
+                if (id.includes('budget')) {
+                    displayEl.textContent = editEl.querySelector('.inline-number').value + '%';
+                } else if (id.includes('type')) {
+                    const val = editEl.value;
+                    displayEl.innerHTML = `<span class="badge${val === 'Optional' ? ' optional' : ''}">${val}</span>`;
+                } else {
+                    displayEl.textContent = editEl.value || editEl.querySelector('input, select')?.value;
+                }
+                editEl.classList.add('hidden');
+                displayEl.style.display = 'block';
+            };
+
+            editEl.onblur = save;
+            if (editEl.tagName === 'SELECT' || editEl.querySelector('input[type="number"]')) {
+                editEl.onchange = save;
             }
         }
 
-        function filterCategories(searchText) {
-            searchText = searchText.toLowerCase();
+        // Recalculate sums shown in badges & item counts
+        function recalculateTotals() {
+            const groups = ['salary','freelance','appliances','utilities','stocks','realestate','loans'];
 
-            // For hierarchy view
-            document.querySelectorAll('.sub-item').forEach(item => {
-                item.style.display = item.textContent.toLowerCase().includes(searchText) ? 'grid' : 'none';
+            groups.forEach(g => {
+                let sum = 0;
+                document.querySelectorAll(`#${g} .budget-display`)
+                    .forEach(el => sum += parseFloat(el.textContent) || 0);
+
+                const countEl = document.getElementById(g + '-count');
+                if (countEl) {
+                    countEl.textContent = countEl.textContent.split(' • ')[0] + ` • ${sum.toFixed(1)}%`;
+                }
             });
 
-            // For card view
+            ['income','expenditure','investment','financial'].forEach(head => {
+                let sum = 0;
+                document.querySelectorAll(`#${head} .budget-display`)
+                    .forEach(el => sum += parseFloat(el.textContent) || 0);
+
+                const badge = document.getElementById(head + '-badge');
+                if (badge) {
+                    badge.textContent = badge.textContent.split(' • ')[0] + ` • ${sum.toFixed(1)}%`;
+                }
+            });
+
+            // Optional: sync card view and table view (simple version)
             document.querySelectorAll('.sub-chip').forEach(chip => {
-                chip.style.display = chip.textContent.toLowerCase().includes(searchText) ? 'flex' : 'none';
+                const name = chip.dataset.name;
+                const item = document.querySelector(`[data-original-name="${name}"]`);
+                if (item) {
+                    chip.lastChild.textContent = item.dataset.originalBudget + '%';
+                }
             });
 
-            // For table view
+            // Sync table view
             document.querySelectorAll('tbody tr').forEach(row => {
-                row.style.display = row.textContent.toLowerCase().includes(searchText) ? 'table-row' : 'none';
+                const subName = row.children[2].textContent;
+                const item = document.querySelector(`[data-original-name="${subName}"]`);
+                if (item) {
+                    row.children[2].textContent = item.dataset.originalName;
+                    row.children[3].innerHTML = `<span class="badge${item.dataset.originalType === 'Optional' ? ' optional' : ''}">${item.dataset.originalType}</span>`;
+                    row.children[4].textContent = item.dataset.originalFreq;
+                    row.children[5].textContent = item.dataset.originalBudget + '%';
+                }
             });
         }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            recalculateTotals();
+        });
     </script>
 </body>
 </html>
